@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Brand Cyber & Stationery</title>
+    <title>The Brand Cyber & Stationery | Gate C, Maasai Mara University</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -134,13 +134,6 @@
             margin-bottom: 8px;
             box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
-
-        .logo-img {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -208,15 +201,12 @@
                 </ul>
             </div>
         </div>
-        <div class="text-center text-slate-400 text-xs border-t border-slate-100 pt-8 space-y-2">
-            <p>&copy; 2026 The Brand Cyber & Stationery. Gate C, Maasai Mara University, Narok Town.</p>
-            <p class="text-blue-500 font-semibold tracking-wide">
-                Designed by <a href="#" target="_blank" class="hover:underline">Exevo Designers Network</a>
-            </p>
+        <div class="text-center text-slate-400 text-xs border-t border-slate-100 pt-8">
+            <p>&copy; 2026 The Brand Cyber & Stationery. Designed by Exevo Designers Network.</p>
         </div>
     </footer>
 
-    <!-- WhatsApp Floating Bot -->
+    <!-- Floating Bot -->
     <div class="fixed bottom-6 right-6 z-[1000] flex flex-col items-end gap-3">
         <div id="botWelcome" class="bg-white px-4 py-2 rounded-2xl shadow-xl border text-sm font-medium animate-bounce hidden">
             👋 Need help? Chat with us!
@@ -241,14 +231,14 @@
         </div>
         <div id="chatBody" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2 bg-[#e5ddd5]">
             <div class="chat-bubble-bot">
-                Hello! Welcome to The Brand Cyber & Stationery. I'm your virtual assistant. How can I help you today?
+                Hello! Welcome to The Brand Cyber & Stationery. How can I help you today?
             </div>
             <div class="chat-bubble-bot text-[11px] opacity-75 italic">
-                Try asking: "Services", "Store Location", or "Assignment help"
+                Try asking: "Services", "Location", or "Assignment"
             </div>
         </div>
         <div class="p-3 bg-white border-t flex gap-2">
-            <input type="text" id="botInput" placeholder="Type a message..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+            <input type="text" id="botInput" placeholder="Type a message..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" onkeypress="if(event.key === 'Enter') handleBotInput()">
             <button onclick="handleBotInput()" class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-700 transition"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -257,20 +247,18 @@
     <div id="cartSidebar" class="fixed inset-y-0 right-0 w-80 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-slate-50">
             <div>
-                <h3 class="font-bold text-lg text-slate-800">Your Cart</h3>
+                <h3 class="font-bold text-lg">Your Cart</h3>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Shopping Items</p>
             </div>
             <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-900 transition"><i class="fas fa-times"></i></button>
         </div>
-        <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4">
-            <!-- Cart items will be rendered here -->
-        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
         <div class="p-6 border-t bg-slate-50 space-y-4">
             <div class="flex justify-between items-end">
                 <span class="text-slate-400 text-xs font-bold uppercase tracking-widest">Grand Total</span>
                 <span id="cartTotal" class="text-xl font-extrabold text-blue-600">KES 0.00</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition active:scale-[0.98]">
+            <button onclick="checkout()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition active:scale-[0.98]">
                 Order via WhatsApp <i class="fab fa-whatsapp ml-2"></i>
             </button>
         </div>
@@ -278,16 +266,16 @@
 
     <!-- Admin Auth Modal -->
     <div id="adminAuthModal" class="fixed inset-0 bg-black/80 z-[250] hidden items-center justify-center px-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm text-center shadow-2xl">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm text-center">
             <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-shield-halved fa-2x"></i>
             </div>
-            <h3 class="font-bold text-xl mb-2 text-slate-900">Admin Authentication</h3>
+            <h3 class="font-bold text-xl mb-2">Admin Auth</h3>
             <p class="text-xs text-slate-400 mb-8 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
-            <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-50 border rounded-xl p-4 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-xl tracking-widest">
+            <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-50 border rounded-xl p-4 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center tracking-widest">
             <div class="flex gap-3">
-                <button onclick="closeAuth()" class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition">Cancel</button>
-                <button onclick="verifyAdmin()" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition">Verify</button>
+                <button onclick="closeAuth()" class="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
+                <button onclick="verifyAdmin()" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl">Verify</button>
             </div>
         </div>
     </div>
@@ -311,15 +299,13 @@
         ];
 
         let documents = [
-            { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', file: 'Research_Methodology_Jebet.pdf' },
-            { id: 102, owner: 'Kevin Otieno', title: 'Macroeconomics Assignment', price: 50, status: 'paid', date: '2024-01-16', file: 'Macroeconomics_Final.pdf' },
-            { id: 103, owner: 'Sarah Wambui', title: 'Social Psychology Notes', price: 100, status: 'unpaid', date: '2024-01-18', file: 'Psychology_Notes.docx' }
+            { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', file: '#' },
+            { id: 102, owner: 'Kevin Otieno', title: 'Macroeconomics Assignment', price: 50, status: 'paid', date: '2024-01-16', file: '#' }
         ];
 
         const views = {
             home: `
-                <!-- Hero Section -->
-                <section id="hero" class="relative h-[85vh] flex items-center px-4 overflow-hidden fade-in">
+                <section id="hero" class="relative h-[80vh] flex items-center px-4 overflow-hidden fade-in">
                     <div class="hero-bg-container">
                         <div class="hero-overlay"></div>
                         <div class="slideshow">
@@ -328,90 +314,65 @@
                             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=1600')"></div>
                         </div>
                     </div>
-                    
                     <div class="relative z-10 max-w-7xl mx-auto w-full text-white">
                         <div class="max-w-2xl">
-                            <span class="bg-blue-600/40 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold mb-6 inline-block uppercase tracking-widest">
-                                <i class="fas fa-map-marker-alt mr-2"></i> Gate C, Maasai Mara University
+                            <span class="bg-blue-600/40 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold mb-6 inline-block uppercase tracking-widest">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Gate C, MMU
                             </span>
                             <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Fast. Precise. <br><span class="text-blue-400">Professional.</span></h2>
-                            <p class="text-lg text-blue-50 mb-10 opacity-90 leading-relaxed">The premier student hub for cyber services, high-quality printing, and stationery in Narok Town.</p>
+                            <p class="text-lg mb-10 opacity-90">The premier student hub for cyber services and stationery in Narok.</p>
                             <div class="flex flex-wrap gap-4">
-                                <button onclick="navigateTo('assignments')" class="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition shadow-lg flex items-center gap-2">
+                                <button onclick="navigateTo('assignments')" class="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold shadow-lg flex items-center gap-2">
                                     <i class="fas fa-search"></i> Find My Assignment
                                 </button>
-                                <button onclick="navigateTo('stationery')" class="bg-blue-600 text-white border border-blue-400 px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg">
+                                <button onclick="navigateTo('stationery')" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg">
                                     Shop Stationery
                                 </button>
                             </div>
                         </div>
                     </div>
                 </section>
-
-                <section id="services" class="py-24 px-4 bg-slate-50">
-                    <div class="max-w-7xl mx-auto">
-                        <div class="text-center mb-16">
-                            <h2 class="text-3xl font-bold mb-4 text-slate-900">Our Premium Services</h2>
-                            <p class="text-slate-500 max-w-2xl mx-auto">We handle everything with precision, from printing to government portal applications.</p>
+                <section id="services" class="py-20 px-4 bg-slate-50">
+                    <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-print"></i></div>
+                            <h3 class="font-bold text-xl mb-3">Printing & Copy</h3>
+                            <p class="text-slate-500 text-sm">Bulk black & white or vibrant color printing for all document formats.</p>
                         </div>
-                        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-print"></i></div>
-                                <h3 class="font-bold text-xl mb-3">Printing & Copy</h3>
-                                <p class="text-slate-500 text-sm">Bulk black & white or vibrant color printing. We support all digital formats.</p>
-                            </div>
-                            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-globe"></i></div>
-                                <h3 class="font-bold text-xl mb-3">Applications</h3>
-                                <p class="text-slate-500 text-sm">KUCCPS, HELB, KRA, and e-Citizen services handled by experts.</p>
-                            </div>
-                            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-book-open"></i></div>
-                                <h3 class="font-bold text-xl mb-3">Research Assist</h3>
-                                <p class="text-slate-500 text-sm">Formatting, proofreading, and resource location for academic success.</p>
-                            </div>
-                            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-id-card"></i></div>
-                                <h3 class="font-bold text-xl mb-3">Graphic Design</h3>
-                                <p class="text-slate-500 text-sm">Professional CVs, business cards, and custom posters for all needs.</p>
-                            </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-globe"></i></div>
+                            <h3 class="font-bold text-xl mb-3">Applications</h3>
+                            <p class="text-slate-500 text-sm">KUCCPS, HELB, KRA, and e-Citizen services handled by experts.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-book-open"></i></div>
+                            <h3 class="font-bold text-xl mb-3">Research Assist</h3>
+                            <p class="text-slate-500 text-sm">Professional formatting, proofreading, and resource location for students.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-id-card"></i></div>
+                            <h3 class="font-bold text-xl mb-3">Graphic Design</h3>
+                            <p class="text-slate-500 text-sm">CVs, posters, and business cards designed for a professional impact.</p>
                         </div>
                     </div>
                 </section>
             `,
             assignments: `
                 <section class="py-16 px-4 bg-slate-900 text-white text-center fade-in">
-                    <div class="max-w-7xl mx-auto">
-                        <span class="bg-blue-600/20 text-blue-400 px-4 py-1 rounded-full text-[10px] font-bold mb-4 inline-block uppercase tracking-widest border border-blue-500/20">Digital Portal</span>
-                        <h2 class="text-4xl font-bold mb-4">Assignment Retrieval</h2>
-                        <p class="text-slate-400 max-w-xl mx-auto text-sm">Access your processed documents. Paid documents are ready for immediate download.</p>
-                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Assignment Retrieval</h2>
+                    <p class="text-slate-400 max-w-xl mx-auto">Enter your name to filter records and download your files.</p>
                 </section>
-
-                <section class="py-12 px-4 max-w-6xl mx-auto">
-                    <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100 -mt-16 relative z-10">
-                        <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
-                            <div>
-                                <h3 class="font-bold text-xl">Find Your Document</h3>
-                                <p class="text-slate-500 text-sm">Enter your name to filter the records</p>
-                            </div>
-                            <div class="relative w-full md:w-96">
-                                <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search Student Name..." class="w-full bg-slate-100 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-800">
-                                <i class="fas fa-search absolute right-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div id="documentGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[300px]"></div>
+                <section class="py-12 px-4 max-w-6xl mx-auto -mt-10">
+                    <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
+                        <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search Student Name..." class="w-full bg-slate-100 rounded-2xl px-6 py-4 mb-8 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <div id="documentGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[200px]"></div>
                     </div>
                 </section>
             `,
             stationery: `
                 <section class="py-16 px-4 bg-blue-700 text-white text-center fade-in">
-                    <div class="max-w-7xl mx-auto">
-                        <span class="bg-white/10 px-4 py-1 rounded-full text-[10px] font-bold mb-4 inline-block uppercase tracking-widest border border-white/20">Marketplace</span>
-                        <h2 class="text-4xl font-bold mb-4">Stationery Shop</h2>
-                        <p class="text-blue-100 text-sm">Quality supplies delivered directly to the university vicinity.</p>
-                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Stationery Shop</h2>
+                    <p class="text-blue-100">Quality supplies delivered to your doorstep near the university.</p>
                 </section>
                 <section class="py-12 px-4 max-w-7xl mx-auto">
                     <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
@@ -421,76 +382,31 @@
                 <section class="py-12 px-4 bg-slate-100 min-h-screen fade-in">
                     <div class="max-w-6xl mx-auto">
                         <div class="flex justify-between items-end mb-8">
-                            <div>
-                                <h2 class="text-3xl font-bold text-slate-900">Admin Dashboard</h2>
-                                <p class="text-slate-500">Manage Assignments & Shop Inventory</p>
-                            </div>
-                            <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold text-sm border border-red-100 hover:bg-red-600 hover:text-white transition">Logout</button>
+                            <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+                            <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold text-sm">Logout</button>
                         </div>
-
-                        <div class="bg-white p-6 rounded-3xl border shadow-sm mb-8">
-                            <h3 class="font-bold mb-4 text-slate-700 text-xs uppercase tracking-wider flex items-center gap-2">
-                                <i class="fas fa-plus-circle text-blue-600"></i> Quick Add Assignment Record
-                            </h3>
-                            <div class="grid md:grid-cols-5 gap-4">
-                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500">
-                                <input type="text" id="newTitle" placeholder="Doc Title" class="bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500">
-                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500">
-                                <div class="relative bg-slate-50 rounded-xl p-3 flex items-center justify-center cursor-pointer border border-dashed border-slate-300">
-                                    <input type="file" id="newFile" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this)">
-                                    <span id="fileNameLabel" class="text-[10px] text-slate-400 truncate"><i class="fas fa-upload mr-1"></i> Attach Doc</span>
-                                </div>
-                                <button onclick="addNewAssignment()" class="bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-md">Add Entry</button>
+                        <div class="bg-white p-6 rounded-3xl border mb-8">
+                            <h3 class="font-bold mb-4 text-xs uppercase tracking-wider">Quick Add Record</h3>
+                            <div class="grid md:grid-cols-4 gap-4">
+                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 rounded-xl p-3 text-sm">
+                                <input type="text" id="newTitle" placeholder="Doc Title" class="bg-slate-50 rounded-xl p-3 text-sm">
+                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 rounded-xl p-3 text-sm">
+                                <button onclick="addNewAssignment()" class="bg-blue-600 text-white rounded-xl font-bold">Add Entry</button>
                             </div>
                         </div>
-
-                        <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                            <div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row justify-between items-center gap-4">
-                                <div class="relative w-full md:w-80">
-                                    <input type="text" oninput="renderAdminDocs(this.value)" placeholder="Filter assignments..." class="w-full bg-white border border-slate-200 rounded-xl px-10 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                </div>
-                                <div class="flex gap-2">
-                                    <div class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold">Total: <span id="adminDocCount">0</span></div>
-                                </div>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse">
-                                    <thead class="bg-slate-50 border-b">
-                                        <tr>
-                                            <th class="p-4 text-xs font-bold uppercase tracking-widest text-slate-400">Student</th>
-                                            <th class="p-4 text-xs font-bold uppercase tracking-widest text-slate-400">Document</th>
-                                            <th class="p-4 text-xs font-bold uppercase tracking-widest text-slate-400">Status</th>
-                                            <th class="p-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="adminDocList"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <div id="adminDocList" class="bg-white rounded-3xl border overflow-hidden"></div>
                     </div>
                 </section>
             `
         };
 
-        // --- Core Application Logic ---
-
-        function updateFileName(input) {
-            const label = document.getElementById('fileNameLabel');
-            if (input.files && input.files[0]) {
-                label.innerText = input.files[0].name;
-                label.className = "text-[10px] text-blue-600 font-bold truncate";
-            }
-        }
-
+        // --- Navigation Logic ---
         function navigateTo(viewName, scrollTarget = null) {
-            const content = document.getElementById('app-content');
-            content.innerHTML = views[viewName];
-            
+            document.getElementById('app-content').innerHTML = views[viewName];
             if (viewName === 'assignments') renderDocuments();
             else if (viewName === 'stationery') renderProducts();
             else if (viewName === 'admin') renderAdminDocs();
-
+            
             if (scrollTarget) {
                 const target = document.getElementById(scrollTarget);
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
@@ -499,82 +415,50 @@
             }
         }
 
-        // --- Assignment Rendering ---
+        // --- Assignment Logic ---
         function renderDocuments(filter = '') {
             const grid = document.getElementById('documentGrid');
             if (!grid) return;
-
-            const filtered = documents.filter(d => 
-                d.owner.toLowerCase().includes(filter.toLowerCase()) ||
-                d.title.toLowerCase().includes(filter.toLowerCase())
-            );
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-12 text-center">
-                        <div class="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                            <i class="fas fa-folder-open fa-2x"></i>
-                        </div>
-                        <p class="text-slate-400 font-medium">No documents found matching "${filter}"</p>
+            const filtered = documents.filter(d => d.owner.toLowerCase().includes(filter.toLowerCase()));
+            
+            grid.innerHTML = filtered.length ? filtered.map(d => `
+                <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="flex justify-between mb-4">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center"><i class="fas fa-file-pdf"></i></div>
+                        <span class="text-[10px] font-bold uppercase px-2 py-1 rounded-full ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${d.status}</span>
                     </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(d => `
-                <div class="group bg-white rounded-2xl p-6 border border-slate-100 hover:border-blue-100 hover:shadow-xl transition-all duration-300 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
-                            <i class="fas fa-file-pdf fa-xl"></i>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
-                            ${d.status}
-                        </span>
-                    </div>
-                    <h4 class="font-bold text-slate-800 text-lg mb-1 truncate">${d.title}</h4>
-                    <p class="text-slate-400 text-xs mb-4">Student: <span class="text-slate-600 font-semibold">${d.owner}</span></p>
-                    
-                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-50">
-                        <div>
-                            <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Price</p>
-                            <p class="font-extrabold text-blue-600">KES ${d.price}</p>
-                        </div>
+                    <h4 class="font-bold text-slate-800 mb-1 truncate">${d.title}</h4>
+                    <p class="text-slate-400 text-xs mb-4">Student: ${d.owner}</p>
+                    <div class="flex items-center justify-between border-t pt-4">
+                        <span class="font-bold text-blue-600">KES ${d.price}</span>
                         ${d.status === 'paid' ? 
-                            `<button onclick="downloadDoc('${d.file}')" class="bg-slate-800 text-white p-3 rounded-xl hover:bg-black transition shadow-lg"><i class="fas fa-download"></i></button>` :
-                            `<button onclick="requestPayment('${d.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition">Pay to Unlock</button>`
-                        }
+                            `<button class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Download</button>` : 
+                            `<button onclick="payViaWhatsapp(${d.id})" class="bg-green-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Pay & Get</button>`}
                     </div>
                 </div>
-            `).join('');
+            `).join('') : '<p class="col-span-full text-center py-10 text-slate-400">No records found.</p>';
         }
 
-        function downloadDoc(filename) {
-            alert(`Initiating download for: ${filename}\n(In a live environment, this would serve the actual secure file link)`);
-        }
-
-        function requestPayment(id) {
-            const doc = documents.find(d => d.id == id);
-            const msg = `Hello! I'd like to pay KES ${doc.price} to unlock my document: "${doc.title}" (ID: ${doc.id}). My name is ${doc.owner}.`;
+        function payViaWhatsapp(id) {
+            const doc = documents.find(d => d.id === id);
+            const msg = `Hello The Brand Cyber, I'd like to pay for my document: ${doc.title} (${doc.owner}). Price: KES ${doc.price}.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
-        // --- Stationery Logic ---
+        // --- Shop Logic ---
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             if (!grid) return;
-
             grid.innerHTML = products.map(p => `
-                <div class="bg-white border rounded-[1.5rem] p-4 hover:shadow-xl transition-all duration-300 group">
-                    <div class="bg-slate-50 h-40 rounded-2xl mb-4 flex items-center justify-center text-slate-300 group-hover:bg-blue-50 group-hover:text-blue-400 transition-all">
-                        <i class="fas fa-${p.icon} text-4xl"></i>
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg transition">
+                    <div class="h-32 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 text-3xl mb-4">
+                        <i class="fas fa-${p.icon}"></i>
                     </div>
-                    <p class="text-[10px] text-blue-500 font-bold uppercase tracking-widest mb-1">${p.category}</p>
-                    <h3 class="font-bold text-sm mb-3 text-slate-800 h-10 overflow-hidden">${p.name}</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="font-extrabold text-slate-900">KES ${p.price}</span>
-                        <button onclick="addToCart(${p.id})" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition-colors shadow-lg active:scale-90">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                    <p class="text-[10px] text-blue-600 font-bold uppercase mb-1">${p.category}</p>
+                    <h4 class="font-bold text-slate-800 mb-3 text-sm">${p.name}</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-blue-600">KES ${p.price}</span>
+                        <button onclick="addToCart(${p.id})" class="w-8 h-8 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -584,41 +468,20 @@
             const product = products.find(p => p.id === id);
             cart.push(product);
             updateCartUI();
-            
-            // Visual feedback
-            const dot = document.getElementById('cart-count');
-            dot.classList.add('scale-125');
-            setTimeout(() => dot.classList.remove('scale-125'), 200);
         }
 
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.length;
             const container = document.getElementById('cartItems');
-            const totalEl = document.getElementById('cartTotal');
-            
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-400"><i class="fas fa-shopping-basket fa-3x mb-4 opacity-20"></i><p>Your cart is empty</p></div>`;
-                totalEl.innerText = "KES 0.00";
-                return;
-            }
-
-            let total = 0;
-            container.innerHTML = cart.map((item, index) => {
-                total += item.price;
-                return `
-                    <div class="flex gap-4 items-center bg-white border-b border-slate-50 pb-4 animate-fadeIn">
-                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
-                            <i class="fas fa-${item.icon}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h5 class="font-bold text-sm text-slate-800 truncate w-32">${item.name}</h5>
-                            <p class="text-xs text-blue-600 font-bold">KES ${item.price}</p>
-                        </div>
-                        <button onclick="removeFromCart(${index})" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                `;
-            }).join('');
-            totalEl.innerText = `KES ${total.toLocaleString()}`;
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="flex gap-4 items-center">
+                    <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-${item.icon}"></i></div>
+                    <div class="flex-1"><h5 class="text-sm font-bold truncate">${item.name}</h5><p class="text-xs text-blue-600">KES ${item.price}</p></div>
+                    <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').innerText = `KES ${total.toFixed(2)}`;
         }
 
         function removeFromCart(index) {
@@ -627,124 +490,84 @@
         }
 
         function toggleCart() {
-            const bar = document.getElementById('cartSidebar');
-            bar.classList.toggle('translate-x-full');
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('translate-x-full');
         }
 
         function checkout() {
-            if (cart.length === 0) return alert("Your cart is empty!");
-            
+            if (!cart.length) return;
+            const items = cart.map(i => `- ${i.name} (KES ${i.price})`).join('\n');
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const items = cart.map(i => `- ${i.name} (KES ${i.price})`).join('%0A');
-            const msg = `*NEW ORDER FROM WEBSITE*%0A%0AItems:%0A${items}%0A%0A*TOTAL: KES ${total}*%0A%0A Please confirm availability and delivery.`;
-            
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`);
+            const msg = `New Order from Website:\n${items}\nTotal: KES ${total}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
-        // --- Admin Dashboard Logic ---
+        // --- Admin Logic ---
         function openAdmin() {
             if (isAdminAuthenticated) navigateTo('admin');
-            else document.getElementById('adminAuthModal').classList.remove('hidden', 'fade-out');
-            document.getElementById('adminAuthModal').classList.add('flex');
+            else document.getElementById('adminAuthModal').classList.remove('hidden');
         }
 
         function closeAuth() {
             document.getElementById('adminAuthModal').classList.add('hidden');
-            document.getElementById('adminAuthModal').classList.remove('flex');
         }
 
         function verifyAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === ADMIN_PASS) {
                 isAdminAuthenticated = true;
-                document.getElementById('adminBtn').innerHTML = '<i class="fas fa-unlock mr-1"></i> Dashboard';
                 closeAuth();
                 navigateTo('admin');
+                document.getElementById('adminBtn').innerHTML = `<i class="fas fa-check-circle mr-1"></i> Admin`;
             } else {
-                alert("Invalid Admin Token!");
+                alert("Incorrect password!");
             }
         }
 
         function logoutAdmin() {
             isAdminAuthenticated = false;
-            document.getElementById('adminBtn').innerHTML = '<i class="fas fa-lock mr-1 text-slate-400"></i> Admin';
             navigateTo('home');
+            document.getElementById('adminBtn').innerHTML = `<i class="fas fa-lock mr-1"></i> Admin`;
         }
 
         function addNewAssignment() {
-            const nameEl = document.getElementById('newOwner');
-            const titleEl = document.getElementById('newTitle');
-            const priceEl = document.getElementById('newPrice');
-            const fileEl = document.getElementById('newFile');
-
-            if (!nameEl.value || !titleEl.value || !priceEl.value) {
-                return alert("Required fields missing!");
-            }
-
-            const newDoc = {
-                id: Date.now(),
-                owner: nameEl.value,
-                title: titleEl.value,
-                price: parseInt(priceEl.value),
-                status: 'unpaid',
-                date: new Date().toLocaleDateString(),
-                file: fileEl.files[0] ? fileEl.files[0].name : "Document.pdf"
-            };
-
-            documents.unshift(newDoc);
+            const owner = document.getElementById('newOwner').value;
+            const title = document.getElementById('newTitle').value;
+            const price = document.getElementById('newPrice').value;
+            if (!owner || !title || !price) return;
+            documents.unshift({ id: Date.now(), owner, title, price: parseInt(price), status: 'unpaid', date: new Date().toISOString().split('T')[0], file: '#' });
             renderAdminDocs();
-            
-            // Clear
-            nameEl.value = ""; titleEl.value = ""; priceEl.value = ""; fileEl.value = "";
-            document.getElementById('fileNameLabel').innerText = "Attach Doc";
         }
 
-        function renderAdminDocs(filter = '') {
+        function renderAdminDocs() {
             const list = document.getElementById('adminDocList');
             if (!list) return;
-
-            const filtered = documents.filter(d => 
-                d.owner.toLowerCase().includes(filter.toLowerCase()) || 
-                d.title.toLowerCase().includes(filter.toLowerCase())
-            );
-
-            document.getElementById('adminDocCount').innerText = filtered.length;
-
-            list.innerHTML = filtered.map(d => `
-                <tr class="border-b last:border-none hover:bg-slate-50 transition">
-                    <td class="p-4">
-                        <p class="font-bold text-slate-800 text-sm">${d.owner}</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${d.date}</p>
-                    </td>
-                    <td class="p-4">
-                        <p class="text-slate-600 text-sm font-medium">${d.title}</p>
-                        <p class="text-[9px] text-blue-500 font-bold uppercase tracking-tighter"><i class="fas fa-paperclip mr-1"></i> ${d.file}</p>
-                    </td>
-                    <td class="p-4">
-                        <button onclick="togglePaidStatus(${d.id})" class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
-                            ${d.status}
-                        </button>
-                    </td>
-                    <td class="p-4 text-right">
-                        <button onclick="deleteDoc(${d.id})" class="text-red-300 hover:text-red-600 transition p-2"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function togglePaidStatus(id) {
-            const doc = documents.find(d => d.id === id);
-            if (doc) {
-                doc.status = doc.status === 'paid' ? 'unpaid' : 'paid';
-                renderAdminDocs();
-            }
+            list.innerHTML = `
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b">
+                        <tr>
+                            <th class="p-4 text-xs font-bold uppercase">Student</th>
+                            <th class="p-4 text-xs font-bold uppercase">Status</th>
+                            <th class="p-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${documents.map(d => `
+                            <tr class="border-b">
+                                <td class="p-4"><div class="font-bold text-sm">${d.owner}</div><div class="text-[10px] text-slate-400">${d.title}</div></td>
+                                <td class="p-4"><span class="text-[10px] font-bold uppercase ${d.status === 'paid' ? 'text-green-600' : 'text-amber-600'}">${d.status}</span></td>
+                                <td class="p-4 text-right">
+                                    <button onclick="deleteDoc(${d.id})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
         }
 
         function deleteDoc(id) {
-            if (confirm("Permanently delete this record?")) {
-                documents = documents.filter(d => d.id !== id);
-                renderAdminDocs();
-            }
+            documents = documents.filter(d => d.id !== id);
+            renderAdminDocs();
         }
 
         // --- Bot Logic ---
@@ -756,40 +579,25 @@
         function handleBotInput() {
             const input = document.getElementById('botInput');
             const body = document.getElementById('chatBody');
-            const val = input.value.trim().toLowerCase();
-            if (!val) return;
-
-            // User message
+            if (!input.value.trim()) return;
+            const val = input.value.toLowerCase();
             body.innerHTML += `<div class="chat-bubble-user">${input.value}</div>`;
             input.value = "";
-
-            // Bot response
-            let response = "I'm not sure about that. Type 'services' or 'contact' to see how we can help.";
-            
-            if (val.includes("service") || val.includes("do you do")) {
-                response = "We offer high-quality printing, photocopying, online applications (KRA, HELB, e-Citizen), and research assistance.";
-            } else if (val.includes("location") || val.includes("where")) {
-                response = "We are located at Maasai Mara University Gate C, Narok Town.";
-            } else if (val.includes("assignment") || val.includes("homework")) {
-                response = "You can retrieve your completed assignments in our 'Assignments' section using your name.";
-            } else if (val.includes("hello") || val.includes("hi")) {
-                response = "Hi there! How can The Brand help you today?";
-            }
-
+            let response = "I'm not sure. Type 'services' or 'location' to learn more.";
+            if (val.includes("service")) response = "We offer high-quality printing, photocopying, and online applications (KRA, HELB).";
+            else if (val.includes("location") || val.includes("where")) response = "We are at Maasai Mara University Gate C, Narok.";
+            else if (val.includes("assignment")) response = "Check the 'Assignments' tab to find your processed files.";
             setTimeout(() => {
                 body.innerHTML += `<div class="chat-bubble-bot">${response}</div>`;
                 body.scrollTop = body.scrollHeight;
             }, 600);
         }
 
-        // Initialize
+        // Init
         window.onload = () => {
             navigateTo('home');
-            setTimeout(() => {
-                document.getElementById('botWelcome').classList.remove('hidden');
-            }, 3000);
+            setTimeout(() => document.getElementById('botWelcome').classList.remove('hidden'), 3000);
         };
     </script>
 </body>
 </html>
-
