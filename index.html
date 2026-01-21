@@ -266,7 +266,7 @@
 
     <!-- Admin Auth Modal -->
     <div id="adminAuthModal" class="fixed inset-0 bg-black/80 z-[250] hidden items-center justify-center px-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm text-center">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-sm text-center">
             <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-shield-halved fa-2x"></i>
             </div>
@@ -287,6 +287,7 @@
         let isAdminAuthenticated = false;
         let cart = [];
 
+        // Stationery Products (Static)
         let products = [
             { id: 1, name: 'A4 Printing Paper (Rim)', price: 750, category: 'Paper', icon: 'file-lines' },
             { id: 2, name: 'Bic Pen (Blue/Black)', price: 20, category: 'Writing', icon: 'pen' },
@@ -298,10 +299,29 @@
             { id: 8, name: 'Scientific Calculator', price: 1200, category: 'Electronics', icon: 'calculator' }
         ];
 
-        let documents = [
-            { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', file: '#' },
-            { id: 102, owner: 'Kevin Otieno', title: 'Macroeconomics Assignment', price: 50, status: 'paid', date: '2024-01-16', file: '#' }
-        ];
+        // --- Persistent Data Management ---
+        const STORAGE_KEY = 'the_brand_cyber_docs';
+        
+        function loadDocuments() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            return [
+                { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', fileData: null, fileName: null },
+                { id: 102, owner: 'Kevin Otieno', title: 'Macroeconomics Assignment', price: 50, status: 'paid', date: '2024-01-16', fileData: null, fileName: null }
+            ];
+        }
+
+        function saveDocuments() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(documents));
+            } catch (e) {
+                alert("Storage error: The file might be too large for browser memory. Try a smaller file.");
+            }
+        }
+
+        let documents = loadDocuments();
 
         const views = {
             home: `
@@ -360,11 +380,14 @@
             assignments: `
                 <section class="py-16 px-4 bg-slate-900 text-white text-center fade-in">
                     <h2 class="text-4xl font-bold mb-4">Assignment Retrieval</h2>
-                    <p class="text-slate-400 max-w-xl mx-auto">Enter your name to filter records and download your files.</p>
+                    <p class="text-slate-400 max-w-xl mx-auto">Search for your document. If paid, you can download it instantly. Otherwise, initiate payment via WhatsApp.</p>
                 </section>
                 <section class="py-12 px-4 max-w-6xl mx-auto -mt-10">
                     <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
-                        <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search Student Name..." class="w-full bg-slate-100 rounded-2xl px-6 py-4 mb-8 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <div class="relative mb-8">
+                            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Enter your name to find your document..." class="w-full bg-slate-100 rounded-2xl pl-14 pr-6 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
                         <div id="documentGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[200px]"></div>
                     </div>
                 </section>
@@ -385,16 +408,30 @@
                             <h2 class="text-3xl font-bold">Admin Dashboard</h2>
                             <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold text-sm">Logout</button>
                         </div>
-                        <div class="bg-white p-6 rounded-3xl border mb-8">
-                            <h3 class="font-bold mb-4 text-xs uppercase tracking-wider">Quick Add Record</h3>
-                            <div class="grid md:grid-cols-4 gap-4">
-                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 rounded-xl p-3 text-sm">
-                                <input type="text" id="newTitle" placeholder="Doc Title" class="bg-slate-50 rounded-xl p-3 text-sm">
-                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 rounded-xl p-3 text-sm">
-                                <button onclick="addNewAssignment()" class="bg-blue-600 text-white rounded-xl font-bold">Add Entry</button>
+                        <div class="bg-white p-6 rounded-3xl border mb-8 shadow-sm">
+                            <h3 class="font-bold mb-4 text-xs uppercase tracking-wider text-slate-400">Add New Student Entry</h3>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-blue-500 lg:col-span-1">
+                                <input type="text" id="newTitle" placeholder="Document Title" class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-blue-500 lg:col-span-1">
+                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-blue-500 lg:col-span-1">
+                                <div class="relative lg:col-span-1">
+                                    <input type="file" id="newFile" class="hidden" onchange="updateFileNameDisplay()">
+                                    <button onclick="document.getElementById('newFile').click()" class="w-full bg-slate-50 border border-dashed border-slate-300 rounded-xl p-3 text-sm text-slate-500 text-left truncate flex items-center gap-2">
+                                        <i class="fas fa-paperclip"></i> <span id="fileNameLabel">Attach File</span>
+                                    </button>
+                                </div>
+                                <button onclick="addNewAssignment()" id="addBtn" class="bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition lg:col-span-1 flex items-center justify-center">
+                                   <span>Add Record</span>
+                                </button>
                             </div>
                         </div>
-                        <div id="adminDocList" class="bg-white rounded-3xl border overflow-hidden"></div>
+                        <div class="bg-white rounded-3xl border shadow-sm overflow-hidden">
+                            <div class="p-6 border-b bg-slate-50 flex justify-between items-center">
+                                <h3 class="font-bold text-sm uppercase tracking-widest text-slate-500">Manage Assignments</h3>
+                                <p class="text-[10px] text-slate-400 font-bold">Data is saved automatically in this browser.</p>
+                            </div>
+                            <div id="adminDocList"></div>
+                        </div>
                     </div>
                 </section>
             `
@@ -415,34 +452,71 @@
             }
         }
 
-        // --- Assignment Logic ---
+        // --- Assignment Logic (User View) ---
         function renderDocuments(filter = '') {
             const grid = document.getElementById('documentGrid');
             if (!grid) return;
-            const filtered = documents.filter(d => d.owner.toLowerCase().includes(filter.toLowerCase()));
+            const filtered = documents.filter(d => d.owner.toLowerCase().includes(filter.toLowerCase()) || d.title.toLowerCase().includes(filter.toLowerCase()));
             
             grid.innerHTML = filtered.length ? filtered.map(d => `
                 <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition">
                     <div class="flex justify-between mb-4">
-                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center"><i class="fas fa-file-pdf"></i></div>
-                        <span class="text-[10px] font-bold uppercase px-2 py-1 rounded-full ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${d.status}</span>
+                        <div class="w-10 h-10 ${d.status === 'paid' ? 'bg-green-50 text-green-500' : 'bg-amber-50 text-amber-500'} rounded-lg flex items-center justify-center">
+                            <i class="fas ${d.status === 'paid' ? 'fa-file-circle-check' : 'fa-lock'}"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
+                            ${d.status}
+                        </span>
                     </div>
                     <h4 class="font-bold text-slate-800 mb-1 truncate">${d.title}</h4>
                     <p class="text-slate-400 text-xs mb-4">Student: ${d.owner}</p>
                     <div class="flex items-center justify-between border-t pt-4">
                         <span class="font-bold text-blue-600">KES ${d.price}</span>
                         ${d.status === 'paid' ? 
-                            `<button class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Download</button>` : 
-                            `<button onclick="payViaWhatsapp(${d.id})" class="bg-green-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Pay & Get</button>`}
+                            `<button onclick="downloadDoc(${d.id})" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-xs font-bold hover:bg-blue-700 transition flex items-center gap-2">
+                                <i class="fas fa-download"></i> Download
+                            </button>` : 
+                            `<button onclick="payViaWhatsapp(${d.id})" class="bg-green-600 text-white px-5 py-2 rounded-lg text-xs font-bold hover:bg-green-700 transition flex items-center gap-2">
+                                <i class="fab fa-whatsapp"></i> Pay & Get
+                            </button>`}
                     </div>
                 </div>
-            `).join('') : '<p class="col-span-full text-center py-10 text-slate-400">No records found.</p>';
+            `).join('') : '<div class="col-span-full text-center py-20 text-slate-400"><i class="fas fa-search fa-3x mb-4 opacity-20"></i><p>No matching assignments found.</p></div>';
         }
 
         function payViaWhatsapp(id) {
             const doc = documents.find(d => d.id === id);
-            const msg = `Hello The Brand Cyber, I'd like to pay for my document: ${doc.title} (${doc.owner}). Price: KES ${doc.price}.`;
+            const msg = `Hello The Brand Cyber, I want to pay for my document:\n\n*Name:* ${doc.owner}\n*Title:* ${doc.title}\n*Price:* KES ${doc.price}\n\nPlease confirm my payment to enable download.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function downloadDoc(id) {
+            const doc = documents.find(d => d.id === id);
+            if (!doc.fileData) {
+                alert("This document does not have a file attached. Please contact support.");
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = doc.fileData;
+            link.download = doc.fileName || `${doc.title}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cloud-arrow-down fa-2x"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Download Started</h3>
+                    <p class="text-sm text-slate-500 mb-6">Your file "${doc.fileName}" is being downloaded to your device.</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         // --- Shop Logic ---
@@ -471,17 +545,23 @@
         }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.innerText = cart.length;
+            
             const container = document.getElementById('cartItems');
+            if (!container) return;
+            
             container.innerHTML = cart.map((item, idx) => `
-                <div class="flex gap-4 items-center">
+                <div class="flex gap-4 items-center animate-fadeIn">
                     <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-${item.icon}"></i></div>
                     <div class="flex-1"><h5 class="text-sm font-bold truncate">${item.name}</h5><p class="text-xs text-blue-600">KES ${item.price}</p></div>
-                    <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
+            
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cartTotal').innerText = `KES ${total.toFixed(2)}`;
+            const totalEl = document.getElementById('cartTotal');
+            if (totalEl) totalEl.innerText = `KES ${total.toFixed(2)}`;
         }
 
         function removeFromCart(index) {
@@ -498,7 +578,7 @@
             if (!cart.length) return;
             const items = cart.map(i => `- ${i.name} (KES ${i.price})`).join('\n');
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const msg = `New Order from Website:\n${items}\nTotal: KES ${total}`;
+            const msg = `New Order from Website:\n\n${items}\n\n*Total: KES ${total}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
@@ -518,9 +598,9 @@
                 isAdminAuthenticated = true;
                 closeAuth();
                 navigateTo('admin');
-                document.getElementById('adminBtn').innerHTML = `<i class="fas fa-check-circle mr-1"></i> Admin`;
+                document.getElementById('adminBtn').innerHTML = `<i class="fas fa-check-circle mr-1 text-green-500"></i> Admin`;
             } else {
-                alert("Incorrect password!");
+                alert("Access Denied: Incorrect Password");
             }
         }
 
@@ -530,44 +610,158 @@
             document.getElementById('adminBtn').innerHTML = `<i class="fas fa-lock mr-1"></i> Admin`;
         }
 
-        function addNewAssignment() {
+        function updateFileNameDisplay() {
+            const fileInput = document.getElementById('newFile');
+            const label = document.getElementById('fileNameLabel');
+            if (fileInput.files.length > 0) {
+                label.innerText = fileInput.files[0].name;
+            } else {
+                label.innerText = "Attach File";
+            }
+        }
+
+        async function addNewAssignment() {
             const owner = document.getElementById('newOwner').value;
             const title = document.getElementById('newTitle').value;
             const price = document.getElementById('newPrice').value;
-            if (!owner || !title || !price) return;
-            documents.unshift({ id: Date.now(), owner, title, price: parseInt(price), status: 'unpaid', date: new Date().toISOString().split('T')[0], file: '#' });
+            const fileInput = document.getElementById('newFile');
+            const btn = document.getElementById('addBtn');
+            
+            if (!owner || !title || !price) {
+                alert("Please fill student name, title, and price.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
+
+            let fileData = null;
+            let fileName = null;
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                fileName = file.name;
+                fileData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            documents.unshift({ 
+                id: Date.now(), 
+                owner, 
+                title, 
+                price: parseInt(price), 
+                status: 'unpaid', 
+                date: new Date().toISOString().split('T')[0],
+                fileData: fileData,
+                fileName: fileName
+            });
+            
+            saveDocuments();
             renderAdminDocs();
+            
+            // Clear inputs
+            document.getElementById('newOwner').value = "";
+            document.getElementById('newTitle').value = "";
+            document.getElementById('newPrice').value = "";
+            fileInput.value = "";
+            document.getElementById('fileNameLabel').innerText = "Attach File";
+            
+            btn.disabled = false;
+            btn.innerHTML = "Add Record";
+        }
+
+        function togglePaidStatus(id) {
+            const docIndex = documents.findIndex(d => d.id === id);
+            if (docIndex > -1) {
+                documents[docIndex].status = documents[docIndex].status === 'paid' ? 'unpaid' : 'paid';
+                saveDocuments();
+                renderAdminDocs();
+            }
         }
 
         function renderAdminDocs() {
             const list = document.getElementById('adminDocList');
             if (!list) return;
             list.innerHTML = `
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b">
-                        <tr>
-                            <th class="p-4 text-xs font-bold uppercase">Student</th>
-                            <th class="p-4 text-xs font-bold uppercase">Status</th>
-                            <th class="p-4 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${documents.map(d => `
-                            <tr class="border-b">
-                                <td class="p-4"><div class="font-bold text-sm">${d.owner}</div><div class="text-[10px] text-slate-400">${d.title}</div></td>
-                                <td class="p-4"><span class="text-[10px] font-bold uppercase ${d.status === 'paid' ? 'text-green-600' : 'text-amber-600'}">${d.status}</span></td>
-                                <td class="p-4 text-right">
-                                    <button onclick="deleteDoc(${d.id})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
-                                </td>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="p-4 text-[10px] font-bold uppercase text-slate-400">Student & Doc</th>
+                                <th class="p-4 text-[10px] font-bold uppercase text-slate-400">File Attachment</th>
+                                <th class="p-4 text-[10px] font-bold uppercase text-slate-400">Price</th>
+                                <th class="p-4 text-[10px] font-bold uppercase text-slate-400">Payment Status</th>
+                                <th class="p-4 text-right text-[10px] font-bold uppercase text-slate-400">Actions</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
+                        </thead>
+                        <tbody>
+                            ${documents.map(d => `
+                                <tr class="border-b hover:bg-slate-50 transition">
+                                    <td class="p-4">
+                                        <div class="font-bold text-sm text-slate-800">${d.owner}</div>
+                                        <div class="text-[10px] text-slate-400 flex items-center gap-1">
+                                            <i class="fas fa-file-lines"></i> ${d.title}
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        ${d.fileData ? 
+                                            `<span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-bold flex items-center gap-1 w-fit">
+                                                <i class="fas fa-check-double"></i> Attached
+                                            </span>` : 
+                                            `<span class="text-[10px] bg-slate-100 text-slate-400 px-2 py-1 rounded-md font-bold flex items-center gap-1 w-fit">
+                                                <i class="fas fa-times"></i> Missing
+                                            </span>`
+                                        }
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="text-sm font-semibold text-slate-600">KES ${d.price}</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <button onclick="togglePaidStatus(${d.id})" class="flex items-center gap-2 group">
+                                            <div class="w-10 h-5 bg-slate-200 rounded-full relative transition-colors ${d.status === 'paid' ? 'bg-green-500' : 'bg-slate-300'}">
+                                                <div class="absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${d.status === 'paid' ? 'left-6' : 'left-1'}"></div>
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase ${d.status === 'paid' ? 'text-green-600' : 'text-slate-400'}">
+                                                ${d.status}
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button onclick="deleteDoc(${d.id})" class="text-slate-300 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition">
+                                            <i class="fas fa-trash-can"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ${documents.length === 0 ? '<div class="p-10 text-center text-slate-400 text-xs">No records available.</div>' : ''}`;
         }
 
         function deleteDoc(id) {
-            documents = documents.filter(d => d.id !== id);
-            renderAdminDocs();
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+                    <h3 class="font-bold text-xl mb-2 text-red-600">Delete Record?</h3>
+                    <p class="text-sm text-slate-500 mb-6">This action cannot be undone. Student will no longer see this file.</p>
+                    <div class="flex gap-2">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="flex-1 bg-slate-100 py-3 rounded-xl font-bold">Cancel</button>
+                        <button id="confirmDelete" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-bold">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('confirmDelete').onclick = () => {
+                documents = documents.filter(d => d.id !== id);
+                saveDocuments();
+                renderAdminDocs();
+                modal.remove();
+            };
         }
 
         // --- Bot Logic ---
@@ -581,14 +775,16 @@
             const body = document.getElementById('chatBody');
             if (!input.value.trim()) return;
             const val = input.value.toLowerCase();
-            body.innerHTML += `<div class="chat-bubble-user">${input.value}</div>`;
+            body.innerHTML += `<div class="chat-bubble-user animate-fadeIn">${input.value}</div>`;
             input.value = "";
-            let response = "I'm not sure. Type 'services' or 'location' to learn more.";
-            if (val.includes("service")) response = "We offer high-quality printing, photocopying, and online applications (KRA, HELB).";
-            else if (val.includes("location") || val.includes("where")) response = "We are at Maasai Mara University Gate C, Narok.";
-            else if (val.includes("assignment")) response = "Check the 'Assignments' tab to find your processed files.";
+            
+            let response = "I'm not sure. Try asking about 'services', 'location', or 'payment'.";
+            if (val.includes("service")) response = "We offer printing, photocopy, and various online applications like HELB and KRA.";
+            else if (val.includes("location") || val.includes("where")) response = "Find us at Maasai Mara University Gate C, Narok.";
+            else if (val.includes("assignment") || val.includes("pay") || val.includes("download")) response = "Check the 'Assignments' page. Once you pay and the admin verifies, your download link activates.";
+            
             setTimeout(() => {
-                body.innerHTML += `<div class="chat-bubble-bot">${response}</div>`;
+                body.innerHTML += `<div class="chat-bubble-bot animate-fadeIn">${response}</div>`;
                 body.scrollTop = body.scrollHeight;
             }, 600);
         }
@@ -596,7 +792,10 @@
         // Init
         window.onload = () => {
             navigateTo('home');
-            setTimeout(() => document.getElementById('botWelcome').classList.remove('hidden'), 3000);
+            setTimeout(() => {
+                const welcome = document.getElementById('botWelcome');
+                if (welcome) welcome.classList.remove('hidden');
+            }, 3000);
         };
     </script>
 </body>
