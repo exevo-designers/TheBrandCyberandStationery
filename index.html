@@ -149,15 +149,6 @@
             margin-bottom: 8px;
             box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
-
-        /* Receipt Styles */
-        #receipt-print {
-            font-family: 'Courier New', Courier, monospace;
-            width: 300px;
-            background: white;
-            padding: 20px;
-            color: black;
-        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -165,6 +156,7 @@
     <!-- Navigation -->
     <nav class="glass-nav sticky top-0 z-50 px-4 py-3">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo Section -->
             <div class="flex items-center gap-2 md:gap-3 cursor-pointer" onclick="navigateTo('home')">
                 <div class="bg-blue-600 text-white p-2 rounded-lg flex items-center justify-center h-9 w-9 md:h-10 md:w-10">
                     <i class="fas fa-print text-sm md:text-lg"></i>
@@ -175,6 +167,7 @@
                 </div>
             </div>
             
+            <!-- Desktop Links -->
             <div class="hidden lg:flex gap-8 font-medium text-sm">
                 <button onclick="navigateTo('home')" class="hover:text-blue-600 transition">Home</button>
                 <button onclick="navigateTo('home', 'services')" class="hover:text-blue-600 transition">Services</button>
@@ -183,6 +176,7 @@
                 <button onclick="navigateTo('home', 'request-service')" class="hover:text-blue-600 transition">Order Work</button>
             </div>
 
+            <!-- Right Controls -->
             <div class="flex items-center gap-2 md:gap-4">
                 <button onclick="toggleCart()" class="relative p-2 hover:bg-slate-100 rounded-full transition">
                     <i class="fas fa-shopping-cart text-lg"></i>
@@ -191,18 +185,21 @@
                 <button id="adminBtn" onclick="openAdmin()" class="hidden sm:flex text-xs bg-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-300 transition font-bold text-slate-600 items-center">
                     <i class="fas fa-lock mr-1"></i> Admin
                 </button>
+                <!-- Mobile Menu Toggle -->
                 <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-600 text-xl">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
 
+        <!-- Mobile Menu Overlay -->
         <div id="mobileMenu" class="absolute top-full left-0 w-full bg-white border-b shadow-xl lg:hidden flex flex-col p-6 gap-4 font-semibold text-slate-700">
             <button onclick="toggleMobileMenu(); navigateTo('home')" class="text-left py-2 border-b border-slate-50">Home</button>
             <button onclick="toggleMobileMenu(); navigateTo('home', 'services')" class="text-left py-2 border-b border-slate-50">Services</button>
             <button onclick="toggleMobileMenu(); navigateTo('stationery')" class="text-left py-2 border-b border-slate-50">Stationery</button>
             <button onclick="toggleMobileMenu(); navigateTo('assignments')" class="text-left py-2 border-b border-slate-50">Assignments</button>
             <button onclick="toggleMobileMenu(); navigateTo('home', 'request-service')" class="text-left py-2 border-b border-slate-50">Order Work</button>
+            <button onclick="toggleMobileMenu(); openAdmin()" class="text-left py-2 text-blue-600"><i class="fas fa-lock mr-2"></i> Admin Portal</button>
         </div>
     </nav>
 
@@ -227,7 +224,7 @@
                 <p class="text-slate-600 text-sm mb-3 flex items-center gap-3"><i class="fas fa-phone text-blue-600"></i> 0702 502147</p>
                 <p class="text-slate-600 text-sm flex items-center gap-3"><i class="fas fa-envelope text-blue-600"></i> thebrandcyber0@gmail.com</p>
             </div>
-            <div>
+            <div class="md:col-span-2 lg:col-span-1">
                 <h3 class="font-bold text-lg mb-4">Working Hours</h3>
                 <ul class="text-slate-600 text-sm space-y-2">
                     <li class="flex justify-between border-b border-slate-50 pb-1"><span>Mon - Fri</span> <span class="font-semibold">7:00 am – 9:00 pm</span></li>
@@ -241,103 +238,23 @@
         </div>
     </footer>
 
-    <!-- Payment Modal (POS) -->
-    <div id="paymentModal" class="fixed inset-0 bg-black/80 z-[2000] hidden items-center justify-center px-4 backdrop-blur-md">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl scale-95 transition-transform duration-300" id="paymentContent">
-            <div class="bg-blue-600 p-8 text-white text-center relative">
-                <button onclick="closePayment()" class="absolute top-6 right-6 opacity-60 hover:opacity-100 transition"><i class="fas fa-times text-xl"></i></button>
-                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-wallet text-2xl"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-1">Complete Payment</h3>
-                <p class="text-xs opacity-70 uppercase tracking-widest font-bold">Order Securely via M-PESA</p>
-            </div>
-            
-            <div class="p-8">
-                <div class="flex justify-between items-center mb-8 bg-slate-50 p-4 rounded-2xl border">
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Payable Amount</p>
-                        <h4 class="text-2xl font-black text-blue-600" id="modalTotal">KES 0</h4>
-                    </div>
-                    <div class="text-right">
-                        <i class="fas fa-shield-check text-green-500 text-2xl"></i>
-                    </div>
-                </div>
-
-                <div class="space-y-4 mb-8">
-                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border">
-                        <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center text-white font-bold italic">M</div>
-                        <div>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Paybill Number</p>
-                            <p class="font-black text-lg">247247</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border">
-                        <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white"><i class="fas fa-hashtag"></i></div>
-                        <div>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Account Name</p>
-                            <p class="font-black text-lg">0702502147</p>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="text-[10px] text-slate-400 text-center mb-6 leading-relaxed">
-                    Once paid, click below to notify us and download your official receipt.
-                </p>
-
-                <div class="grid grid-cols-1 gap-3">
-                    <button onclick="confirmAndReceipt()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition flex items-center justify-center gap-2">
-                        I've Paid - Download Receipt <i class="fas fa-file-invoice"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hidden Receipt for Printing -->
-    <div id="receipt-container" style="position: absolute; left: -9999px;">
-        <div id="receipt-print">
-            <div style="text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                <h2 style="margin: 0;">THE BRAND CYBER</h2>
-                <p style="font-size: 10px; margin: 2px 0;">MMU GATE C - NAROK</p>
-                <p style="font-size: 10px; margin: 0;">TEL: 0702 502147</p>
-            </div>
-            <div style="font-size: 12px; margin-bottom: 10px;">
-                <p style="margin: 2px 0;"><strong>RECEIPT:</strong> #<span id="r-no"></span></p>
-                <p style="margin: 2px 0;"><strong>DATE:</strong> <span id="r-date"></span></p>
-                <p style="margin: 2px 0;"><strong>CLIENT:</strong> <span id="r-name"></span></p>
-            </div>
-            <table style="width: 100%; font-size: 12px; border-bottom: 2px dashed #ccc; margin-bottom: 10px;">
-                <thead>
-                    <tr style="text-align: left; border-bottom: 1px solid #eee;">
-                        <th style="padding: 5px 0;">ITEM</th>
-                        <th style="text-align: right; padding: 5px 0;">TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody id="r-items"></tbody>
-            </table>
-            <div style="text-align: right; font-weight: bold; font-size: 14px;">
-                TOTAL: KES <span id="r-total"></span>
-            </div>
-            <div style="text-align: center; margin-top: 20px; font-size: 10px;">
-                <p>THANK YOU FOR YOUR BUSINESS!</p>
-                <p>Efficiency Meets Excellence</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating UI elements like Bot, Cart Sidebar, etc remain same... -->
+    <!-- Floating Bot Button -->
     <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[1000] flex flex-col items-end gap-3">
-        <div id="botWelcome" class="bg-white px-4 py-2 rounded-2xl shadow-xl border text-sm font-medium animate-bounce hidden max-w-[200px] text-center">👋 Need help? Chat with us!</div>
-        <button onclick="toggleBot()" class="bg-green-500 text-white w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:bg-green-600 transition-transform active:scale-90 relative">
+        <div id="botWelcome" class="bg-white px-4 py-2 rounded-2xl shadow-xl border text-sm font-medium animate-bounce hidden max-w-[200px] text-center md:max-w-none">
+            👋 Need help? Chat with us!
+        </div>
+        <button onclick="toggleBot()" class="bg-green-500 text-white w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl flex items-center justify-center text-xl md:text-2xl hover:bg-green-600 transition-transform active:scale-90 relative">
             <i class="fab fa-whatsapp"></i>
             <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
         </button>
     </div>
 
+    <!-- Bot Window -->
     <div id="botWindow" class="bot-window">
         <div class="bg-green-600 p-4 text-white flex items-center gap-3">
-            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fas fa-robot"></i></div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-robot"></i>
+            </div>
             <div>
                 <h4 class="font-bold text-sm">The Brand Assistant</h4>
                 <p class="text-[10px] opacity-80">Online | Auto-Responder</p>
@@ -345,17 +262,23 @@
             <button onclick="toggleBot()" class="ml-auto opacity-70 hover:opacity-100"><i class="fas fa-times"></i></button>
         </div>
         <div id="chatBody" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2 bg-[#e5ddd5]">
-            <div class="chat-bubble-bot">Hello! Welcome to The Brand Cyber & Stationery. How can I help you?</div>
+            <div class="chat-bubble-bot">
+                Hello! Welcome to The Brand Cyber & Stationery. How can I help you today?
+            </div>
         </div>
         <div class="p-3 bg-white border-t flex gap-2">
             <input type="text" id="botInput" placeholder="Type a message..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" onkeypress="if(event.key === 'Enter') handleBotInput()">
-            <button onclick="handleBotInput()" class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-700"><i class="fas fa-paper-plane"></i></button>
+            <button onclick="handleBotInput()" class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-700 transition"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
+    <!-- Cart Sidebar -->
     <div id="cartSidebar" class="fixed inset-y-0 right-0 w-full sm:w-80 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-slate-50">
-            <div><h3 class="font-bold text-lg">Your Cart</h3><p class="text-[10px] text-slate-400 uppercase font-bold">Shopping Items</p></div>
+            <div>
+                <h3 class="font-bold text-lg">Your Cart</h3>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Shopping Items</p>
+            </div>
             <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-900 transition p-2"><i class="fas fa-times text-xl"></i></button>
         </div>
         <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
@@ -364,27 +287,35 @@
                 <span class="text-slate-400 text-xs font-bold uppercase tracking-widest">Grand Total</span>
                 <span id="cartTotal" class="text-xl font-extrabold text-blue-600">KES 0.00</span>
             </div>
-            <button onclick="checkoutCart()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition active:scale-[0.98]">
-                Checkout Order <i class="fas fa-check-circle ml-2"></i>
+            <button onclick="checkout()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition active:scale-[0.98]">
+                Order via WhatsApp <i class="fab fa-whatsapp ml-2"></i>
             </button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Admin Auth Modal -->
+    <div id="adminAuthModal" class="fixed inset-0 bg-black/80 z-[250] hidden items-center justify-center px-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-shield-halved fa-2x"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Admin Auth</h3>
+            <p class="text-xs text-slate-400 mb-8 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
+            <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-slate-50 border rounded-xl p-4 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center tracking-widest">
+            <div class="flex gap-3">
+                <button onclick="closeAuth()" class="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
+                <button onclick="verifyAdmin()" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl">Verify</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const WHATSAPP_NUMBER = "254702502147";
         const ADMIN_PASS = "Hemstone_2019"; 
+        const EMAIL_RECIPIENT = "thebrandcyber0@gmail.com";
         
+        let isAdminAuthenticated = false;
         let cart = [];
-        let currentOrder = null;
-
-        const serviceRates = {
-            "Assignment/Academic Paper": 100,
-            "Printing/Photocopy": 10,
-            "KRA/HELB/KUCCPS App": 200,
-            "Graphic Design/CV": 500,
-            "Other": 150
-        };
 
         let products = [
             { id: 1, name: 'A4 Printing Paper (Rim)', price: 750, category: 'Paper', icon: 'file-lines' },
@@ -397,13 +328,34 @@
             { id: 8, name: 'Scientific Calculator', price: 1200, category: 'Electronics', icon: 'calculator' }
         ];
 
+        const STORAGE_KEY = 'the_brand_cyber_docs';
+        function loadDocuments() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [
+                { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', fileData: null, fileName: null }
+            ];
+        }
+        function saveDocuments() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(documents));
+        }
+
+        let documents = loadDocuments();
+
         const views = {
             home: `
-                <section id="hero" class="relative min-h-[70vh] flex items-center px-4 overflow-hidden fade-in py-20 md:py-0">
-                    <div class="hero-bg-container"><div class="hero-overlay"></div><div class="slideshow"><div class="slide" style="background-image: url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&q=80&w=1600')"></div><div class="slide" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600')"></div></div></div>
+                <section id="hero" class="relative min-h-[70vh] md:h-[80vh] flex items-center px-4 overflow-hidden fade-in py-20 md:py-0">
+                    <div class="hero-bg-container">
+                        <div class="hero-overlay"></div>
+                        <div class="slideshow">
+                            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&q=80&w=1600')"></div>
+                            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600')"></div>
+                        </div>
+                    </div>
                     <div class="relative z-10 max-w-7xl mx-auto w-full text-white">
                         <div class="max-w-2xl">
-                            <span class="bg-blue-600/40 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold mb-6 inline-block uppercase tracking-widest"><i class="fas fa-map-marker-alt mr-2"></i> Gate C, MMU</span>
+                            <span class="bg-blue-600/40 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold mb-6 inline-block uppercase tracking-widest">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Gate C, MMU
+                            </span>
                             <h2 class="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Professional <br><span class="text-blue-400">Cyber Solutions.</span></h2>
                             <p class="text-base md:text-lg mb-10 opacity-90 max-w-lg">Efficiency meets excellence. Get your assignments done professionally and stationery delivered to your doorstep.</p>
                             <div class="flex flex-col sm:flex-row gap-4">
@@ -415,7 +367,10 @@
                 </section>
 
                 <section id="services" class="py-16 md:py-24 px-4 bg-slate-50">
-                    <div class="max-w-7xl mx-auto text-center mb-12"><h2 class="text-2xl md:text-3xl font-bold mb-4">Our Premium Services</h2><div class="w-16 h-1 bg-blue-600 mx-auto rounded-full"></div></div>
+                    <div class="max-w-7xl mx-auto text-center mb-12 md:mb-16">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-4">Our Premium Services</h2>
+                        <div class="w-16 h-1 bg-blue-600 mx-auto rounded-full"></div>
+                    </div>
                     <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition">
                             <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-print"></i></div>
@@ -425,7 +380,7 @@
                         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition">
                             <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-globe"></i></div>
                             <h3 class="font-bold text-xl mb-3">Online Apps</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">KUCCPS, HELB, KRA, and e-Citizen services handled by experts for guaranteed success.</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">KUCCPS, HELB, KRA, and e-Citizen services handled by seasoned experts for success.</p>
                         </div>
                         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition">
                             <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6"><i class="fas fa-book-open"></i></div>
@@ -442,50 +397,46 @@
 
                 <section id="request-service" class="py-16 md:py-24 px-4 bg-white">
                     <div class="max-w-4xl mx-auto">
-                        <div class="text-center mb-10"><h2 class="text-3xl md:text-4xl font-extrabold mb-4">Service POS Portal</h2><p class="text-slate-500 text-sm">Calculate your service costs and place your order instantly.</p></div>
-                        <div class="bg-slate-50 rounded-[2rem] p-6 md:p-12 border border-slate-100 shadow-xl">
-                            <form onsubmit="handleOrderSubmission(event)">
-                                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                                    <div>
-                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Client Full Name</label>
-                                        <input type="text" id="orderName" required placeholder="Enter your name" class="w-full bg-white border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Phone Number</label>
-                                        <input type="tel" id="orderPhone" required placeholder="07XX XXX XXX" class="w-full bg-white border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                                    </div>
-                                </div>
+                        <div class="text-center mb-10 md:mb-12">
+                            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Request a Service</h2>
+                            <p class="text-slate-500 text-sm md:text-base">Fill the form below and we will get back to you within minutes.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 border border-slate-100 shadow-xl">
+                            <form action="https://formsubmit.co/${EMAIL_RECIPIENT}" method="POST">
+                                <input type="hidden" name="_subject" value="New Service Request - The Brand Cyber">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_captcha" value="false">
                                 
                                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                                     <div>
-                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Choose Service</label>
-                                        <select id="serviceSelect" onchange="calculateBudget()" required class="w-full bg-white border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none">
-                                            <option value="" disabled selected>Select service...</option>
-                                            <option value="Assignment/Academic Paper">Assignment / Academic Paper</option>
-                                            <option value="Printing/Photocopy">Printing / Photocopy</option>
-                                            <option value="KRA/HELB/KUCCPS App">KRA / HELB / KUCCPS Application</option>
-                                            <option value="Graphic Design/CV">Graphic Design / CV Writing</option>
-                                            <option value="Other">Other Cyber Service</option>
-                                        </select>
+                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Full Name</label>
+                                        <input type="text" name="Client Name" required placeholder="Your name" class="w-full bg-white border border-slate-200 rounded-xl md:rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Quantity (Pages/Units)</label>
-                                        <input type="number" id="serviceQty" oninput="calculateBudget()" value="1" min="1" class="w-full bg-white border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Phone Number</label>
+                                        <input type="tel" name="Phone Number" required placeholder="07XX XXX XXX" class="w-full bg-white border border-slate-200 rounded-xl md:rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </div>
                                 </div>
-
-                                <div class="mb-8 bg-blue-600 text-white p-6 rounded-2xl flex justify-between items-center shadow-lg">
-                                    <div><p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Estimated Total Cost</p><h4 class="text-3xl font-black" id="budgetDisplay">KES 0</h4></div>
-                                    <div class="bg-white/20 p-4 rounded-xl text-center"><p class="text-[8px] font-bold uppercase mb-1">Status</p><p class="text-xs font-bold">READY</p></div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Service Required</label>
+                                    <select name="Service Category" required class="w-full bg-white border border-slate-200 rounded-xl md:rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
+                                        <option value="" disabled selected>Select a service...</option>
+                                        <option value="Assignment/Academic Paper">Assignment / Academic Paper</option>
+                                        <option value="Printing/Photocopy">Printing / Photocopy</option>
+                                        <option value="KRA/HELB/KUCCPS App">KRA / HELB / KUCCPS Application</option>
+                                        <option value="Graphic Design/CV">Graphic Design / CV Writing</option>
+                                        <option value="Other">Other Cyber Service</option>
+                                    </select>
                                 </div>
 
                                 <div class="mb-8">
                                     <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Specific Instructions</label>
-                                    <textarea id="orderInstructions" rows="4" required placeholder="Describe your requirements clearly..." class="w-full bg-white border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                                    <textarea name="Instructions" rows="4" required placeholder="Tell us exactly what you need done..." class="w-full bg-white border border-slate-200 rounded-xl md:rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                                 </div>
 
-                                <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 shadow-xl transition active:scale-[0.98]">
-                                    PLACE ORDER <i class="fas fa-shopping-basket ml-2"></i>
+                                <button type="submit" class="w-full bg-blue-600 text-white py-4 md:py-5 rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition active:scale-[0.98]">
+                                    Submit Request <i class="fas fa-paper-plane ml-2"></i>
                                 </button>
                             </form>
                         </div>
@@ -496,12 +447,15 @@
                 <section class="py-12 md:py-20 px-4 bg-slate-900 text-white text-center fade-in">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">Assignment Retrieval</h2>
                     <p class="text-slate-400 max-w-xl mx-auto text-sm md:text-base px-4">Find your processed work here using your name. Secure and private.</p>
+                    <div class="mt-6 inline-flex flex-wrap justify-center items-center gap-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-[10px] md:text-xs font-bold border border-blue-500/30">
+                        <i class="fas fa-shield-alt"></i> Self-Destruct Mode: Downloads auto-delete for privacy
+                    </div>
                 </section>
                 <section class="py-12 px-4 max-w-6xl mx-auto -mt-10">
                     <div class="bg-white p-6 md:p-10 rounded-[2rem] shadow-xl border border-slate-100">
                         <div class="relative mb-8">
                             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search by name..." class="w-full bg-slate-100 rounded-2xl pl-14 pr-6 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search by name or title..." class="w-full bg-slate-100 rounded-2xl pl-14 pr-6 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm md:text-base">
                         </div>
                         <div id="documentGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[200px]"></div>
                     </div>
@@ -515,170 +469,318 @@
                 <section class="py-12 px-4 max-w-7xl mx-auto">
                     <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"></div>
                 </section>
+            `,
+            admin: `
+                <section class="py-8 md:py-12 px-4 bg-slate-100 min-h-screen fade-in">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
+                            <div>
+                                <h2 class="text-3xl font-bold">Admin Portal</h2>
+                                <p class="text-slate-500 text-xs mt-1">Manage processed documents and inventory.</p>
+                            </div>
+                            <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm border border-red-100">Logout</button>
+                        </div>
+                        
+                        <!-- Upload Form -->
+                        <div class="bg-white p-6 md:p-8 rounded-3xl border mb-8 shadow-sm">
+                            <h3 class="font-bold mb-6 text-xs uppercase tracking-wider text-slate-400">Upload Processed Work</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <input type="text" id="newTitle" placeholder="Work Title" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <div class="relative">
+                                    <input type="file" id="newFile" class="hidden" onchange="updateFileNameDisplay()">
+                                    <button onclick="document.getElementById('newFile').click()" class="w-full bg-slate-50 border border-dashed border-slate-300 rounded-xl p-3.5 text-sm text-slate-500 text-left truncate flex items-center gap-2">
+                                        <i class="fas fa-paperclip"></i> <span id="fileNameLabel">Attach File</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button onclick="addNewAssignment()" id="addBtn" class="w-full lg:w-auto px-10 py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Add Entry</button>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div class="bg-white rounded-3xl border shadow-sm overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <div id="adminDocList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             `
         };
 
-        function calculateBudget() {
-            const service = document.getElementById('serviceSelect')?.value;
-            const qty = parseInt(document.getElementById('serviceQty')?.value) || 0;
-            const display = document.getElementById('budgetDisplay');
-            if (!service || !display) return;
-            const rate = serviceRates[service] || 0;
-            const total = rate * qty;
-            display.innerText = `KES ${total.toLocaleString()}`;
-            return total;
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        function handleOrderSubmission(e) {
-            e.preventDefault();
-            const total = calculateBudget();
-            const name = document.getElementById('orderName').value;
-            const service = document.getElementById('serviceSelect').value;
-            const qty = document.getElementById('serviceQty').value;
-            const instructions = document.getElementById('orderInstructions').value;
-
-            currentOrder = {
-                name,
-                items: [{ name: service, qty: qty, price: serviceRates[service], total: total }],
-                total: total,
-                id: Math.floor(1000 + Math.random() * 9000),
-                date: new Date().toLocaleString()
-            };
-
-            openPayment(total);
-        }
-
-        function openPayment(amount) {
-            document.getElementById('modalTotal').innerText = `KES ${amount.toLocaleString()}`;
-            const modal = document.getElementById('paymentModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => document.getElementById('paymentContent').classList.remove('scale-95'), 10);
-        }
-
-        function closePayment() {
-            const modal = document.getElementById('paymentModal');
-            document.getElementById('paymentContent').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        function checkoutCart() {
-            if (!cart.length) return;
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            
-            currentOrder = {
-                name: "Stationery Client",
-                items: cart.map(i => ({ name: i.name, qty: 1, price: i.price, total: i.price })),
-                total: total,
-                id: Math.floor(1000 + Math.random() * 9000),
-                date: new Date().toLocaleString()
-            };
-
-            toggleCart();
-            openPayment(total);
-        }
-
-        async function confirmAndReceipt() {
-            if (!currentOrder) return;
-            
-            // 1. Prepare Receipt Data
-            document.getElementById('r-no').innerText = currentOrder.id;
-            document.getElementById('r-date').innerText = currentOrder.date;
-            document.getElementById('r-name').innerText = currentOrder.name;
-            document.getElementById('r-total').innerText = currentOrder.total.toLocaleString();
-            
-            const tbody = document.getElementById('r-items');
-            tbody.innerHTML = currentOrder.items.map(i => `
-                <tr>
-                    <td style="padding: 5px 0;">${i.name} (x${i.qty})</td>
-                    <td style="text-align: right; padding: 5px 0;">${i.total}</td>
-                </tr>
-            `).join('');
-
-            // 2. WhatsApp Notification
-            const itemsList = currentOrder.items.map(i => `- ${i.name} (x${i.qty})`).join('\n');
-            const msg = `PAYMENT CONFIRMED!\n\nOrder ID: #${currentOrder.id}\nClient: ${currentOrder.name}\nItems:\n${itemsList}\nTotal: KES ${currentOrder.total}\n\nPlease check my work request!`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
-
-            // 3. Download Receipt Image
-            const receiptEl = document.getElementById('receipt-print');
-            const canvas = await html2canvas(receiptEl);
-            const image = canvas.toDataURL("image/png");
-            const link = document.createElement('a');
-            link.download = `TheBrand_Receipt_${currentOrder.id}.png`;
-            link.href = image;
-            link.click();
-
-            // 4. Cleanup
-            cart = [];
-            updateCartUI();
-            closePayment();
-            alert("Order Successful! Your receipt is downloading. We've notified the team via WhatsApp.");
-        }
-
-        // Standard helpers (Navigation, Cart management, Bot etc.)
         function navigateTo(viewName, scrollTarget = null) {
             document.getElementById('app-content').innerHTML = views[viewName];
-            if (viewName === 'stationery') renderProducts();
+            if (viewName === 'assignments') renderDocuments();
+            else if (viewName === 'stationery') renderProducts();
+            else if (viewName === 'admin') renderAdminDocs();
+            
             if (scrollTarget) {
                 const target = document.getElementById(scrollTarget);
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
-            } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function renderDocuments(filter = '') {
+            const grid = document.getElementById('documentGrid');
+            if (!grid) return;
+            const filtered = documents.filter(d => d.owner.toLowerCase().includes(filter.toLowerCase()) || d.title.toLowerCase().includes(filter.toLowerCase()));
+            
+            grid.innerHTML = filtered.length ? filtered.map(d => `
+                <div class="bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-sm relative overflow-hidden flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 ${d.status === 'paid' ? 'bg-green-50 text-green-500' : 'bg-amber-50 text-amber-500'} rounded-lg flex items-center justify-center">
+                            <i class="fas ${d.status === 'paid' ? 'fa-file-circle-check' : 'fa-lock'}"></i>
+                        </div>
+                        <span class="text-[9px] md:text-[10px] font-bold uppercase px-2 py-1 rounded-full ${d.status === 'paid' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
+                            ${d.status}
+                        </span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1 truncate">${d.title}</h4>
+                    <p class="text-slate-400 text-xs mb-6">Student: ${d.owner}</p>
+                    <div class="mt-auto flex items-center justify-between border-t pt-4">
+                        <span class="font-bold text-blue-600">KES ${d.price}</span>
+                        ${d.status === 'paid' ? 
+                            `<button onclick="downloadDoc(${d.id})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-[10px] md:text-xs font-bold flex items-center gap-2">
+                                <i class="fas fa-download"></i> Get File
+                             </button>` : 
+                            `<button onclick="payViaWhatsapp(${d.id})" class="bg-green-600 text-white px-4 py-2 rounded-lg text-[10px] md:text-xs font-bold">Pay & Collect</button>`}
+                    </div>
+                </div>
+            `).join('') : '<div class="col-span-full text-center py-20 text-slate-400">No matching assignments found.</div>';
+        }
+
+        function payViaWhatsapp(id) {
+            const doc = documents.find(d => d.id === id);
+            const msg = `Hello The Brand Cyber, I want to pay for my document:\n\n*Name:* ${doc.owner}\n*Title:* ${doc.title}\n*Price:* KES ${doc.price}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function downloadDoc(id) {
+            const docIndex = documents.findIndex(d => d.id === id);
+            if (docIndex === -1) return;
+            
+            const doc = documents[docIndex];
+            if (!doc.fileData) { alert("File missing in storage."); return; }
+
+            const link = document.createElement('a');
+            link.href = doc.fileData;
+            link.download = doc.fileName || "document.pdf";
+            link.click();
+
+            setTimeout(() => {
+                documents.splice(docIndex, 1);
+                saveDocuments();
+                renderDocuments(document.getElementById('assignSearch')?.value || '');
+            }, 1000); 
         }
 
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             if (!grid) return;
             grid.innerHTML = products.map(p => `
-                <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col hover:shadow-md transition">
-                    <div class="h-24 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 text-2xl mb-4"><i class="fas fa-${p.icon}"></i></div>
-                    <h4 class="font-bold text-slate-800 mb-3 text-xs line-clamp-2 min-h-[2.5rem]">${p.name}</h4>
+                <div class="bg-white p-4 md:p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col hover:shadow-md transition">
+                    <div class="h-24 md:h-32 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 text-2xl md:text-3xl mb-4">
+                        <i class="fas fa-${p.icon}"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-3 text-xs md:text-sm line-clamp-2 min-h-[2.5rem]">${p.name}</h4>
                     <div class="flex items-center justify-between mt-auto">
-                        <span class="font-bold text-blue-600 text-xs">KES ${p.price}</span>
-                        <button onclick="addToCart(${p.id})" class="w-8 h-8 bg-slate-900 text-white rounded-lg active:scale-95 transition"><i class="fas fa-plus text-xs"></i></button>
+                        <span class="font-bold text-blue-600 text-xs md:text-base">KES ${p.price}</span>
+                        <button onclick="addToCart(${p.id})" class="w-8 h-8 md:w-9 md:h-9 bg-slate-900 text-white rounded-lg active:scale-95 transition"><i class="fas fa-plus text-xs"></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function addToCart(id) { cart.push(products.find(p => p.id === id)); updateCartUI(); }
-        function removeFromCart(idx) { cart.splice(idx, 1); updateCartUI(); }
-        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('translate-x-full'); }
+        function addToCart(id) {
+            cart.push(products.find(p => p.id === id));
+            updateCartUI();
+        }
+
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.length;
             const container = document.getElementById('cartItems');
-            if (container) {
-                container.innerHTML = cart.length ? cart.map((i, idx) => `
-                    <div class="flex gap-4 items-center bg-slate-50 p-3 rounded-xl">
-                        <div class="flex-1 text-xs font-bold truncate">${i.name}</div>
-                        <div class="font-bold text-blue-600">KES ${i.price}</div>
-                        <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash-can"></i></button>
-                    </div>
-                `).join('') : '<div class="text-center py-12 text-slate-400 text-sm">Cart is empty</div>';
-            }
+            if (!container) return;
+            container.innerHTML = cart.length ? cart.map((item, idx) => `
+                <div class="flex gap-4 items-center bg-slate-50 p-3 rounded-xl">
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-slate-300"><i class="fas fa-${item.icon}"></i></div>
+                    <div class="flex-1"><h5 class="text-xs font-bold truncate">${item.name}</h5><p class="text-[10px] font-bold text-blue-600">KES ${item.price}</p></div>
+                    <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500 p-2"><i class="fas fa-trash-can"></i></button>
+                </div>
+            `).join('') : '<div class="text-center py-12 text-slate-400 text-sm">Your cart is empty</div>';
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            if (document.getElementById('cartTotal')) document.getElementById('cartTotal').innerText = `KES ${total.toLocaleString()}`;
+            document.getElementById('cartTotal').innerText = `KES ${total.toLocaleString()}`;
         }
 
-        function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
-        function toggleBot() { document.getElementById('botWindow').classList.toggle('bot-active'); document.getElementById('botWelcome').classList.add('hidden'); }
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('translate-x-full');
+        }
+
+        function checkout() {
+            if (!cart.length) return;
+            const items = cart.map(i => `- ${i.name}`).join('\n');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const msg = `New Order from Website:\n------------------\n${items}\n------------------\nTotal: KES ${total}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function openAdmin() {
+            if (isAdminAuthenticated) navigateTo('admin');
+            else document.getElementById('adminAuthModal').classList.remove('hidden');
+        }
+
+        function closeAuth() { document.getElementById('adminAuthModal').classList.add('hidden'); }
+
+        function verifyAdmin() {
+            if (document.getElementById('adminPass').value === ADMIN_PASS) {
+                isAdminAuthenticated = true;
+                closeAuth();
+                navigateTo('admin');
+                document.getElementById('adminBtn').innerHTML = `<i class="fas fa-check-circle mr-1 text-green-500"></i> Admin`;
+            } else { 
+                const input = document.getElementById('adminPass');
+                input.classList.add('ring-2', 'ring-red-500');
+                setTimeout(() => input.classList.remove('ring-2', 'ring-red-500'), 1000);
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            navigateTo('home');
+            document.getElementById('adminBtn').innerHTML = `<i class="fas fa-lock mr-1"></i> Admin`;
+        }
+
+        function updateFileNameDisplay() {
+            const fileInput = document.getElementById('newFile');
+            document.getElementById('fileNameLabel').innerText = fileInput.files.length ? fileInput.files[0].name : "Attach File";
+        }
+
+        async function addNewAssignment() {
+            const owner = document.getElementById('newOwner').value;
+            const title = document.getElementById('newTitle').value;
+            const price = document.getElementById('newPrice').value;
+            const fileInput = document.getElementById('newFile');
+            
+            if (!owner || !title || !price) { alert("Please fill all details"); return; }
+
+            let fileData = null;
+            let fileName = null;
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                fileName = file.name;
+                fileData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            documents.unshift({ id: Date.now(), owner, title, price: parseInt(price), status: 'unpaid', date: new Date().toISOString().split('T')[0], fileData, fileName });
+            saveDocuments();
+            renderAdminDocs();
+            document.getElementById('newOwner').value = ""; 
+            document.getElementById('newTitle').value = ""; 
+            document.getElementById('newPrice').value = "";
+            document.getElementById('fileNameLabel').innerText = "Attach File";
+        }
+
+        function togglePaidStatus(id) {
+            const doc = documents.find(d => d.id === id);
+            if (doc) { doc.status = doc.status === 'paid' ? 'unpaid' : 'paid'; saveDocuments(); renderAdminDocs(); }
+        }
+
+        function renderAdminDocs() {
+            const list = document.getElementById('adminDocList');
+            if (!list) return;
+            list.innerHTML = `
+                <table class="w-full text-left min-w-[600px]">
+                    <thead class="bg-slate-50 border-b">
+                        <tr>
+                            <th class="p-4 text-[10px] uppercase text-slate-400 font-bold">Student/Task</th>
+                            <th class="p-4 text-[10px] uppercase text-slate-400 font-bold">Attachment</th>
+                            <th class="p-4 text-[10px] uppercase text-slate-400 font-bold">Payment</th>
+                            <th class="p-4 text-right"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${documents.map(d => `
+                            <tr class="border-b hover:bg-slate-50/50 transition">
+                                <td class="p-4">
+                                    <p class="text-sm font-bold text-slate-700">${d.owner}</p>
+                                    <p class="text-[10px] text-slate-400 font-medium">${d.title}</p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-xs ${d.fileData ? 'text-green-600 bg-green-50' : 'text-slate-400 bg-slate-50'} px-2 py-1 rounded-md font-medium">
+                                        ${d.fileData ? 'Attached' : 'Missing'}
+                                    </span>
+                                </td>
+                                <td class="p-4">
+                                    <button onclick="togglePaidStatus(${d.id})" class="text-[10px] uppercase font-bold px-3 py-1 rounded-full transition ${d.status === 'paid' ? 'bg-green-600 text-white' : 'bg-slate-200 text-slate-600'}">
+                                        ${d.status}
+                                    </button>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button onclick="deleteDoc(${d.id})" class="text-slate-300 hover:text-red-500 p-2"><i class="fas fa-trash-can"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                ${documents.length === 0 ? '<div class="p-12 text-center text-slate-400 text-sm italic">No entries found in registry.</div>' : ''}
+            `;
+        }
+
+        function deleteDoc(id) {
+            if(confirm("Permanently delete this entry?")) { 
+                documents = documents.filter(d => d.id !== id); 
+                saveDocuments(); 
+                renderAdminDocs(); 
+            }
+        }
+
+        function toggleBot() { 
+            document.getElementById('botWindow').classList.toggle('bot-active'); 
+            document.getElementById('botWelcome').classList.add('hidden'); 
+        }
+
         function handleBotInput() {
             const input = document.getElementById('botInput');
             const body = document.getElementById('chatBody');
             if (!input.value.trim()) return;
+            
             const userMsg = input.value;
-            body.innerHTML += `<div class="chat-bubble-user text-right">${userMsg}</div>`;
+            body.innerHTML += `<div class="chat-bubble-user">${userMsg}</div>`;
             input.value = "";
+            body.scrollTop = body.scrollHeight;
+
             setTimeout(() => {
-                body.innerHTML += `<div class="chat-bubble-bot">I'm the Brand Assistant! Use the form to order work or shop stationery.</div>`;
+                let response = "I'm the Brand Assistant. How can I help? You can ask about 'services', 'location', or 'stationery'.";
+                const q = userMsg.toLowerCase();
+                
+                if (q.includes('service') || q.includes('offer')) response = "We offer professional printing, photocopies, assignments, and online apps (KRA, HELB, KUCCPS).";
+                else if (q.includes('location') || q.includes('where')) response = "We are located at Maasai Mara University Gate C, Bomet Road, Narok.";
+                else if (q.includes('price') || q.includes('cost')) response = "Our prices are very student-friendly! Check our Stationery section for shop prices.";
+                
+                body.innerHTML += `<div class="chat-bubble-bot">${response}</div>`;
                 body.scrollTop = body.scrollHeight;
             }, 600);
         }
 
-        window.onload = () => { navigateTo('home'); setTimeout(() => { document.getElementById('botWelcome').classList.remove('hidden'); }, 3000); };
+        window.onload = () => {
+            navigateTo('home');
+            setTimeout(() => { document.getElementById('botWelcome').classList.remove('hidden'); }, 3000);
+        };
     </script>
 </body>
 </html>
