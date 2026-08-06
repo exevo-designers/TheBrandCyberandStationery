@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Brand Cyber & Stationery | Gate C, Maasai Mara University</title>
+        <link rel="icon" type="image/png" href="logo/the-brand-cyber-logo.png" />
+    <link rel="apple-touch-icon" href="logo/the-brand-cyber-logo.png">
+    
+    <!-- Adding multiple sizes for better compatibility -->
+    <link rel="icon" type="image/png" sizes="16x16" href="logo/the-brand-cyber-logo.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="logo/the-brand-cyber-logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-orange: #FF8C42;
+            --brand-blue: #0033A0;
+            --brand-blue-dark: #001F5C;
+            --brand-blue-light: #4D7FFF;
+            --brand-orange-light: #FFB380;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.08em;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--brand-orange);
+            box-shadow: 0 4px 20px rgba(0, 51, 160, 0.08);
+        }
+
+        /* Hero Background Animation */
+        .hero-bg-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 50%, rgba(0, 51, 160, 0.9) 100%);
+            z-index: 2;
+        }
+
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(30deg, var(--brand-orange) 12%, transparent 12.5%, transparent 87%, var(--brand-orange) 87.5%, var(--brand-orange)),
+                linear-gradient(150deg, var(--brand-orange) 12%, transparent 12.5%, transparent 87%, var(--brand-orange) 87.5%, var(--brand-orange));
+            background-size: 80px 140px;
+            opacity: 0.03;
+            z-index: 1;
+        }
+
+        .slideshow {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            animation: slideShowAnim 20s infinite;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide:nth-child(1) { animation-delay: 0s; }
+        .slide:nth-child(2) { animation-delay: 5s; }
+        .slide:nth-child(3) { animation-delay: 10s; }
+        .slide:nth-child(4) { animation-delay: 15s; }
+
+        @keyframes slideShowAnim {
+            0% { opacity: 0; transform: scale(1.1); }
+            5% { opacity: 1; }
+            25% { opacity: 1; }
+            30% { opacity: 0; transform: scale(1); }
+            100% { opacity: 0; }
+        }
+
+        .cart-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--brand-orange);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 99px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Menu */
+        #mobileMenu {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #mobileMenu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* WhatsApp Bot Styles */
+        .bot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            max-width: calc(100vw - 40px);
+            height: 450px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 51, 160, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            border: 2px solid var(--brand-orange);
+        }
+
+        .bot-active {
+            display: flex;
+            animation: botOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes botOpen {
+            from { transform: scale(0.8) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .chat-bubble-user {
+            background: var(--brand-orange-light);
+            color: var(--brand-blue-dark);
+            align-self: flex-end;
+            padding: 10px 14px;
+            border-radius: 18px 18px 2px 18px;
+            font-size: 14px;
+            max-width: 85%;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(255, 140, 66, 0.2);
+            font-weight: 500;
+        }
+
+        .chat-bubble-bot {
+            background: white;
+            border: 2px solid var(--brand-blue);
+            color: var(--brand-blue-dark);
+            align-self: flex-start;
+            padding: 10px 14px;
+            border-radius: 18px 18px 18px 2px;
+            font-size: 14px;
+            max-width: 85%;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        /* Orange accent elements */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-orange) 0%, #FF6B00 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FF6B00 0%, var(--brand-orange) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 140, 66, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--brand-blue) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 51, 160, 0.4);
+        }
+
+        /* Logo styling */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 38px;
+            }
+        }
+
+        /* Service cards with orange accents */
+        .service-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            border-color: var(--brand-orange);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(255, 140, 66, 0.15);
+        }
+
+        .service-card .icon-box {
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card .icon-box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: var(--brand-orange);
+            opacity: 0;
+            transform: rotate(45deg);
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover .icon-box::after {
+            opacity: 0.2;
+            top: 0;
+            right: 0;
+        }
+
+        /* Enhanced modal styling */
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Product cards */
+        .product-card {
+            transition: all 0.3s ease;
+            border: 2px solid #f1f5f9;
+        }
+
+        .product-card:hover {
+            border-color: var(--brand-orange);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 51, 160, 0.1);
+        }
+
+        /* Floating elements */
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Career opportunity banner ("advert" style) */
+        .ad-banner-shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-banner-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-20deg);
+            animation: adShine 3.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes adShine {
+            0% { left: -150%; }
+            55% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        .ad-banner-enter {
+            animation: adBannerEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes adBannerEnter {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="glass-nav sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo Section with Image -->
+            <div class="logo-container cursor-pointer" onclick="navigateTo('home')">
+                <img src="logo/the-brand-cyber-logo.png" alt="The Brand Cyber Logo" class="logo-img">
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden lg:flex gap-8 font-semibold text-sm items-center">
+                <button onclick="navigateTo('home')" class="hover:text-[var(--brand-orange)] transition-colors duration-300">Home</button>
+                <button onclick="navigateTo('home', 'services')" class="hover:text-[var(--brand-orange)] transition-colors duration-300">Services</button>
+                <button onclick="navigateTo('stationery')" class="hover:text-[var(--brand-orange)] transition-colors duration-300">Stationery</button>
+                <div class="relative">
+                    <button onclick="toggleMoreMenu()" id="moreMenuBtn" class="flex items-center gap-1.5 hover:text-[var(--brand-orange)] transition-colors duration-300">
+                        More <i class="fas fa-chevron-down text-[10px] transition-transform duration-300" id="moreChevron"></i>
+                    </button>
+                    <div id="moreMenuDropdown" class="hidden absolute top-full right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border-2 border-slate-100 py-2 z-50">
+                        <button onclick="navigateTo('assignments'); closeMoreMenu()" class="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[var(--brand-orange)] transition flex items-center gap-3"><i class="fas fa-folder-open w-4 text-center" style="color: var(--brand-blue);"></i> Assignments</button>
+                        <button onclick="navigateTo('applications'); closeMoreMenu()" class="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[var(--brand-orange)] transition flex items-center gap-3"><i class="fas fa-file-invoice-dollar w-4 text-center" style="color: var(--brand-blue);"></i> HELB &amp; KRA</button>
+                        <button onclick="navigateTo('home', 'request-service'); closeMoreMenu()" class="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[var(--brand-orange)] transition flex items-center gap-3"><i class="fas fa-pen-to-square w-4 text-center" style="color: var(--brand-blue);"></i> Order Work</button>
+                        <div class="border-t border-slate-100 my-2"></div>
+                        <button onclick="navigateTo('careers'); closeMoreMenu()" class="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[var(--brand-orange)] transition flex items-center gap-3"><i class="fas fa-briefcase w-4 text-center" style="color: var(--brand-orange);"></i> Careers</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Controls -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <button onclick="toggleCart()" class="relative p-2 hover:bg-orange-50 rounded-full transition">
+                    <i class="fas fa-shopping-cart text-lg" style="color: var(--brand-blue);"></i>
+                    <span id="cart-count" class="cart-dot">0</span>
+                </button>
+                <button id="adminBtn" onclick="openAdmin()" class="hidden sm:flex text-xs font-bold px-4 py-2 rounded-lg transition items-center btn-secondary">
+                    <i class="fas fa-lock mr-1"></i> Admin
+                </button>
+                <!-- Mobile Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-[var(--brand-blue)] text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu" class="absolute top-full left-0 w-full bg-white border-b-2 border-[var(--brand-orange)] shadow-xl lg:hidden flex flex-col p-6 gap-4 font-semibold text-slate-700">
+            <button onclick="toggleMobileMenu(); navigateTo('home')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Home</button>
+            <button onclick="toggleMobileMenu(); navigateTo('home', 'services')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Services</button>
+            <button onclick="toggleMobileMenu(); navigateTo('stationery')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Stationery</button>
+            <button onclick="toggleMobileMenu(); navigateTo('assignments')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Assignments</button>
+            <button onclick="toggleMobileMenu(); navigateTo('applications')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">HELB &amp; KRA</button>
+            <button onclick="toggleMobileMenu(); navigateTo('home', 'request-service')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Order Work</button>
+            <button onclick="toggleMobileMenu(); navigateTo('careers')" class="text-left py-3 border-b border-slate-100 hover:text-[var(--brand-orange)] transition">Careers</button>
+            <button onclick="toggleMobileMenu(); openAdmin()" class="text-left py-3" style="color: var(--brand-blue);"><i class="fas fa-lock mr-2"></i> Admin Portal</button>
+        </div>
+    </nav>
+
+    <!-- Main App Container -->
+    <main id="app-content"></main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t-4 border-[var(--brand-orange)] pt-16 pb-8 px-4" id="contact" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+            <div>
+                <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">The Brand Cyber</h3>
+                <p class="text-slate-600 text-sm mb-6 leading-relaxed">The leading destination for printing, cyber services, and stationery at Maasai Mara University Gate C.</p>
+                <div class="flex gap-4">
+                    <a href="https://wa.me/254702502147" class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110"><i class="fab fa-whatsapp text-lg"></i></a>
+                    <a href="#" class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center hover:text-white transition-all duration-300 hover:scale-110" style="color: var(--brand-blue);" onmouseover="this.style.background='var(--brand-blue)'" onmouseout="this.style.background=''"><i class="fab fa-facebook-f text-lg"></i></a>
+                    <a href="#" class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center hover:text-white transition-all duration-300 hover:scale-110" style="color: var(--brand-orange);" onmouseover="this.style.background='var(--brand-orange)'" onmouseout="this.style.background=''"><i class="fab fa-instagram text-lg"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Visit Us</h3>
+                <p class="text-slate-600 text-sm mb-4 flex items-start gap-3"><i class="fas fa-map-marker-alt mt-1" style="color: var(--brand-orange);"></i> <span>Narok Town, Bomet Road,<br>Gate C, Maasai Mara University</span></p>
+                <p class="text-slate-600 text-sm mb-4 flex items-center gap-3"><i class="fas fa-phone" style="color: var(--brand-orange);"></i> 0702 502147</p>
+                <p class="text-slate-600 text-sm flex items-center gap-3"><i class="fas fa-envelope" style="color: var(--brand-orange);"></i> thebrandcyber0@gmail.com</p>
+            </div>
+            <div class="md:col-span-2 lg:col-span-1">
+                <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Working Hours</h3>
+                <ul class="text-slate-600 text-sm space-y-3">
+                    <li class="flex justify-between border-b border-slate-100 pb-2"><span>Mon - Fri</span> <span class="font-bold" style="color: var(--brand-blue);">7:00 am – 9:00 pm</span></li>
+                    <li class="flex justify-between border-b border-slate-100 pb-2"><span>Saturday</span> <span class="font-bold" style="color: var(--brand-blue);">9:30 am – 7:30 pm</span></li>
+                    <li class="flex justify-between"><span>Sunday</span> <span class="font-bold" style="color: var(--brand-blue);">2:00 pm – 8:00 pm</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-slate-500 text-xs border-t border-slate-200 pt-8">
+            <p>&copy; 2026 The Brand Cyber & Stationery. Designed by <a href="https://exevodesigners.online" target="_blank" class="font-bold hover:underline" style="color: var(--brand-orange);">Exevo Designers Network</a>.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Bot Button -->
+    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[1000] flex flex-col items-end gap-3">
+        <div id="botWelcome" class="bg-white px-5 py-3 rounded-2xl shadow-2xl border-2 text-sm font-semibold hidden max-w-[200px] text-center md:max-w-none float-animation" style="border-color: var(--brand-orange); color: var(--brand-blue);">
+            👋 Need help? Chat with us!
+        </div>
+        <button onclick="toggleBot()" class="w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl flex items-center justify-center text-2xl md:text-3xl text-white hover:scale-110 transition-all duration-300 relative" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);">
+            <i class="fab fa-whatsapp"></i>
+            <span class="absolute top-0 right-0 w-4 h-4 border-2 border-white rounded-full animate-pulse" style="background: var(--brand-orange);"></span>
+        </button>
+    </div>
+
+    <!-- Bot Window -->
+    <div id="botWindow" class="bot-window">
+        <div class="p-5 text-white flex items-center gap-3" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <i class="fas fa-robot text-xl"></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-bold">The Brand Assistant</h4>
+                <p class="text-xs opacity-90">Online | Auto-Responder</p>
+            </div>
+            <button onclick="toggleBot()" class="opacity-80 hover:opacity-100 transition p-2"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div id="chatBody" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2 bg-[#e5ddd5]">
+            <div class="chat-bubble-bot">
+                Hello! Welcome to The Brand Cyber & Stationery. How can I help you today?
+            </div>
+        </div>
+        <div class="p-4 bg-white border-t-2 flex gap-3" style="border-color: var(--brand-orange);">
+            <input type="text" id="botInput" placeholder="Type a message..." class="flex-1 bg-slate-100 rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-2 font-medium" style="--tw-ring-color: var(--brand-orange);" onkeypress="if(event.key === 'Enter') handleBotInput()">
+            <button onclick="handleBotInput()" class="w-12 h-12 rounded-full flex items-center justify-center text-white transition-all hover:scale-105" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 flex flex-col border-l-4" style="border-color: var(--brand-orange);">
+        <div class="p-6 border-b-2 flex justify-between items-center" style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-color: var(--brand-orange);">
+            <div>
+                <h3 class="font-bold text-xl" style="color: var(--brand-blue);">Your Cart</h3>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold mt-1">Shopping Items</p>
+            </div>
+            <button onclick="toggleCart()" class="text-slate-400 hover:text-[var(--brand-orange)] transition p-2"><i class="fas fa-times text-2xl"></i></button>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+        <div class="p-6 border-t-2 space-y-5" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-color: var(--brand-orange);">
+            <div class="flex justify-between items-center">
+                <span class="text-slate-500 text-sm font-bold uppercase tracking-wider">Grand Total</span>
+                <span id="cartTotal" class="text-2xl font-extrabold" style="color: var(--brand-orange);">KES 0.00</span>
+            </div>
+            <button onclick="checkout()" class="w-full py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white;">
+                Order via WhatsApp <i class="fab fa-whatsapp ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Auth Modal -->
+    <div id="adminAuthModal" class="modal-backdrop fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center px-4">
+        <div class="modal-content bg-white rounded-3xl p-8 w-full max-w-md text-center shadow-2xl border-4" style="border-color: var(--brand-orange);">
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                <i class="fas fa-shield-halved fa-3x text-white"></i>
+            </div>
+            <h3 class="font-bold text-2xl mb-2" style="color: var(--brand-blue);">Admin Authentication</h3>
+            <p class="text-xs text-slate-500 mb-8 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
+            <input type="password" id="adminPass" placeholder="Enter Password" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-4 mb-6 focus:outline-none focus:border-[var(--brand-orange)] text-center tracking-wider font-mono transition">
+            <div class="flex gap-4">
+                <button onclick="closeAuth()" class="flex-1 py-3 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition">Cancel</button>
+                <button onclick="verifyAdmin()" class="flex-1 py-3 text-white font-bold rounded-xl btn-primary">Verify Access</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WHATSAPP_NUMBER = "254702502147";
+        const ADMIN_PASS = "Hemstone_2019"; 
+        const EMAIL_RECIPIENT = "thebrandcyber0@gmail.com";
+        
+        let isAdminAuthenticated = false;
+        let cart = [];
+
+        let products = [
+            { id: 1, name: 'A4 Printing Paper (Rim)', price: 750, category: 'Paper', icon: 'file-lines' },
+            { id: 2, name: 'Bic Pen (Blue/Black)', price: 20, category: 'Writing', icon: 'pen' },
+            { id: 3, name: 'Geometric Set', price: 250, category: 'Tools', icon: 'compass' },
+            { id: 4, name: 'Exercise Book (200pg)', price: 85, category: 'Writing', icon: 'book' },
+            { id: 5, name: 'Stapler Medium', price: 350, category: 'Office', icon: 'paperclip' },
+            { id: 6, name: 'Highlighters (Pack)', price: 200, category: 'Writing', icon: 'marker' },
+            { id: 7, name: 'Notebook Spiral A5', price: 150, category: 'Writing', icon: 'book-open' },
+            { id: 8, name: 'Scientific Calculator', price: 1200, category: 'Electronics', icon: 'calculator' }
+        ];
+
+        const STORAGE_KEY = 'the_brand_cyber_docs';
+        function loadDocuments() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [
+                { id: 101, owner: 'Mercy Jebet', title: 'Research Methodology', price: 150, status: 'unpaid', date: '2024-01-15', fileData: null, fileName: null }
+            ];
+        }
+        function saveDocuments() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(documents));
+        }
+
+        let documents = loadDocuments();
+
+        // ---- Careers / contracted-work openings ----
+        // Add or remove entries here to update the Careers page.
+        let jobOpenings = [
+            {
+                id: 1,
+                title: 'Marketing Agent',
+                type: 'Contract',
+                payment: 'Contractual Basis',
+                deadline: '2026-08-11',
+                description: "We're looking for a driven Marketing Agent to help grow The Brand Cyber's reach around Maasai Mara University Gate C. Specific role scope, targets, and terms will be discussed directly with management during the interview process."
+            }
+        ];
+
+        // ---- Form-field builder helpers (used by the HELB & KRA application forms) ----
+        function f(label, name, opts = {}) {
+            const type = opts.type || 'text';
+            const required = opts.required ? 'required' : '';
+            const placeholder = opts.placeholder || '';
+            const extraAttrs = opts.id ? `id="${opts.id}"` : '';
+            return `<div>
+                <label class="block text-xs font-bold uppercase tracking-wide mb-2 text-slate-500">${label}${opts.required ? ' *' : ''}</label>
+                <input type="${type}" name="${name}" ${extraAttrs} ${required} placeholder="${placeholder}" class="w-full bg-white border-2 border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[var(--brand-orange)] transition">
+            </div>`;
+        }
+
+        function sel(label, name, options, opts = {}) {
+            const required = opts.required ? 'required' : '';
+            const optHtml = options.map(o => `<option value="${o}">${o}</option>`).join('');
+            return `<div>
+                <label class="block text-xs font-bold uppercase tracking-wide mb-2 text-slate-500">${label}${opts.required ? ' *' : ''}</label>
+                <select name="${name}" ${opts.id ? `id="${opts.id}"` : ''} ${opts.onchange ? `onchange="${opts.onchange}"` : ''} ${required} class="w-full bg-white border-2 border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[var(--brand-orange)] appearance-none transition">
+                <option value="" disabled selected>Select...</option>${optHtml}</select>
+            </div>`;
+        }
+
+        function fileF(label, name, opts = {}) {
+            return `<div>
+                <label class="block text-xs font-bold uppercase tracking-wide mb-2 text-slate-500">${label}${opts.required ? ' *' : ''}</label>
+                <input type="file" name="${name}" ${opts.multiple ? 'multiple' : ''} ${opts.required ? 'required' : ''} class="w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-2.5 text-xs focus:outline-none focus:border-[var(--brand-orange)] transition file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-orange-100 file:cursor-pointer" style="color:#64748b;">
+            </div>`;
+        }
+
+        function sectionHeader(icon, title, note) {
+            return `<div class="flex items-center gap-3 mb-6 pb-3 border-b-2 border-slate-100">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0" style="background:linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);"><i class="fas ${icon}"></i></div>
+                <div><h4 class="font-bold text-base font-heading" style="color:var(--brand-blue);">${title}</h4>${note ? `<p class="text-xs text-slate-400">${note}</p>` : ''}</div>
+            </div>`;
+        }
+
+        function formGroup(icon, title, note, innerHTML, wrapperOpts = {}) {
+            return `<div ${wrapperOpts.id ? `id="${wrapperOpts.id}"` : ''} class="bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100 ${wrapperOpts.hidden ? 'hidden' : ''}">
+                ${sectionHeader(icon, title, note)}
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${innerHTML}</div>
+            </div>`;
+        }
+
+        function declarationBlock(btnLabel) {
+            return `<div class="space-y-6">
+                <label class="flex items-start gap-3 bg-orange-50 border-2 rounded-2xl p-5 cursor-pointer" style="border-color: var(--brand-orange);">
+                    <input type="checkbox" required class="mt-1 w-5 h-5 accent-[var(--brand-orange)]">
+                    <span class="text-sm text-slate-700">I confirm that all the information provided is accurate and I authorize The Brand Cyber & Stationery to use it solely for processing this application.</span>
+                </label>
+                <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-bold text-lg shadow-2xl transition-all active:scale-95">
+                    ${btnLabel} <i class="fas fa-paper-plane ml-2"></i>
+                </button>
+            </div>`;
+        }
+
+        const views = {
+            home: `
+                <div id="careerBanner"></div>
+                <section id="hero" class="relative min-h-[70vh] md:h-[85vh] flex items-center px-4 overflow-hidden fade-in py-20 md:py-0">
+                    <div class="hero-bg-container">
+                        <div class="hero-overlay"></div>
+                        <div class="hero-pattern"></div>
+                        <div class="slideshow">
+                            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&q=80&w=1600')"></div>
+                            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600')"></div>
+                        </div>
+                    </div>
+                    <div class="relative z-10 max-w-7xl mx-auto w-full text-white">
+                        <div class="max-w-2xl">
+                            <span class="backdrop-blur-md px-5 py-2 rounded-full text-xs font-bold mb-8 inline-block uppercase tracking-widest shadow-lg" style="background: rgba(255, 140, 66, 0.3); border: 2px solid var(--brand-orange);">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Gate C, MMU
+                            </span>
+                            <h2 class="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Professional <br><span style="color: var(--brand-orange);">Cyber Solutions.</span></h2>
+                            <p class="text-base md:text-xl mb-12 opacity-95 max-w-lg font-light leading-relaxed">Efficiency meets excellence. Get your assignments done professionally and stationery delivered to your doorstep.</p>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button onclick="navigateTo('home', 'request-service')" class="btn-primary px-8 py-5 rounded-xl font-bold shadow-2xl text-center text-base">
+                                    Submit Work Request <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                                <button onclick="navigateTo('stationery')" class="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white px-8 py-5 rounded-xl font-bold shadow-lg text-center hover:bg-white/20 transition text-base">
+                                    Shop Stationery <i class="fas fa-shopping-bag ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="services" class="py-20 md:py-32 px-4" style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);">
+                    <div class="max-w-7xl mx-auto text-center mb-16 md:mb-20">
+                        <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);">What We Offer</span>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-6" style="color: var(--brand-blue);">Our Premium Services</h2>
+                        <div class="w-24 h-1.5 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--brand-orange) 0%, var(--brand-blue) 100%);"></div>
+                    </div>
+                    <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="service-card bg-white p-8 md:p-10 rounded-3xl shadow-lg">
+                            <div class="icon-box w-16 h-16 text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                                <i class="fas fa-print text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Printing & Copy</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">Bulk black & white or vibrant color printing for all document formats with high speed and quality.</p>
+                        </div>
+                        <div class="service-card bg-white p-8 md:p-10 rounded-3xl shadow-lg">
+                            <div class="icon-box w-16 h-16 text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                                <i class="fas fa-globe text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Online Apps</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">KUCCPS, HELB, KRA, and e-Citizen services handled by seasoned experts for guaranteed success.</p>
+                            <button onclick="navigateTo('applications')" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style="color: var(--brand-orange);">
+                                Start Application <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="service-card bg-white p-8 md:p-10 rounded-3xl shadow-lg">
+                            <div class="icon-box w-16 h-16 text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                                <i class="fas fa-book-open text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Academic Assist</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">Professional formatting, proofreading, and typesetting for research papers and academic projects.</p>
+                        </div>
+                        <div class="service-card bg-white p-8 md:p-10 rounded-3xl shadow-lg">
+                            <div class="icon-box w-16 h-16 text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                                <i class="fas fa-palette text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-xl mb-4" style="color: var(--brand-blue);">Graphic Design</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">Professional CVs, posters, and flyers designed to stand out in the competitive market.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="ushuru-mashinani" class="py-16 md:py-20 px-4">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="rounded-3xl overflow-hidden shadow-2xl relative" style="background: linear-gradient(120deg, var(--brand-blue-dark) 0%, var(--brand-blue) 55%, var(--brand-blue-light) 100%);">
+                            <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #fff 0, #fff 2px, transparent 2px, transparent 14px);"></div>
+                            <div class="relative z-10 grid lg:grid-cols-[auto,1fr,auto] gap-8 items-center p-8 md:p-12">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white flex items-center justify-center shadow-lg shrink-0">
+                                        <i class="fas fa-landmark text-3xl" style="color: var(--brand-blue);"></i>
+                                    </div>
+                                    <span class="text-white/70 text-xs font-bold uppercase tracking-widest">In Affiliation With</span>
+                                </div>
+                                <div class="text-white">
+                                    <h3 class="text-2xl md:text-3xl font-extrabold mb-3">Ushuru Mashinani <span class="font-normal opacity-80 text-lg md:text-xl">| Kenya Revenue Authority</span></h3>
+                                    <p class="text-slate-100 text-sm md:text-base leading-relaxed max-w-2xl">The Brand Cyber & Stationery is a proud affiliate of the KRA <strong>Ushuru Mashinani</strong> initiative, bringing tax registration, filing, and compliance services closer to students and residents around Maasai Mara University. File your returns, register your PIN, and get compliant — right here at Gate C.</p>
+                                </div>
+                                <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+                                    <button onclick="navigateTo('applications'); setTimeout(()=>switchAppTab('kra'),120)" class="px-6 py-4 rounded-xl font-bold text-sm shadow-lg text-center btn-primary whitespace-nowrap">
+                                        <i class="fas fa-file-invoice-dollar mr-2"></i>Start KRA Application
+                                    </button>
+                                    <span class="text-white/60 text-[11px] text-center font-semibold uppercase tracking-wider">PIN &bull; Returns &bull; Compliance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="request-service" class="py-20 md:py-32 px-4 bg-white">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="text-center mb-12 md:mb-16">
+                            <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);">Get Started</span>
+                            <h2 class="text-3xl md:text-5xl font-extrabold mb-6" style="color: var(--brand-blue);">Request a Service</h2>
+                            <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">Fill the form below and we will get back to you within minutes with a customized solution.</p>
+                        </div>
+                        <div class="rounded-3xl p-8 md:p-12 shadow-2xl border-4" style="background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%); border-color: var(--brand-orange);">
+                            <form action="https://formsubmit.co/${EMAIL_RECIPIENT}" method="POST">
+                                <input type="hidden" name="_subject" value="New Service Request - The Brand Cyber">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_captcha" value="false">
+                                
+                                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Full Name</label>
+                                        <input type="text" name="Client Name" required placeholder="Your name" class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Phone Number</label>
+                                        <input type="tel" name="Phone Number" required placeholder="07XX XXX XXX" class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] transition">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Service Required</label>
+                                    <select name="Service Category" required class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] appearance-none transition">
+                                        <option value="" disabled selected>Select a service...</option>
+                                        <option value="Assignment/Academic Paper">Assignment / Academic Paper</option>
+                                        <option value="Printing/Photocopy">Printing / Photocopy</option>
+                                        <option value="KRA/HELB/KUCCPS App">KRA / HELB / KUCCPS Application</option>
+                                        <option value="Graphic Design/CV">Graphic Design / CV Writing</option>
+                                        <option value="Other">Other Cyber Service</option>
+                                    </select>
+                                    <p class="text-xs text-slate-500 mt-2">Applying for HELB or KRA? Use our <button type="button" onclick="navigateTo('applications')" class="font-bold underline" style="color: var(--brand-orange);">dedicated application forms</button> instead for faster processing.</p>
+                                </div>
+
+                                <div class="mb-8">
+                                    <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Specific Instructions</label>
+                                    <textarea name="Instructions" rows="5" required placeholder="Tell us exactly what you need done..." class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] transition"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-bold text-lg shadow-2xl transition-all active:scale-95">
+                                    Submit Request <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            `,
+            assignments: `
+                <section class="py-16 md:py-24 px-4 text-white text-center fade-in" style="background: linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 100%);">
+                    <div class="max-w-4xl mx-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);">Secure Portal</span>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Assignment Retrieval</h2>
+                        <p class="text-slate-200 max-w-2xl mx-auto text-base md:text-lg px-4 mb-8 leading-relaxed">Find your processed work here using your name. All documents are secured and encrypted for your privacy.</p>
+                        <div class="inline-flex flex-wrap justify-center items-center gap-3 px-6 py-3 rounded-full text-xs md:text-sm font-bold border-2" style="background: rgba(255, 140, 66, 0.2); color: var(--brand-orange); border-color: var(--brand-orange);">
+                            <i class="fas fa-shield-alt"></i> Self-Destruct Mode: Downloads auto-delete for privacy
+                        </div>
+                    </div>
+                </section>
+                <section class="py-16 px-4 max-w-6xl mx-auto -mt-12">
+                    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border-4" style="border-color: var(--brand-orange);">
+                        <div class="relative mb-10">
+                            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-xl" style="color: var(--brand-orange);"></i>
+                            <input type="text" id="assignSearch" oninput="renderDocuments(this.value)" placeholder="Search by name or title..." class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl pl-16 pr-6 py-5 focus:ring-2 focus:outline-none text-base transition" style="--tw-ring-color: var(--brand-orange);">
+                        </div>
+                        <div id="documentGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[200px]"></div>
+                    </div>
+                </section>
+            `,
+            stationery: `
+                <section class="py-16 md:py-24 px-4 text-white text-center fade-in" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                    <div class="max-w-4xl mx-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);">Shop Now</span>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Stationery Shop</h2>
+                        <p class="text-slate-100 text-base md:text-lg max-w-2xl mx-auto">Essential academic supplies delivered around MMU Gate C. Quality products at student-friendly prices.</p>
+                    </div>
+                </section>
+                <section class="py-16 px-4 max-w-7xl mx-auto">
+                    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"></div>
+                </section>
+            `,
+            applications: `
+                <section class="py-16 md:py-24 px-4 text-white text-center fade-in" style="background: linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 100%);">
+                    <div class="max-w-4xl mx-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);"><i class="fas fa-landmark mr-2"></i>Ushuru Mashinani Affiliate Desk</span>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-6">HELB &amp; KRA Applications</h2>
+                        <p class="text-slate-200 max-w-2xl mx-auto text-base md:text-lg px-4 leading-relaxed">Fill in your details once, attach your documents, and submit securely. Our team processes your application and confirms with you directly.</p>
+                    </div>
+                </section>
+
+                <section id="applicationsFormArea" class="py-16 px-4 max-w-5xl mx-auto -mt-12">
+                    <div class="flex justify-center gap-3 mb-10">
+                        <button type="button" id="tabBtnHelb" onclick="switchAppTab('helb')" class="px-6 py-3.5 rounded-xl font-bold text-sm shadow-lg transition-all btn-primary">
+                            <i class="fas fa-graduation-cap mr-2"></i>HELB Application
+                        </button>
+                        <button type="button" id="tabBtnKra" onclick="switchAppTab('kra')" class="px-6 py-3.5 rounded-xl font-bold text-sm shadow-md transition-all bg-white text-slate-600 border-2 border-slate-200">
+                            <i class="fas fa-file-invoice-dollar mr-2"></i>KRA Services
+                        </button>
+                    </div>
+
+                    <!-- HELB FORM -->
+                    <div id="helbFormTab" class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl border-4" style="border-color: var(--brand-orange);">
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-extrabold mb-2" style="color: var(--brand-blue);">HELB First-Time Application</h3>
+                            <p class="text-slate-500 text-sm">Complete every section below. Fields marked * are required.</p>
+                        </div>
+                        <form action="https://formsubmit.co/${EMAIL_RECIPIENT}" method="POST" enctype="multipart/form-data" class="space-y-8">
+                            <input type="hidden" name="_subject" value="New HELB Application - The Brand Cyber">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="Form Type" value="HELB First-Time Application">
+
+                            ${formGroup('fa-user', 'Personal Information', null, [
+                                f('Full Name (as per ID)', 'Full Name', {required:true}),
+                                f('National ID Number', 'National ID Number', {required:true}),
+                                f('Date of Birth', 'Date of Birth', {type:'date', required:true}),
+                                sel('Gender', 'Gender', ['Male','Female'], {required:true}),
+                                f('Phone Number', 'Phone Number', {type:'tel', required:true, placeholder:'07XX XXX XXX'}),
+                                f('Alternative Phone Number', 'Alternative Phone Number', {type:'tel'}),
+                                f('Email Address', 'Email Address', {type:'email', required:true}),
+                                f('County', 'County', {required:true}),
+                                f('Constituency', 'Constituency', {required:true}),
+                                f('Ward', 'Ward', {required:true}),
+                                f('Home Address', 'Home Address'),
+                                f('Postal Address', 'Postal Address'),
+                                f('Postal Code', 'Postal Code'),
+                                f('Town', 'Town')
+                            ].join(''))}
+
+                            ${formGroup('fa-graduation-cap', 'Education Details', null, [
+                                f('Institution Name', 'Institution Name', {required:true}),
+                                f('Campus', 'Campus'),
+                                f('Admission Number', 'Admission Number', {required:true}),
+                                f('Course Name', 'Course Name', {required:true}),
+                                sel('Course Level', 'Course Level', ['Certificate','Diploma','Degree','Masters'], {required:true}),
+                                f('Year of Admission', 'Year of Admission', {type:'number', placeholder:'e.g. 2025'}),
+                                f('Expected Graduation Year', 'Expected Graduation Year', {type:'number', placeholder:'e.g. 2029'}),
+                                sel('Mode of Study', 'Mode of Study', ['Full-time','Part-time'], {required:true})
+                            ].join(''))}
+
+                            ${formGroup('fa-school', 'KCSE Details', null, [
+                                f('KCSE Index Number', 'KCSE Index Number', {required:true}),
+                                f('KCSE Year', 'KCSE Year', {type:'number'}),
+                                f('KCSE School Name', 'KCSE School Name'),
+                                f('Mean Grade', 'Mean Grade', {placeholder:'e.g. B+'})
+                            ].join(''))}
+
+                            ${formGroup('fa-user-tie', 'Parent / Guardian 1', null, [
+                                f('Full Name', 'Guardian1 Full Name', {required:true}),
+                                f('National ID Number', 'Guardian1 National ID', {required:true}),
+                                f('Relationship', 'Guardian1 Relationship', {placeholder:'e.g. Father, Mother'}),
+                                f('Phone Number', 'Guardian1 Phone', {type:'tel'}),
+                                f('Occupation', 'Guardian1 Occupation'),
+                                f('Employer', 'Guardian1 Employer'),
+                                f('Monthly Income (Optional)', 'Guardian1 Monthly Income', {type:'number'}),
+                                sel('Living Status', 'Guardian1 Living Status', ['Alive','Deceased'])
+                            ].join(''))}
+
+                            ${formGroup('fa-user-tie', 'Parent / Guardian 2', 'Leave blank if not applicable', [
+                                f('Full Name', 'Guardian2 Full Name'),
+                                f('National ID Number', 'Guardian2 National ID'),
+                                f('Relationship', 'Guardian2 Relationship', {placeholder:'e.g. Father, Mother'}),
+                                f('Phone Number', 'Guardian2 Phone', {type:'tel'}),
+                                f('Occupation', 'Guardian2 Occupation'),
+                                f('Employer', 'Guardian2 Employer'),
+                                f('Monthly Income (Optional)', 'Guardian2 Monthly Income', {type:'number'}),
+                                sel('Living Status', 'Guardian2 Living Status', ['Alive','Deceased'])
+                            ].join(''))}
+
+                            ${formGroup('fa-building-columns', 'Bank Details', 'Provide bank details OR an M-Pesa registered number', [
+                                f('Bank Name', 'Bank Name'),
+                                f('Branch', 'Branch'),
+                                f('Account Number', 'Account Number'),
+                                f('M-Pesa Registered Number', 'Mpesa Number', {type:'tel'})
+                            ].join(''))}
+
+                            ${formGroup('fa-wheelchair', 'Disability Information', null, [
+                                sel('Are you living with a disability?', 'Disability Status', ['Yes','No'], {id:'helbDisability', onchange:'toggleHelbDisability()', required:true})
+                            ].join(''))}
+
+                            <div id="helbDisabilityDetails" class="hidden bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100 -mt-2">
+                                <div class="grid sm:grid-cols-2 gap-5">
+                                    ${f('Disability Type', 'Disability Type')}
+                                    ${f('NCPWD Registration Number', 'NCPWD Registration Number')}
+                                </div>
+                            </div>
+
+                            ${formGroup('fa-circle-info', 'Additional Information', null, [
+                                sel('Orphan Status', 'Orphan Status', ['Not an Orphan','Single Orphan','Double Orphan']),
+                                f('Vulnerability Status', 'Vulnerability Status', {placeholder:'If applicable'}),
+                                f('Number of Siblings', 'Number of Siblings', {type:'number'}),
+                                f('Number in School', 'Number in School', {type:'number'}),
+                                f('Sponsor (if any)', 'Sponsor')
+                            ].join(''))}
+
+                            ${formGroup('fa-paperclip', 'Required Document Uploads', 'Accepted: JPG, PNG or PDF. Max size per file as advised by our team.', [
+                                fileF('National ID (Front & Back)', 'ID Documents', {multiple:true, required:true}),
+                                fileF('Passport Photo', 'Passport Photo', {required:true}),
+                                fileF('Admission Letter', 'Admission Letter', {required:true}),
+                                fileF('Student ID (If Available)', 'Student ID'),
+                                fileF('KCSE Result Slip / Certificate', 'KCSE Certificate', {required:true}),
+                                fileF('KRA PIN Certificate (if applicable)', 'KRA PIN Certificate'),
+                                fileF('Bank ATM Card / Bank Confirmation (if applicable)', 'Bank Confirmation'),
+                                fileF('Parent/Guardian ID (Front & Back)', 'Guardian ID Documents', {multiple:true, required:true}),
+                                fileF('Death Certificate (if deceased)', 'Death Certificate'),
+                                fileF('Guardian Affidavit (if applicable)', 'Guardian Affidavit'),
+                                fileF('Birth Certificate (Optional)', 'Birth Certificate'),
+                                fileF('Any Other Supporting Document', 'Other Documents', {multiple:true})
+                            ].join(''), {})}
+
+                            <div id="helbNcpwdUpload" class="hidden bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100 -mt-2">
+                                <div class="grid sm:grid-cols-2 gap-5">
+                                    ${fileF('NCPWD Certificate', 'NCPWD Certificate')}
+                                </div>
+                            </div>
+
+                            ${declarationBlock('Submit HELB Application')}
+                        </form>
+                    </div>
+
+                    <!-- KRA FORM -->
+                    <div id="kraFormTab" class="hidden bg-white p-6 md:p-10 rounded-3xl shadow-2xl border-4" style="border-color: var(--brand-blue);">
+                        <div class="mb-8 flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0" style="color: var(--brand-orange);"><i class="fas fa-landmark text-xl"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-extrabold mb-2" style="color: var(--brand-blue);">KRA Services <span class="text-xs font-bold align-middle px-3 py-1 rounded-full ml-2" style="background: var(--brand-orange); color:white;">Ushuru Mashinani</span></h3>
+                                <p class="text-slate-500 text-sm">Select your required service — the form will adjust to show exactly what we need.</p>
+                            </div>
+                        </div>
+                        <form action="https://formsubmit.co/${EMAIL_RECIPIENT}" method="POST" enctype="multipart/form-data" class="space-y-8">
+                            <input type="hidden" name="_subject" value="New KRA Service Request - The Brand Cyber">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="Form Type" value="KRA Service Request">
+
+                            <div class="bg-orange-50 rounded-2xl p-5 md:p-7 border-2" style="border-color: var(--brand-orange);">
+                                ${sel('Select Service Required', 'Service Required', ['First-Time KRA PIN Registration','KRA Return Filing (Nil Return)','KRA Return Filing (Employment)','KRA Return Filing (Business)','KRA Return Filing (Rental Income)','PIN Update','PIN Retrieval','Tax Compliance Certificate'], {id:'kraService', onchange:'updateKraForm()', required:true})}
+                            </div>
+
+                            ${formGroup('fa-user', 'Section A: Personal Information', null, [
+                                f('Full Name', 'Full Name', {required:true}),
+                                f('National ID Number', 'National ID Number', {required:true}),
+                                f('KRA PIN (if available)', 'KRA PIN'),
+                                f('Date of Birth', 'Date of Birth', {type:'date'}),
+                                sel('Gender', 'Gender', ['Male','Female']),
+                                f('Phone Number', 'Phone Number', {type:'tel', required:true}),
+                                f('Email Address', 'Email Address', {type:'email', required:true}),
+                                f('County', 'County'),
+                                f('Postal Address', 'Postal Address'),
+                                f('Postal Code', 'Postal Code')
+                            ].join(''))}
+
+                            ${formGroup('fa-briefcase', 'Section B: Employment Information', 'Only required for Employment Return filing', [
+                                f('Employer Name', 'Employer Name'),
+                                f('Employer KRA PIN (Optional)', 'Employer KRA PIN'),
+                                f('Employment Start Date', 'Employment Start Date', {type:'date'}),
+                                f('Employment End Date (if applicable)', 'Employment End Date', {type:'date'})
+                            ].join(''), {id:'kraEmploymentSection', hidden:true})}
+
+                            <div id="kraReturnSection" class="hidden space-y-6">
+                                ${formGroup('fa-file-invoice', 'Section C: Return Filing Information', null, [
+                                    sel('Return Type', 'Return Type', ['Nil Return','Employment Return','Business Return','Rental Return'], {id:'kraReturnType', onchange:'updateKraReturnType()', required:true}),
+                                    sel('Tax Year', 'Tax Year', ['2024','2025','2026'], {required:true})
+                                ].join(''))}
+
+                                <div id="kraP9Block" class="hidden bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100">
+                                    ${sectionHeader('fa-file-lines', 'P9 Information', 'Employment returns')}
+                                    <div class="grid sm:grid-cols-2 gap-5">${fileF('P9 Form', 'P9 Form')}</div>
+                                </div>
+
+                                <div id="kraBusinessBlock" class="hidden bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100">
+                                    ${sectionHeader('fa-store', 'Business Information', null)}
+                                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                        ${f('Business Name', 'Business Name')}
+                                        ${f('Business KRA PIN', 'Business KRA PIN')}
+                                        ${f('Nature of Business', 'Nature of Business')}
+                                        ${fileF('Financial Statements (if applicable)', 'Financial Statements')}
+                                        ${fileF('Business Registration Certificate (Optional)', 'Business Registration Certificate')}
+                                    </div>
+                                </div>
+
+                                <div id="kraRentalBlock" class="hidden bg-slate-50/60 rounded-2xl p-5 md:p-7 border-2 border-slate-100">
+                                    ${sectionHeader('fa-house-chimney', 'Rental Income Information', null)}
+                                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                        ${f('Rental Income Amount', 'Rental Income Amount', {type:'number'})}
+                                        ${f('Expenses (Optional)', 'Rental Expenses', {type:'number'})}
+                                        ${fileF('Rental Income Statement', 'Rental Income Statement')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${formGroup('fa-building-columns', 'Banking Details (Optional)', null, [
+                                f('Bank Name', 'Bank Name'),
+                                f('Account Number', 'Account Number')
+                            ].join(''))}
+
+                            ${formGroup('fa-paperclip', 'Required Document Uploads', 'Accepted: JPG, PNG or PDF', [
+                                fileF('National ID (Front)', 'National ID Front', {required:true}),
+                                fileF('National ID (Back)', 'National ID Back', {required:true}),
+                                fileF('Passport Photo', 'Passport Photo'),
+                                fileF('KRA PIN Certificate (if available)', 'KRA PIN Certificate Upload'),
+                                fileF('Any Other Supporting Document', 'Other Documents', {multiple:true})
+                            ].join(''))}
+
+                            ${declarationBlock('Submit KRA Request')}
+                        </form>
+                    </div>
+                </section>
+            `,
+            careers: `
+                <section class="py-16 md:py-24 px-4 text-white text-center fade-in" style="background: linear-gradient(135deg, var(--brand-blue-dark) 0%, var(--brand-blue) 100%);">
+                    <div class="max-w-4xl mx-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest mb-4 inline-block" style="color: var(--brand-orange);"><i class="fas fa-briefcase mr-2"></i>Join The Team</span>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Careers &amp; Contract Work</h2>
+                        <p class="text-slate-200 max-w-2xl mx-auto text-base md:text-lg px-4 leading-relaxed">From time to time we bring on contracted and freelance help across design, marketing, printing, and delivery. Current openings are listed below.</p>
+                    </div>
+                </section>
+
+                <section class="py-16 px-4 max-w-5xl mx-auto -mt-12">
+                    <div id="careerListings" class="space-y-6 mb-10"></div>
+                    <div id="careerApplySection"></div>
+                </section>
+            `,
+            admin: `
+                <section class="py-8 md:py-12 px-4 min-h-screen fade-in" style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 p-6 rounded-2xl" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                            <div class="text-white">
+                                <h2 class="text-3xl font-extrabold mb-2">Admin Portal</h2>
+                                <p class="text-slate-100 text-sm">Manage processed documents and inventory securely.</p>
+                            </div>
+                            <button onclick="logoutAdmin()" class="bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-xl font-bold text-sm border-2 border-white/30 hover:bg-white/30 transition">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </button>
+                        </div>
+                        
+                        <!-- Upload Form -->
+                        <div class="bg-white p-8 md:p-10 rounded-3xl border-4 mb-10 shadow-xl" style="border-color: var(--brand-orange);">
+                            <h3 class="font-bold mb-8 text-sm uppercase tracking-wider flex items-center gap-2" style="color: var(--brand-blue);">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload Processed Work
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                <input type="text" id="newOwner" placeholder="Student Name" class="bg-slate-50 border-2 border-slate-200 rounded-xl p-4 text-sm focus:ring-2 focus:outline-none transition" style="--tw-ring-color: var(--brand-orange);">
+                                <input type="text" id="newTitle" placeholder="Work Title" class="bg-slate-50 border-2 border-slate-200 rounded-xl p-4 text-sm focus:ring-2 focus:outline-none transition" style="--tw-ring-color: var(--brand-orange);">
+                                <input type="number" id="newPrice" placeholder="Price (KES)" class="bg-slate-50 border-2 border-slate-200 rounded-xl p-4 text-sm focus:ring-2 focus:outline-none transition" style="--tw-ring-color: var(--brand-orange);">
+                                <div class="relative">
+                                    <input type="file" id="newFile" class="hidden" onchange="updateFileNameDisplay()">
+                                    <button onclick="document.getElementById('newFile').click()" class="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-[var(--brand-orange)] rounded-xl p-4 text-sm text-slate-600 text-left truncate flex items-center gap-2 transition">
+                                        <i class="fas fa-paperclip"></i> <span id="fileNameLabel">Attach File</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button onclick="addNewAssignment()" id="addBtn" class="w-full lg:w-auto px-12 py-4 font-bold rounded-xl shadow-lg transition-all hover:scale-105 btn-primary">
+                                <i class="fas fa-plus-circle mr-2"></i> Add Entry
+                            </button>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div class="bg-white rounded-3xl border-4 shadow-xl overflow-hidden" style="border-color: var(--brand-orange);">
+                            <div class="overflow-x-auto">
+                                <div id="adminDocList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `
+        };
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        function toggleMoreMenu() {
+            const dropdown = document.getElementById('moreMenuDropdown');
+            const chevron = document.getElementById('moreChevron');
+            const isHidden = dropdown.classList.contains('hidden');
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                dropdown.classList.add('hidden');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function closeMoreMenu() {
+            const dropdown = document.getElementById('moreMenuDropdown');
+            const chevron = document.getElementById('moreChevron');
+            if (dropdown) dropdown.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('moreMenuDropdown');
+            const btn = document.getElementById('moreMenuBtn');
+            if (!dropdown || dropdown.classList.contains('hidden')) return;
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                closeMoreMenu();
+            }
+        });
+
+        function switchAppTab(tab) {
+            const helb = document.getElementById('helbFormTab');
+            const kra = document.getElementById('kraFormTab');
+            const helbBtn = document.getElementById('tabBtnHelb');
+            const kraBtn = document.getElementById('tabBtnKra');
+            if (!helb || !kra) return;
+            const activeClasses = ['btn-primary'];
+            const inactiveClasses = ['bg-white', 'text-slate-600', 'border-2', 'border-slate-200'];
+            if (tab === 'kra') {
+                kra.classList.remove('hidden');
+                helb.classList.add('hidden');
+                kraBtn.classList.add(...activeClasses);
+                kraBtn.classList.remove(...inactiveClasses);
+                helbBtn.classList.remove(...activeClasses);
+                helbBtn.classList.add(...inactiveClasses);
+            } else {
+                helb.classList.remove('hidden');
+                kra.classList.add('hidden');
+                helbBtn.classList.add(...activeClasses);
+                helbBtn.classList.remove(...inactiveClasses);
+                kraBtn.classList.remove(...activeClasses);
+                kraBtn.classList.add(...inactiveClasses);
+            }
+            const anchor = document.getElementById('applicationsFormArea');
+            if (anchor) window.scrollTo({ top: anchor.offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function toggleHelbDisability() {
+            const v = document.getElementById('helbDisability').value;
+            const show = v === 'Yes';
+            document.getElementById('helbDisabilityDetails').classList.toggle('hidden', !show);
+            document.getElementById('helbNcpwdUpload').classList.toggle('hidden', !show);
+        }
+
+        function updateKraForm() {
+            const v = document.getElementById('kraService').value;
+            const returnSection = document.getElementById('kraReturnSection');
+            const employmentSection = document.getElementById('kraEmploymentSection');
+            const returnTypeSelect = document.getElementById('kraReturnType');
+            const isReturn = v.startsWith('KRA Return Filing');
+            returnSection.classList.toggle('hidden', !isReturn);
+            employmentSection.classList.toggle('hidden', v !== 'KRA Return Filing (Employment)');
+            if (isReturn) {
+                if (v.includes('Nil')) returnTypeSelect.value = 'Nil Return';
+                else if (v.includes('Employment')) returnTypeSelect.value = 'Employment Return';
+                else if (v.includes('Business')) returnTypeSelect.value = 'Business Return';
+                else if (v.includes('Rental')) returnTypeSelect.value = 'Rental Return';
+                updateKraReturnType();
+            }
+        }
+
+        function updateKraReturnType() {
+            const v = document.getElementById('kraReturnType').value;
+            document.getElementById('kraP9Block').classList.toggle('hidden', v !== 'Employment Return');
+            document.getElementById('kraBusinessBlock').classList.toggle('hidden', v !== 'Business Return');
+            document.getElementById('kraRentalBlock').classList.toggle('hidden', v !== 'Rental Return');
+        }
+
+        function navigateTo(viewName, scrollTarget = null) {
+            document.getElementById('app-content').innerHTML = views[viewName];
+            if (viewName === 'assignments') renderDocuments();
+            else if (viewName === 'stationery') renderProducts();
+            else if (viewName === 'admin') renderAdminDocs();
+            else if (viewName === 'careers') renderCareers();
+            else if (viewName === 'home') renderCareerBanner();
+            
+            if (scrollTarget) {
+                setTimeout(() => {
+                    const target = document.getElementById(scrollTarget);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function renderDocuments(filter = '') {
+            const grid = document.getElementById('documentGrid');
+            if (!grid) return;
+            const filtered = documents.filter(d => d.owner.toLowerCase().includes(filter.toLowerCase()) || d.title.toLowerCase().includes(filter.toLowerCase()));
+            
+            grid.innerHTML = filtered.length ? filtered.map(d => `
+                <div class="bg-white rounded-2xl p-6 md:p-7 border-2 shadow-lg relative overflow-hidden flex flex-col h-full transition-all hover:shadow-xl hover:-translate-y-1" style="border-color: ${d.status === 'paid' ? 'var(--brand-orange)' : '#e2e8f0'};">
+                    <div class="flex justify-between items-start mb-5">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-md" style="background: ${d.status === 'paid' ? 'linear-gradient(135deg, var(--brand-orange) 0%, #FF6B00 100%)' : 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'}; color: white;">
+                            <i class="fas ${d.status === 'paid' ? 'fa-file-circle-check' : 'fa-lock'} text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1.5 rounded-full shadow-sm" style="background: ${d.status === 'paid' ? 'var(--brand-orange)' : '#fbbf24'}; color: white;">
+                            ${d.status}
+                        </span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-2 text-base truncate">${d.title}</h4>
+                    <p class="text-slate-500 text-sm mb-6">Student: <span class="font-semibold">${d.owner}</span></p>
+                    <div class="mt-auto flex items-center justify-between border-t-2 pt-5" style="border-color: #f1f5f9;">
+                        <span class="font-extrabold text-lg" style="color: var(--brand-blue);">KES ${d.price}</span>
+                        ${d.status === 'paid' ? 
+                            `<button onclick="downloadDoc(${d.id})" class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md transition-all hover:scale-105 btn-secondary">
+                                <i class="fas fa-download"></i> Get File
+                             </button>` : 
+                            `<button onclick="payViaWhatsapp(${d.id})" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white shadow-md transition-all hover:scale-105" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);">Pay & Collect</button>`}
+                    </div>
+                </div>
+            `).join('') : '<div class="col-span-full text-center py-24 text-slate-400 text-lg">No matching assignments found.</div>';
+        }
+
+        function formatDeadline(iso) {
+            const d = new Date(iso + 'T00:00:00');
+            return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        function isJobExpired(deadlineIso) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const deadline = new Date(deadlineIso + 'T00:00:00');
+            return today >= deadline;
+        }
+
+        function renderCareerBanner() {
+            const banner = document.getElementById('careerBanner');
+            if (!banner) return;
+
+            const activeJobs = jobOpenings.filter(job => !isJobExpired(job.deadline));
+            const dismissed = sessionStorage.getItem('careerBannerDismissed') === 'true';
+
+            if (activeJobs.length === 0 || dismissed) {
+                banner.innerHTML = '';
+                return;
+            }
+
+            const headline = activeJobs.length === 1
+                ? `We're Hiring — ${activeJobs[0].title}`
+                : `We're Hiring — ${activeJobs.length} Open Positions`;
+            const nearest = activeJobs.reduce((a, b) => (a.deadline < b.deadline ? a : b));
+
+            banner.innerHTML = `
+                <div onclick="navigateTo('careers')" class="ad-banner-shine ad-banner-enter cursor-pointer relative" style="background: linear-gradient(90deg, var(--brand-orange) 0%, #FF6B00 50%, var(--brand-orange) 100%);">
+                    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span class="hidden sm:flex w-8 h-8 rounded-full bg-white/25 items-center justify-center shrink-0">
+                                <i class="fas fa-bullhorn text-white text-sm"></i>
+                            </span>
+                            <p class="text-white text-xs sm:text-sm font-bold truncate">
+                                <span class="uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded-full text-[10px] mr-2 align-middle">Now Hiring</span>
+                                <span class="align-middle">${headline} &middot; Apply before ${formatDeadline(nearest.deadline)}</span>
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="hidden md:inline-flex items-center gap-1.5 text-white text-xs font-bold bg-white/20 px-4 py-1.5 rounded-full hover:bg-white/30 transition">
+                                View Details <i class="fas fa-arrow-right"></i>
+                            </span>
+                            <button onclick="event.stopPropagation(); dismissCareerBanner();" class="text-white/80 hover:text-white transition p-1" aria-label="Dismiss">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function dismissCareerBanner() {
+            sessionStorage.setItem('careerBannerDismissed', 'true');
+            const banner = document.getElementById('careerBanner');
+            if (banner) banner.innerHTML = '';
+        }
+
+        function renderCareers() {
+            const listings = document.getElementById('careerListings');
+            const applySection = document.getElementById('careerApplySection');
+            if (!listings || !applySection) return;
+
+            const activeJobs = jobOpenings.filter(job => !isJobExpired(job.deadline));
+
+            if (activeJobs.length === 0) {
+                listings.innerHTML = `
+                    <div class="bg-white p-10 md:p-16 rounded-3xl shadow-2xl border-4 text-center" style="border-color: var(--brand-orange);">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 float-animation" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                            <i class="fas fa-magnifying-glass text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-extrabold mb-4" style="color: var(--brand-blue);">No Open Positions Right Now</h3>
+                        <p class="text-slate-500 text-sm md:text-base max-w-xl mx-auto leading-relaxed">We don't have any contracted or freelance roles listed at the moment. Check back soon — when we do, they'll appear right here with full details on how to apply.</p>
+                    </div>`;
+                applySection.innerHTML = `
+                    <div class="rounded-2xl p-6 md:p-8 text-center mt-8" style="background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%); border: 2px dashed #cbd5e1;">
+                        <p class="text-sm text-slate-600 mb-4">Want to be first to know when we're hiring or looking for contractors?</p>
+                        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello The Brand Cyber, I would like to be considered for future contracted/freelance work.')}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm shadow-md text-white transition-all hover:scale-105" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);">
+                            <i class="fab fa-whatsapp"></i> Register Your Interest
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            listings.innerHTML = activeJobs.map(job => `
+                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-2 border-slate-100 hover:border-[var(--brand-orange)] transition-all">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                                <i class="fas fa-bullhorn text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-extrabold mb-2" style="color: var(--brand-blue);">${job.title}</h3>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="text-[10px] font-bold uppercase px-3 py-1.5 rounded-full" style="background: var(--brand-orange); color: white;">${job.type}</span>
+                                    <span class="text-[10px] font-bold uppercase px-3 py-1.5 rounded-full bg-slate-100 text-slate-600">${job.payment}</span>
+                                </div>
+                                <p class="text-slate-600 text-sm leading-relaxed max-w-xl">${job.description}</p>
+                                <p class="text-xs text-slate-400 mt-4 italic">Specific role responsibilities will be discussed directly with management.</p>
+                            </div>
+                        </div>
+                        <div class="text-left md:text-right shrink-0 md:pl-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Apply Before</p>
+                            <p class="font-extrabold text-lg mb-4 whitespace-nowrap" style="color: var(--brand-orange);">${formatDeadline(job.deadline)}</p>
+                            <button onclick="startApplication('${job.title.replace(/'/g, "\\'")}')" class="px-6 py-3 rounded-xl font-bold text-sm shadow-md text-white transition-all hover:scale-105 btn-primary whitespace-nowrap w-full md:w-auto">
+                                Apply Now <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            applySection.innerHTML = `
+                <div id="applicationFormCard" class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border-4 mt-4" style="border-color: var(--brand-orange);">
+                    <h3 class="text-2xl font-extrabold mb-2" style="color: var(--brand-blue);">Submit Your Application</h3>
+                    <p class="text-slate-500 text-sm mb-8">Select the position and tell us a bit about yourself. Role specifics and terms will be discussed directly with management.</p>
+                    <form action="https://formsubmit.co/${EMAIL_RECIPIENT}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        <input type="hidden" name="_subject" value="New Job Application - The Brand Cyber">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_captcha" value="false">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Position Applying For</label>
+                            <select name="Position" id="applyPositionSelect" required class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] appearance-none transition">
+                                <option value="" disabled selected>Select a position...</option>
+                                ${activeJobs.map(j => `<option value="${j.title}">${j.title}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            ${f('Full Name', 'Full Name', { required: true })}
+                            ${f('Phone Number', 'Phone Number', { type: 'tel', required: true })}
+                        </div>
+                        ${f('Email Address', 'Email Address', { type: 'email', required: true })}
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--brand-blue);">Why are you a good fit?</label>
+                            <textarea name="Cover Note" rows="5" required placeholder="Tell us about your experience and why you're interested..." class="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 focus:outline-none focus:border-[var(--brand-orange)] transition"></textarea>
+                        </div>
+                        ${fileF('CV / Resume (Optional)', 'CV')}
+                        <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-bold text-lg shadow-2xl transition-all active:scale-95">
+                            Submit Application <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>`;
+        }
+
+        function startApplication(title) {
+            const sel = document.getElementById('applyPositionSelect');
+            if (sel) sel.value = title;
+            const card = document.getElementById('applicationFormCard');
+            if (card) setTimeout(() => window.scrollTo({ top: card.offsetTop - 100, behavior: 'smooth' }), 50);
+        }
+
+        function payViaWhatsapp(id) {
+            const doc = documents.find(d => d.id === id);
+            const msg = `Hello The Brand Cyber, I want to pay for my document:\n\n*Name:* ${doc.owner}\n*Title:* ${doc.title}\n*Price:* KES ${doc.price}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function downloadDoc(id) {
+            const docIndex = documents.findIndex(d => d.id === id);
+            if (docIndex === -1) return;
+            
+            const doc = documents[docIndex];
+            if (!doc.fileData) { alert("File missing in storage."); return; }
+
+            const link = document.createElement('a');
+            link.href = doc.fileData;
+            link.download = doc.fileName || "document.pdf";
+            link.click();
+
+            setTimeout(() => {
+                documents.splice(docIndex, 1);
+                saveDocuments();
+                renderDocuments(document.getElementById('assignSearch')?.value || '');
+            }, 1000); 
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            grid.innerHTML = products.map(p => `
+                <div class="product-card bg-white p-6 md:p-7 rounded-3xl shadow-lg flex flex-col">
+                    <div class="h-28 md:h-36 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-6" style="color: var(--brand-blue);">
+                        <i class="fas fa-${p.icon}"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-4 text-sm md:text-base line-clamp-2 min-h-[3rem]">${p.name}</h4>
+                    <div class="flex items-center justify-between mt-auto">
+                        <span class="font-extrabold text-base md:text-lg" style="color: var(--brand-orange);">KES ${p.price}</span>
+                        <button onclick="addToCart(${p.id})" class="w-10 h-10 md:w-11 md:h-11 rounded-xl active:scale-95 transition-all shadow-md btn-secondary">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            cart.push(products.find(p => p.id === id));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cartItems');
+            if (!container) return;
+            container.innerHTML = cart.length ? cart.map((item, idx) => `
+                <div class="flex gap-4 items-center bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 hover:border-[var(--brand-orange)] transition">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm" style="color: var(--brand-blue);"><i class="fas fa-${item.icon} text-lg"></i></div>
+                    <div class="flex-1">
+                        <h5 class="text-sm font-bold truncate">${item.name}</h5>
+                        <p class="text-xs font-extrabold" style="color: var(--brand-orange);">KES ${item.price}</p>
+                    </div>
+                    <button onclick="removeFromCart(${idx})" class="text-slate-300 hover:text-red-500 p-2 transition"><i class="fas fa-trash-can"></i></button>
+                </div>
+            `).join('') : '<div class="text-center py-16 text-slate-400 text-sm">Your cart is empty</div>';
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').innerText = `KES ${total.toLocaleString()}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('translate-x-full');
+        }
+
+        function checkout() {
+            if (!cart.length) return;
+            const items = cart.map(i => `- ${i.name}`).join('\n');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const msg = `New Order from Website:\n------------------\n${items}\n------------------\nTotal: KES ${total}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function openAdmin() {
+            if (isAdminAuthenticated) {
+                navigateTo('admin');
+            } else {
+                document.getElementById('adminAuthModal').style.display = 'flex';
+            }
+        }
+
+        function closeAuth() { 
+            document.getElementById('adminAuthModal').style.display = 'none';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function verifyAdmin() {
+            const password = document.getElementById('adminPass').value;
+            if (password === ADMIN_PASS) {
+                isAdminAuthenticated = true;
+                closeAuth();
+                navigateTo('admin');
+                document.getElementById('adminBtn').innerHTML = `<i class="fas fa-check-circle mr-1 text-green-400"></i> Admin`;
+            } else { 
+                const input = document.getElementById('adminPass');
+                input.style.borderColor = '#ef4444';
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.style.animation = '';
+                    input.value = '';
+                }, 500);
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            navigateTo('home');
+            document.getElementById('adminBtn').innerHTML = `<i class="fas fa-lock mr-1"></i> Admin`;
+        }
+
+        function updateFileNameDisplay() {
+            const fileInput = document.getElementById('newFile');
+            const label = document.getElementById('fileNameLabel');
+            label.innerText = fileInput.files.length ? fileInput.files[0].name : "Attach File";
+            if (fileInput.files.length) {
+                label.parentElement.style.borderColor = 'var(--brand-orange)';
+            }
+        }
+
+        async function addNewAssignment() {
+            const owner = document.getElementById('newOwner').value;
+            const title = document.getElementById('newTitle').value;
+            const price = document.getElementById('newPrice').value;
+            const fileInput = document.getElementById('newFile');
+            
+            if (!owner || !title || !price) { 
+                alert("Please fill all required details");
+                return;
+            }
+
+            let fileData = null;
+            let fileName = null;
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                fileName = file.name;
+                fileData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            documents.unshift({ 
+                id: Date.now(), 
+                owner, 
+                title, 
+                price: parseInt(price), 
+                status: 'unpaid', 
+                date: new Date().toISOString().split('T')[0], 
+                fileData, 
+                fileName 
+            });
+            saveDocuments();
+            renderAdminDocs();
+            
+            // Clear form
+            document.getElementById('newOwner').value = ""; 
+            document.getElementById('newTitle').value = ""; 
+            document.getElementById('newPrice').value = "";
+            document.getElementById('newFile').value = "";
+            document.getElementById('fileNameLabel').innerText = "Attach File";
+            document.getElementById('fileNameLabel').parentElement.style.borderColor = '';
+            
+            // Success feedback
+            const btn = document.getElementById('addBtn');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Added Successfully!';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i> Add Entry';
+            }, 2000);
+        }
+
+        function togglePaidStatus(id) {
+            const doc = documents.find(d => d.id === id);
+            if (doc) { 
+                doc.status = doc.status === 'paid' ? 'unpaid' : 'paid'; 
+                saveDocuments(); 
+                renderAdminDocs(); 
+            }
+        }
+
+        function renderAdminDocs() {
+            const list = document.getElementById('adminDocList');
+            if (!list) return;
+            list.innerHTML = `
+                <table class="w-full text-left min-w-[700px]">
+                    <thead style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                        <tr>
+                            <th class="p-5 text-xs uppercase text-white font-bold">Student/Task</th>
+                            <th class="p-5 text-xs uppercase text-white font-bold">Attachment</th>
+                            <th class="p-5 text-xs uppercase text-white font-bold">Payment</th>
+                            <th class="p-5 text-right"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${documents.map(d => `
+                            <tr class="border-b-2 border-slate-100 hover:bg-orange-50/30 transition">
+                                <td class="p-5">
+                                    <p class="text-sm font-bold text-slate-800">${d.owner}</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">${d.title}</p>
+                                </td>
+                                <td class="p-5">
+                                    <span class="text-xs font-bold px-3 py-1.5 rounded-lg ${d.fileData ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}">
+                                        ${d.fileData ? '✓ Attached' : '⨯ Missing'}
+                                    </span>
+                                </td>
+                                <td class="p-5">
+                                    <button onclick="togglePaidStatus(${d.id})" class="text-xs uppercase font-bold px-4 py-2 rounded-full transition-all hover:scale-105 ${d.status === 'paid' ? 'text-white shadow-md' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}" style="${d.status === 'paid' ? 'background: linear-gradient(135deg, var(--brand-orange) 0%, #FF6B00 100%);' : ''}">
+                                        ${d.status}
+                                    </button>
+                                </td>
+                                <td class="p-5 text-right">
+                                    <button onclick="deleteDoc(${d.id})" class="text-slate-300 hover:text-red-500 p-3 transition"><i class="fas fa-trash-can"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                ${documents.length === 0 ? '<div class="p-16 text-center text-slate-400 text-sm italic">No entries found in registry.</div>' : ''}
+            `;
+        }
+
+        function deleteDoc(id) {
+            if(confirm("Permanently delete this entry?")) { 
+                documents = documents.filter(d => d.id !== id); 
+                saveDocuments(); 
+                renderAdminDocs(); 
+            }
+        }
+
+        function toggleBot() { 
+            document.getElementById('botWindow').classList.toggle('bot-active'); 
+            document.getElementById('botWelcome').classList.add('hidden'); 
+        }
+
+        function handleBotInput() {
+            const input = document.getElementById('botInput');
+            const body = document.getElementById('chatBody');
+            if (!input.value.trim()) return;
+            
+            const userMsg = input.value;
+            body.innerHTML += `<div class="chat-bubble-user">${userMsg}</div>`;
+            input.value = "";
+            body.scrollTop = body.scrollHeight;
+
+            setTimeout(() => {
+                let response = "I'm the Brand Assistant. How can I help? You can ask about 'services', 'location', or 'stationery'.";
+                const q = userMsg.toLowerCase();
+                
+                if (q.includes('service') || q.includes('offer')) response = "We offer professional printing, photocopies, assignments, and online apps (KRA, HELB, KUCCPS).";
+                else if (q.includes('location') || q.includes('where')) response = "We are located at Maasai Mara University Gate C, Bomet Road, Narok.";
+                else if (q.includes('price') || q.includes('cost')) response = "Our prices are very student-friendly! Check our Stationery section for shop prices.";
+                else if (q.includes('hour') || q.includes('open')) response = "We're open Mon-Fri: 7am-9pm, Saturday: 9:30am-7:30pm, Sunday: 2pm-8pm.";
+                
+                body.innerHTML += `<div class="chat-bubble-bot">${response}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 800);
+        }
+
+        window.onload = () => {
+            navigateTo('home');
+            setTimeout(() => { 
+                document.getElementById('botWelcome').classList.remove('hidden'); 
+            }, 3000);
+        };
+    </script>
+</body>
+</html>
