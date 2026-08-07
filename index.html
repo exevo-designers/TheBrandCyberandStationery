@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Brand Cyber & Stationery | Gate C, Maasai Mara University</title>
-        <link rel="icon" type="image/png" href="logo/the-brand-cyber-logo.png" />
-    <link rel="apple-touch-icon" href="logo/the-brand-cyber-logo.png">
+        <link rel="icon" type="image/png" href="logo/the-brand-cyber-logo.jpg" />
+    <link rel="apple-touch-icon" href="logo/the-brand-cyber-logo.jpg">
     
     <!-- Adding multiple sizes for better compatibility -->
     <link rel="icon" type="image/png" sizes="16x16" href="logo/the-brand-cyber-logo.jpg">
@@ -361,7 +361,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <!-- Logo Section with Image -->
             <div class="logo-container cursor-pointer" onclick="navigateTo('home')">
-                <img src="logo/the-brand-cyber-logo.png" alt="The Brand Cyber Logo" class="logo-img">
+                <img src="logo/the-brand-cyber-logo.jpg" alt="The Brand Cyber Logo" class="logo-img">
             </div>
             
             <!-- Desktop Links -->
@@ -472,7 +472,16 @@
         </div>
         <div id="chatBody" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-2 bg-[#e5ddd5]">
             <div class="chat-bubble-bot">
-                Hello! Welcome to The Brand Cyber & Stationery. How can I help you today?
+                Hello! Welcome to The Brand Cyber & Stationery. Ask me anything about our services, or tap a topic below 👇
+            </div>
+            <div class="self-start flex flex-wrap gap-2 max-w-[95%] mb-2">
+                <button onclick="sendQuickReply('Services')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Services</button>
+                <button onclick="sendQuickReply('Stationery')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Stationery</button>
+                <button onclick="sendQuickReply('Assignments')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Assignments</button>
+                <button onclick="sendQuickReply('HELB and KRA')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">HELB &amp; KRA</button>
+                <button onclick="sendQuickReply('Careers')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Careers</button>
+                <button onclick="sendQuickReply('Working hours')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Hours</button>
+                <button onclick="sendQuickReply('Location')" class="text-xs font-bold px-3 py-2 rounded-full bg-white border-2 hover:bg-orange-50 transition" style="border-color: var(--brand-orange); color: var(--brand-blue);">Location</button>
             </div>
         </div>
         <div class="p-4 bg-white border-t-2 flex gap-3" style="border-color: var(--brand-orange);">
@@ -1622,6 +1631,105 @@
             document.getElementById('botWelcome').classList.add('hidden'); 
         }
 
+        // ---- FAQ knowledge base for the Brand Assistant bot ----
+        // Each entry is matched by keyword against the user's message.
+        // Order matters: more specific entries should come before general ones.
+        const faqData = [
+            {
+                keywords: ['helb'],
+                response: "We handle first-time HELB applications end-to-end — personal info, education & KCSE details, guardian details, bank details, disability info, and all required document uploads in one form.",
+                cta: { label: 'Start HELB Application', action: "navigateTo('applications')" }
+            },
+            {
+                keywords: ['kra', 'tax', 'pin', 'ushuru', 'mashinani', 'return', 'compliance'],
+                response: "We're a Ushuru Mashinani (KRA) affiliate — we handle PIN registration, nil/employment/business/rental return filing, PIN updates & retrieval, and tax compliance certificates.",
+                cta: { label: 'Start KRA Service', action: "navigateTo('applications')" }
+            },
+            {
+                keywords: ['kuccps'],
+                response: "We assist with KUCCPS applications too — visit us at Gate C or submit a service request and our team will guide you through it.",
+                cta: { label: 'Request Help', action: "navigateTo('home', 'request-service')" }
+            },
+            {
+                keywords: ['career', 'job', 'hiring', 'vacancy', 'employ', 'recruit', 'contract work'],
+                response: "Check our Careers page for current openings — we occasionally bring on contracted or freelance help across marketing, design, and more.",
+                cta: { label: 'View Careers', action: "navigateTo('careers')" }
+            },
+            {
+                keywords: ['assignment', 'research', 'thesis', 'project', 'academic', 'typesetting', 'proofread'],
+                response: "Once your academic work is processed, search for it by your name in our Assignments portal, pay, then download. Downloads self-delete after collection for your privacy.",
+                cta: { label: 'Find My Work', action: "navigateTo('assignments')" }
+            },
+            {
+                keywords: ['stationery', 'shop', 'buy', 'pen', 'exercise book', 'notebook', 'calculator', 'stapler', 'highlighter', 'geometric set', 'paper'],
+                response: "Our Stationery Shop has pens, paper, exercise books, calculators and more — add items to your cart and checkout straight to WhatsApp.",
+                cta: { label: 'Open Shop', action: "navigateTo('stationery')" }
+            },
+            {
+                keywords: ['print', 'photocopy', 'copy', 'scan'],
+                response: "We handle bulk black & white and color printing plus photocopying at Gate C. Walk in or send us your files on WhatsApp and we'll have it ready fast."
+            },
+            {
+                keywords: ['design', 'cv', 'resume', 'poster', 'flyer', 'graphic', 'branding'],
+                response: "Our design team creates professional CVs, resumes, posters and flyers. Tell us what you need and we'll follow up with pricing.",
+                cta: { label: 'Request Design Work', action: "navigateTo('home', 'request-service')" }
+            },
+            {
+                keywords: ['order', 'request', 'submit work', 'custom job', 'quote'],
+                response: "Fill in our Request a Service form with what you need and we'll get back to you within minutes with a customized solution.",
+                cta: { label: 'Request a Service', action: "navigateTo('home', 'request-service')" }
+            },
+            {
+                keywords: ['cart', 'checkout', 'basket'],
+                response: "Add items to your cart from the Stationery Shop, then tap the cart icon and hit 'Order via WhatsApp' to confirm your order with us."
+            },
+            {
+                keywords: ['payment', 'pay', 'mpesa', 'm-pesa', 'money'],
+                response: "We accept M-Pesa and cash. For online orders and applications, you'll confirm payment details with our team directly over WhatsApp."
+            },
+            {
+                keywords: ['admin', 'login', 'portal'],
+                response: "The Admin Portal is reserved for our staff to manage uploaded documents and inventory — it's not for general customer use."
+            },
+            {
+                keywords: ['contact', 'phone', 'email', 'whatsapp', 'call', 'reach', 'talk to someone', 'human'],
+                response: "You can reach our team on WhatsApp at 0702 502147, or by email at thebrandcyber0@gmail.com — we usually reply within minutes."
+            },
+            {
+                keywords: ['hour', 'open', 'close', 'time'],
+                response: "We're open Mon–Fri: 7:00am–9:00pm, Saturday: 9:30am–7:30pm, and Sunday: 2:00pm–8:00pm."
+            },
+            {
+                keywords: ['location', 'where', 'address', 'directions', 'find you', 'situated'],
+                response: "We're located at Maasai Mara University Gate C, Bomet Road, Narok Town."
+            },
+            {
+                keywords: ['price', 'cost', 'how much', 'fee', 'charges'],
+                response: "Prices vary by item and job. Stationery prices are listed in our Shop, and custom work like printing, assignments, or design gets a quick quote over WhatsApp.",
+                cta: { label: 'Shop Stationery', action: "navigateTo('stationery')" }
+            },
+            {
+                keywords: ['service', 'offer', 'what do you do', 'what can you help'],
+                response: "We offer Printing & Copy, Online Applications (HELB, KRA, KUCCPS), Academic Assistance, and Graphic Design.",
+                cta: { label: 'View All Services', action: "navigateTo('home', 'services')" }
+            },
+            {
+                keywords: ['hello', 'hi', 'hey', 'menu', 'help'],
+                response: "Hi there! I can help with our Services, Stationery Shop, Assignments, HELB & KRA applications, Careers, hours, or location — what would you like to know?"
+            }
+        ];
+
+        function findFaqMatch(text) {
+            const q = text.toLowerCase();
+            return faqData.find(item => item.keywords.some(k => q.includes(k)));
+        }
+
+        function sendQuickReply(label) {
+            const input = document.getElementById('botInput');
+            input.value = label;
+            handleBotInput();
+        }
+
         function handleBotInput() {
             const input = document.getElementById('botInput');
             const body = document.getElementById('chatBody');
@@ -1633,15 +1741,16 @@
             body.scrollTop = body.scrollHeight;
 
             setTimeout(() => {
-                let response = "I'm the Brand Assistant. How can I help? You can ask about 'services', 'location', or 'stationery'.";
-                const q = userMsg.toLowerCase();
-                
-                if (q.includes('service') || q.includes('offer')) response = "We offer professional printing, photocopies, assignments, and online apps (KRA, HELB, KUCCPS).";
-                else if (q.includes('location') || q.includes('where')) response = "We are located at Maasai Mara University Gate C, Bomet Road, Narok.";
-                else if (q.includes('price') || q.includes('cost')) response = "Our prices are very student-friendly! Check our Stationery section for shop prices.";
-                else if (q.includes('hour') || q.includes('open')) response = "We're open Mon-Fri: 7am-9pm, Saturday: 9:30am-7:30pm, Sunday: 2pm-8pm.";
-                
-                body.innerHTML += `<div class="chat-bubble-bot">${response}</div>`;
+                const match = findFaqMatch(userMsg);
+                const response = match
+                    ? match.response
+                    : "I don't have a ready answer for that, but our team can help directly — tap below to chat with us on WhatsApp.";
+                const cta = match && match.cta
+                    ? match.cta
+                    : { label: 'Chat on WhatsApp', action: `window.open('https://wa.me/${WHATSAPP_NUMBER}')` };
+                const ctaHtml = `<button onclick="${cta.action}" class="mt-2 text-xs font-bold px-3 py-2 rounded-lg text-white inline-flex items-center gap-1.5" style="background: var(--brand-blue);">${cta.label} <i class="fas fa-arrow-right text-[10px]"></i></button>`;
+
+                body.innerHTML += `<div class="chat-bubble-bot"><div>${response}</div>${ctaHtml}</div>`;
                 body.scrollTop = body.scrollHeight;
             }, 800);
         }
