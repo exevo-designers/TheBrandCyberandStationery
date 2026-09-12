@@ -511,61 +511,32 @@
         </div>
     </div>
 
-<!-- Admin Auth Modal -->
-<div id="adminAuthModal" class="modal-backdrop fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center px-4">
-    <div class="modal-content bg-white rounded-3xl p-8 w-full max-w-md text-center shadow-2xl border-4"
-         style="border-color: var(--brand-orange);">
-
-        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6"
-             style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
-            <i class="fas fa-shield-halved fa-3x text-white"></i>
+    <!-- Admin Auth Modal -->
+    <div id="adminAuthModal" class="modal-backdrop fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center px-4">
+        <div class="modal-content bg-white rounded-3xl p-8 w-full max-w-md text-center shadow-2xl border-4" style="border-color: var(--brand-orange);">
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);">
+                <i class="fas fa-shield-halved fa-3x text-white"></i>
+            </div>
+            <h3 class="font-bold text-2xl mb-2" style="color: var(--brand-blue);">Admin Authentication</h3>
+            <p class="text-xs text-slate-500 mb-6 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
+            <input type="password" id="adminPass" placeholder="Enter Password" autocomplete="current-password" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-4 mb-3 focus:outline-none focus:border-[var(--brand-orange)] text-center tracking-wider font-mono transition">
+            <p id="adminAuthMessage" class="text-sm min-h-[24px] mb-4 font-semibold"></p>
+            <div class="flex gap-4">
+                <button onclick="closeAuth()" class="flex-1 py-3 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition">Cancel</button>
+                <button onclick="verifyAdmin()" class="flex-1 py-3 text-white font-bold rounded-xl btn-primary">Verify Access</button>
+            </div>
         </div>
-
-        <h3 class="font-bold text-2xl mb-2" style="color: var(--brand-blue);">
-            Admin Authentication
-        </h3>
-
-        <p class="text-xs text-slate-500 mb-8 uppercase tracking-widest font-bold">
-            Authorized Personnel Only
-        </p>
-
-        <input
-            type="password"
-            id="adminPass"
-            placeholder="Enter Password"
-            autocomplete="current-password"
-            class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-4 mb-6 focus:outline-none focus:border-[var(--brand-orange)] text-center tracking-wider font-mono transition"
-            onkeypress="if(event.key === 'Enter') verifyAdmin()"
-        >
-
-        <div class="flex gap-4">
-            <button
-                onclick="closeAuth()"
-                class="flex-1 py-3 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition">
-                Cancel
-            </button>
-
-            <button
-                id="verifyAdminBtn"
-                onclick="verifyAdmin()"
-                class="flex-1 py-3 text-white font-bold rounded-xl btn-primary">
-                Verify Access
-            </button>
-        </div>
-
-        <p id="adminAuthMessage" class="text-xs font-semibold mt-5 hidden"></p>
     </div>
-</div>
 
     <script>
-            const WHATSAPP_NUMBER = "254702502147";
-            const EMAIL_RECIPIENT = "thebrandcyber0@gmail.com";
-            
-            const ADMIN_AUTH_URL =
-                "https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec";
-            
-            let isAdminAuthenticated = false;
-            let cart = [];
+        const WHATSAPP_NUMBER = "254702502147";
+        const ADMIN_AUTH_URL = "https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec";
+        const ADMIN_POS_URL = "admin-pos.html";
+        const ADMIN_SESSION_KEY = "the_brand_cyber_admin_authenticated";
+        const EMAIL_RECIPIENT = "thebrandcyber0@gmail.com";
+        
+        let isAdminAuthenticated = false;
+        let cart = [];
 
         let products = [
             { id: 1, name: 'A4 Printing Paper (Rim)', price: 750, category: 'Paper', icon: 'file-lines' },
@@ -1460,10 +1431,12 @@
                 </div>
             `).join('');
         }
+
         function addToCart(id) {
             cart.push(products.find(p => p.id === id));
             updateCartUI();
         }
+
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.length;
             const container = document.getElementById('cartItems');
@@ -1481,13 +1454,16 @@
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             document.getElementById('cartTotal').innerText = `KES ${total.toLocaleString()}`;
         }
+
         function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
+
         function toggleCart() {
             document.getElementById('cartSidebar').classList.toggle('translate-x-full');
         }
+
         function checkout() {
             if (!cart.length) return;
             const items = cart.map(i => `- ${i.name}`).join('\n');
@@ -1495,106 +1471,136 @@
             const msg = `New Order from Website:\n------------------\n${items}\n------------------\nTotal: KES ${total}`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
-function openAdmin() {
-    if (isAdminAuthenticated) {
-        window.location.href = "admin-pos.html";
-        return;
-    }
-    const modal = document.getElementById('adminAuthModal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    setTimeout(() => {
-        document.getElementById('adminPass').focus();
-    }, 100);
-}
-function closeAuth() {
-    const modal = document.getElementById('adminAuthModal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.getElementById('adminPass').value = '';
-    const message = document.getElementById('adminAuthMessage');
-    message.classList.add('hidden');
-    message.innerText = '';
-}
-async function verifyAdmin() {
-    const input = document.getElementById('adminPass');
-    const button = document.getElementById('verifyAdminBtn');
-    const message = document.getElementById('adminAuthMessage');
-    const password = input.value.trim();
-    if (!password) {
-        message.innerText = "Please enter your password.";
-        message.style.color = "#ef4444";
-        message.classList.remove('hidden');
-        input.focus();
-        return;
-    }
-    // Loading state
-    button.disabled = true;
-    button.innerHTML =
-        '<i class="fas fa-spinner fa-spin mr-2"></i> Verifying...';
-    message.classList.add('hidden');
-    try {
-        const response = await fetch(ADMIN_AUTH_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: "verifyAdmin",
-                password: password
-            })
-        });
-        if (!response.ok) {
-            throw new Error("Authentication server returned an error.");
-        }
-        const result = await response.json();
-        if (result.success === true) {
-            isAdminAuthenticated = true;
-            // Store only the authentication state locally.
-            sessionStorage.setItem(
-                "the_brand_cyber_admin",
-                "authenticated"
-            );
-            closeAuth();
-            // Go directly to the POS admin page
-            window.location.href = "admin-pos.html";
-        } else {
-            message.innerText =
-                result.message || "Invalid admin password.";
-            message.style.color = "#ef4444";
-            message.classList.remove('hidden');
-            input.style.borderColor = "#ef4444";
-            input.style.animation = "shake 0.5s";
-            setTimeout(() => {
-                input.style.borderColor = "";
-                input.style.animation = "";
-                input.value = "";
-                input.focus();
-            }, 500);
-        }
-    } catch (error) {
-        console.error("Admin authentication error:", error);
-        message.innerText =
-            "Unable to connect to the authentication server. Please try again.";
-        message.style.color = "#ef4444";
-        message.classList.remove('hidden');
 
-    } finally {
-        button.disabled = false;
-        button.innerHTML = "Verify Access";
-    }
-}
-function logoutAdmin() {
-    isAdminAuthenticated = false;
-    sessionStorage.removeItem("the_brand_cyber_admin");
-    window.location.href = "index.html";
-}
+        function openAdmin() {
+            if (isAdminAuthenticated || sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true') {
+                isAdminAuthenticated = true;
+                window.location.href = ADMIN_POS_URL;
+                return;
+            }
+
+            const modal = document.getElementById('adminAuthModal');
+            const message = document.getElementById('adminAuthMessage');
+            const input = document.getElementById('adminPass');
+            if (message) {
+                message.textContent = '';
+                message.className = 'text-sm min-h-[24px] mb-4 font-semibold';
+            }
+            if (input) {
+                input.value = '';
+                input.style.borderColor = '';
+                input.disabled = false;
+            }
+            if (modal) modal.style.display = 'flex';
+            setTimeout(() => input?.focus(), 100);
+        }
+
+        function closeAuth() {
+            const modal = document.getElementById('adminAuthModal');
+            const input = document.getElementById('adminPass');
+            const message = document.getElementById('adminAuthMessage');
+            if (modal) modal.style.display = 'none';
+            if (input) {
+                input.value = '';
+                input.disabled = false;
+                input.style.borderColor = '';
+                input.style.animation = '';
+            }
+            if (message) {
+                message.textContent = '';
+                message.className = 'text-sm min-h-[24px] mb-4 font-semibold';
+            }
+        }
+
+        async function verifyAdmin() {
+            const input = document.getElementById('adminPass');
+            const message = document.getElementById('adminAuthMessage');
+            const password = input ? input.value.trim() : '';
+
+            if (!password) {
+                if (message) {
+                    message.textContent = 'Please enter your password.';
+                    message.className = 'text-sm min-h-[24px] mb-4 font-semibold text-red-600';
+                }
+                input?.focus();
+                return;
+            }
+
+            if (input) input.disabled = true;
+            if (message) {
+                message.textContent = 'Verifying access...';
+                message.className = 'text-sm min-h-[24px] mb-4 font-semibold text-slate-500';
+            }
+
+            try {
+                const response = await fetch(ADMIN_AUTH_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({
+                        action: 'verifyAdmin',
+                        password: password
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Authentication server returned ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result && result.success === true) {
+                    isAdminAuthenticated = true;
+                    sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+                    if (message) {
+                        message.textContent = 'Access granted. Redirecting...';
+                        message.className = 'text-sm min-h-[24px] mb-4 font-semibold text-green-600';
+                    }
+                    setTimeout(() => {
+                        window.location.href = ADMIN_POS_URL;
+                    }, 250);
+                } else {
+                    throw new Error((result && (result.message || result.error)) || 'Invalid password');
+                }
+            } catch (error) {
+                console.error('Admin authentication error:', error);
+                isAdminAuthenticated = false;
+                sessionStorage.removeItem(ADMIN_SESSION_KEY);
+                if (input) {
+                    input.disabled = false;
+                    input.value = '';
+                    input.style.borderColor = '#ef4444';
+                    input.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        input.style.borderColor = '';
+                        input.style.animation = '';
+                    }, 500);
+                }
+                if (message) {
+                    message.textContent = error.message === 'Invalid password' ? 'Invalid password. Please try again.' : 'Unable to verify access. Please try again.';
+                    message.className = 'text-sm min-h-[24px] mb-4 font-semibold text-red-600';
+                }
+            }
+        }
 
         function logoutAdmin() {
             isAdminAuthenticated = false;
-            navigateTo('home');
-            document.getElementById('adminBtn').innerHTML = `<i class="fas fa-lock mr-1"></i> Admin`;
+            sessionStorage.removeItem(ADMIN_SESSION_KEY);
+            window.location.href = 'index.html';
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminPassInput = document.getElementById('adminPass');
+            if (adminPassInput) {
+                adminPassInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        verifyAdmin();
+                    }
+                });
+            }
+        });
 
         function updateFileNameDisplay() {
             const fileInput = document.getElementById('newFile');
