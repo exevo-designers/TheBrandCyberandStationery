@@ -308,6 +308,7 @@
         <div class="field"><label for="repFrom">From</label><input type="date" id="repFrom"></div>
         <div class="field"><label for="repTo">To</label><input type="date" id="repTo"></div>
         <button class="btn" onclick="loadReport()">Run report</button>
+        <button class="btn secondary" onclick="downloadReportStatement()" title="Download all report records">Download statement</button>
       </div>
       <div class="stat-row">
         <div class="stat-card"><div class="label">Revenue</div><div class="value" id="statRevenue">KES 0</div></div>
@@ -793,6 +794,93 @@ function loadReport() {
     document.getElementById('categoryProfitBody').innerHTML = res.categoryProfit.length ? res.categoryProfit.map(function (p) {
       return '<tr><td><strong>' + esc(p.category) + '</strong></td><td>' + p.qty + '</td><td>KES ' + p.revenue.toFixed(2) + '</td><td>KES ' + p.profit.toFixed(2) + '</td><td>' + p.margin.toFixed(1) + '%</td></tr>';
     }).join('') : '<tr><td colspan="5" style="color:var(--muted)">No sales in this range yet.</td></tr>';
+  });
+}
+
+/* ================= Report statement export ================= */
+function downloadReportStatement() {
+  var from = document.getElementById('repFrom').value;
+  var to = document.getElementById('repTo').value;
+  var btn = event && event.currentTarget ? event.currentTarget : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'Preparing…'; }
+
+  api('listSales', { from: from || null, to: to ? to + 'T23:59:59' : null }).then(function (res) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Download statement'; }
+    if (!res.ok) { toast(res.error || 'Could not prepare the statement.'); return; }
+
+    var rows = [];
+    var totalRevenue = 0, totalCost = 0, totalProfit = 0, totalItems = 0;
+    var sales = res.sales || [];
+
+    sales.forEach(function (sale) {
+      (sale.items || []).forEach(function (it) {
+        var qty = Number(it.qty) || 0;
+        var selling = Number(it.price) || 0;
+        var purchase = Number(it.purchasePrice);
+        if (isNaN(purchase)) purchase = 0;
+        var revenue = selling * qty;
+        var cost = purchase * qty;
+        var profit = revenue - cost;
+        totalRevenue += revenue;
+        totalCost += cost;
+        totalProfit += profit;
+        totalItems += qty;
+        rows.push([
+          sale.id,
+          new Date(sale.timestamp).toLocaleString('en-GB'),
+          sale.cashier || '',
+          sale.paymentMethod || '',
+          it.name || '',
+          it.category || '',
+          it.specification || it.spec || '',
+          it.unit || '',
+          qty,
+          purchase.toFixed(2),
+          selling.toFixed(2),
+          revenue.toFixed(2),
+          cost.toFixed(2),
+          profit.toFixed(2),
+          revenue ? ((profit / revenue) * 100).toFixed(1) + '%' : '0.0%'
+        ]);
+      });
+    });
+
+    var csv = [];
+    csv.push(['THE BRAND CYBER & STATIONERY - SALES STATEMENT']);
+    csv.push(['Period', from || 'All records', to || 'All records']);
+    csv.push([]);
+    csv.push(['Receipt','Date / Time','Cashier','Payment','Product','Category','Specification','Unit','Qty','Purchase Price','Selling Price','Revenue','Cost','Gross Profit','Margin']);
+    rows.forEach(function (r) { csv.push(r); });
+    csv.push([]);
+    csv.push(['STATEMENT TOTALS']);
+    csv.push(['Orders', sales.length]);
+    csv.push(['Items Sold', totalItems]);
+    csv.push(['Revenue (KES)', totalRevenue.toFixed(2)]);
+    csv.push(['Cost of Goods (KES)', totalCost.toFixed(2)]);
+    csv.push(['Gross Profit (KES)', totalProfit.toFixed(2)]);
+    csv.push(['Gross Margin', totalRevenue ? ((totalProfit / totalRevenue) * 100).toFixed(1) + '%' : '0.0%']);
+
+    var csvText = csv.map(function (row) {
+      return row.map(function (value) {
+        var text = String(value == null ? '' : value);
+        return /[",\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+      }).join(',');
+    }).join('\r\n');
+
+    var blob = new Blob(['\uFEFF' + csvText], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var period = (from || 'all') + '_to_' + (to || 'all');
+    a.href = url;
+    a.download = 'TB-sales-statement-' + period + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast('Statement downloaded: ' + rows.length + ' item records.');
+  }).catch(function () {
+    if (btn) { btn.disabled = false; btn.textContent = 'Download statement'; }
+    toast('Could not download the statement.');
   });
 }
 
