@@ -234,7 +234,7 @@
       <button class="btn btn-primary" type="submit" style="width:100%" id="loginBtn">Sign in</button>
       <div class="error-text" id="loginError"></div>
     </form>
-    <p class="helper">Default login is <strong>admin</strong> / <strong>changeme123</strong> until it's changed from Settings. <a href="#" onclick="forgetApiUrl();return false;" style="color:var(--muted)">Use a different database</a></p>
+    <p class="helper">Sign in with your authorized administrator credentials.</p>
   </div>
 </div>
 
@@ -387,7 +387,7 @@
 
 <script>
 /* ================= State ================= */
-var API_URL = localStorage.getItem('pos_api_url') || '';
+var API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec';
 var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [];
 var cart = []; // {id, name, price, qty}
@@ -409,11 +409,6 @@ function api(action, payload) {
 
 /* ================= Boot ================= */
 function boot() {
-  if (!API_URL) {
-    show('connectScreen');
-    return;
-  }
-  document.getElementById('apiUrlInput').value = API_URL;
   if (session && session.token && new Date(session.expiresAt) > new Date()) {
     enterApp();
   } else {
@@ -428,20 +423,13 @@ function show(id) {
 }
 
 function saveApiUrl() {
-  var val = document.getElementById('apiUrlInput').value.trim();
-  if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(val)) {
-    document.getElementById('connectError').textContent = 'That doesn\'t look like a Google Apps Script URL.';
-    return;
-  }
-  API_URL = val;
-  localStorage.setItem('pos_api_url', val);
-  document.getElementById('connectError').textContent = '';
+  API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec';
+  localStorage.setItem('pos_api_url', API_URL);
   show('loginScreen');
 }
 function forgetApiUrl() {
-  localStorage.removeItem('pos_api_url');
-  API_URL = '';
-  show('connectScreen');
+  API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec';
+  show('loginScreen');
 }
 
 function doLogin(ev) {
