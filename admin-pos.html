@@ -67,6 +67,7 @@
 
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,31,92,.62);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}.modal{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:26px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,31,92,.25);}.modal h2{font-size:18px;margin:0 0 16px;color:var(--brand-blue-dark);}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
   .receipt{font-family:'Montserrat',sans-serif;font-size:12px;}.receipt h2{text-align:center;font-size:16px;margin:0 0 2px;}.receipt .rline{text-align:center;color:var(--muted);font-size:10.5px;margin-bottom:2px;}.receipt hr{border:none;border-top:1px dashed var(--rule);margin:12px 0;}.receipt .rrow{display:flex;justify-content:space-between;padding:3px 0;}.receipt .rtotal{font-weight:700;font-size:14px;color:var(--brand-blue);}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--brand-blue-dark);color:#fff;padding:11px 20px;border-radius:8px;font-size:12px;z-index:80;box-shadow:0 8px 25px rgba(0,31,92,.25);border-left:4px solid var(--brand-orange);}
+.scanner-row{display:flex;gap:10px;margin:-4px 0 16px;align-items:center;flex-wrap:wrap}.scanner-row .hint{font-size:10px;color:var(--muted)}.scanner-modal{max-width:520px}#scannerVideo{width:100%;display:block;background:#0b1220;border-radius:12px;aspect-ratio:4/3;object-fit:cover}.scanner-status{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.45}.scanner-frame{position:relative;margin-top:12px}.scanner-frame:after{content:"";position:absolute;left:12%;right:12%;top:50%;height:2px;background:var(--brand-orange);box-shadow:0 0 12px rgba(255,140,66,.65);pointer-events:none}.spec-line{font-size:9px;color:var(--ink-soft);line-height:1.35}.unit-pill{display:inline-block;font-size:9px;padding:3px 6px;border-radius:999px;background:#eef4ff;color:var(--brand-blue);font-weight:700;margin-top:2px}.inventory-code{font-family:monospace;font-size:10px;color:var(--muted)}
   @media(max-width:860px){.app.active{grid-template-columns:1fr;}.sidebar{display:flex;flex-direction:row;overflow-x:auto;padding:10px 0;}.sidebar .brand,.sidebar-footer{display:none;}.nav{flex-direction:row;margin-top:0;}.nav button{border-left:none;border-bottom:3px solid transparent;white-space:nowrap;}.nav button.active{border-left-color:transparent;border-bottom-color:var(--brand-orange);}.main{padding:20px;}.checkout-grid{grid-template-columns:1fr;}.cart{position:static;}.stat-row{grid-template-columns:1fr 1fr;}.two-col{grid-template-columns:1fr;}}
   @media(max-width:520px){.main{padding:16px;}.topbar{display:block}.topbar .meta{display:block;margin-top:5px}.stat-row{grid-template-columns:1fr 1fr;gap:10px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.card{padding:28px 22px;}.toolrow{flex-wrap:wrap}.toolrow select{width:100%;}}
   /* Responsive hardening — all POS screens */
@@ -231,9 +232,10 @@
       <div class="checkout-grid">
         <div>
           <div class="toolrow">
-            <input type="text" id="productSearch" placeholder="Search products…" oninput="renderProductGrid()">
+            <input type="text" id="productSearch" placeholder="Search name, SKU or barcode…" oninput="renderProductGrid()">
             <select id="categoryFilter" onchange="renderProductGrid()"><option value="">All categories</option></select>
-          </div>
+            <button class="btn btn-primary" type="button" onclick="openScanner()">📷 Scan</button>
+          </div><div class="scanner-row"><span class="hint">Scan QR codes or barcodes with this phone. Products can be sold as a piece, sheet, pack, box, ream, quire, set, etc.</span></div>
           <div class="product-grid" id="productGrid"></div>
         </div>
         <div class="cart">
@@ -258,7 +260,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th></th><th></th></tr></thead>
+          <thead><tr><th>Product</th><th>Category</th><th>Price / Unit</th><th>Stock</th><th>SKU / Barcode</th><th></th><th></th></tr></thead>
           <tbody id="inventoryBody"></tbody>
         </table>
       </div>
@@ -341,6 +343,7 @@
 </div>
 
 <!-- ---------- RECEIPT MODAL ---------- -->
+<div class="modal-backdrop hidden" id="scannerBackdrop"><div class="modal scanner-modal"><h2>Scan stationery code</h2><div class="scanner-frame"><video id="scannerVideo" playsinline muted></video></div><div class="scanner-status" id="scannerStatus">Point your camera at a QR code or barcode.</div><div class="field" style="margin-top:12px"><label for="manualScanCode">Manual code entry</label><input id="manualScanCode" placeholder="SKU or barcode"></div><div class="modal-actions"><button class="btn" type="button" onclick="closeScanner()">Close</button><button class="btn btn-primary" type="button" onclick="useManualScanCode()">Use code</button></div></div></div>
 <div class="modal-backdrop hidden" id="receiptBackdrop">
   <div class="modal">
     <div class="receipt" id="receiptContent"></div>
@@ -360,6 +363,8 @@ var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [];
 var cart = []; // {id, name, price, qty}
 var currentView = 'checkout';
+var STATIONERY_CATEGORIES = ['Writing instruments','Paper & notebooks','Copy & printer paper','Exercise & school supplies','Office stationery','Filing & organisation','Envelopes & mailing','Art & drawing supplies','Craft & DIY supplies','Desk accessories','Adhesives & tapes','Cutting & measuring','Printing & binding supplies','Packaging supplies','Labels & stickers','Books & registers','Folders & files','Calculators & electronics','Computer & printing accessories','Cleaning & office supplies','Presentation supplies','School bags & accessories','Gift & wrapping supplies','Other stationery'];
+var scannerStream = null, scannerLoop = null;
 
 /* ================= API ================= */
 function api(action, payload) {
@@ -464,9 +469,10 @@ function loadProducts() {
   api('listProducts', {}).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
     products = res.products;
-    var cats = Array.from(new Set(products.map(function (p) { return p.category; }).filter(Boolean)));
+    var cats = Array.from(new Set(STATIONERY_CATEGORIES.concat(products.map(function (p) { return p.category; }).filter(Boolean))));
     var sel = document.getElementById('categoryFilter');
     sel.innerHTML = '<option value="">All categories</option>' + cats.map(function (c) { return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
+    populateCategorySelect();
     renderProductGrid();
     renderInventoryTable();
   });
@@ -477,14 +483,14 @@ function renderProductGrid() {
   var cat = document.getElementById('categoryFilter').value;
   var grid = document.getElementById('productGrid');
   var list = products.filter(function (p) {
-    return (!cat || p.category === cat) && (!q || p.name.toLowerCase().indexOf(q) > -1);
+    var haystack = [p.name,p.category,p.specification,p.sku,p.barcode,p.unit,p.packSize].map(function(v){return String(v||'').toLowerCase();}).join(' '); return (!cat || p.category === cat) && (!q || haystack.indexOf(q) > -1);
   });
   if (!list.length) { grid.innerHTML = '<p style="color:var(--muted); font-size:13px;">No products match. Add some from Inventory.</p>'; return; }
   grid.innerHTML = list.map(function (p) {
     var out = Number(p.stock) <= 0;
     return '<button class="product-card" ' + (out ? 'disabled' : '') + ' onclick="addToCart(\'' + p.id + '\')">' +
       '<span class="name">' + esc(p.name) + '</span>' +
-      '<span class="cat">' + esc(p.category || '—') + '</span>' +
+      '<span class="cat">' + esc(p.category || '—') + '</span>' + (p.specification ? '<span class="spec-line">' + esc(p.specification) + '</span>' : '') + '<span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span>' +
       '<span class="price">KES ' + Number(p.price).toFixed(2) + '</span>' +
       '<span class="stock" style="color:' + (out ? 'var(--stamp)' : Number(p.stock) <= Number(p.lowStock) ? 'var(--amber)' : 'var(--muted)') + '">' + (out ? 'Out of stock' : p.stock + ' in stock') + '</span>' +
       '</button>';
@@ -553,23 +559,33 @@ function closeReceipt() { document.getElementById('receiptBackdrop').classList.a
 /* ================= Inventory ================= */
 function renderInventoryTable() {
   var body = document.getElementById('inventoryBody');
-  if (!products.length) { body.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">No products yet. Add your first one.</td></tr>'; return; }
+  if (!products.length) { body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">No products yet. Add your first one.</td></tr>'; return; }
   body.innerHTML = products.map(function (p) {
     var low = Number(p.stock) <= Number(p.lowStock);
-    return '<tr><td>' + esc(p.name) + '</td><td>' + esc(p.category || '—') + '</td><td>KES ' + Number(p.price).toFixed(2) + '</td>' +
-      '<td>' + p.stock + ' <span class="badge ' + (low ? 'badge-low' : 'badge-ok') + '">' + (low ? 'Low' : 'OK') + '</span></td>' +
-      '<td class="row-actions"><button class="btn" onclick=\'openProductModal(' + JSON.stringify(p) + ')\'>Edit</button></td>' +
-      '<td><button class="btn btn-danger" onclick="removeProduct(\'' + p.id + '\')">Delete</button></td></tr>';
+    var editArg = JSON.stringify(p).replace(/'/g, '&#39;');
+    var deleteId = esc(p.id).replace(/'/g, '&#39;');
+    return '<tr><td><strong>' + esc(p.name) + '</strong>' + (p.specification ? '<div class="spec-line">' + esc(p.specification) + '</div>' : '') + '<span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span></td>'
+      + '<td>' + esc(p.category || '—') + '</td><td>KES ' + Number(p.price).toFixed(2) + '</td>'
+      + '<td>' + p.stock + ' <span class="badge ' + (low ? 'badge-low' : 'badge-ok') + '">' + (low ? 'Low' : 'OK') + '</span></td>'
+      + '<td><div class="inventory-code">' + esc(p.sku || '—') + '</div><div class="inventory-code">' + esc(p.barcode || '—') + '</div></td>'
+      + '<td class="row-actions"><button class="btn" onclick="openProductModal(' + JSON.stringify(p).replace(/"/g, '&quot;') + ')">Edit</button></td>'
+      + '<td><button class="btn btn-danger" onclick="removeProduct(\'' + deleteId + '\')">Delete</button></td></tr>';
   }).join('');
 }
 function openProductModal(p) {
   document.getElementById('productModalTitle').textContent = p ? 'Edit product' : 'Add product';
   document.getElementById('pId').value = p ? p.id : '';
   document.getElementById('pName').value = p ? p.name : '';
-  document.getElementById('pCategory').value = p ? p.category : '';
+  populateCategorySelect();
+  document.getElementById('pCategory').value = p ? p.category : STATIONERY_CATEGORIES[0];
+  document.getElementById('pSpecification').value = p ? (p.specification || '') : '';
   document.getElementById('pPrice').value = p ? p.price : '';
   document.getElementById('pStock').value = p ? p.stock : 0;
   document.getElementById('pLowStock').value = p ? p.lowStock : 5;
+  document.getElementById('pUnit').value = p ? (p.unit || 'piece') : 'piece';
+  document.getElementById('pPackSize').value = p ? (p.packSize || '') : '';
+  document.getElementById('pSku').value = p ? (p.sku || '') : '';
+  document.getElementById('pBarcode').value = p ? (p.barcode || '') : '';
   document.getElementById('productModalBackdrop').classList.remove('hidden');
 }
 function closeProductModal() { document.getElementById('productModalBackdrop').classList.add('hidden'); }
@@ -579,6 +595,11 @@ function saveProduct(ev) {
     id: document.getElementById('pId').value || undefined,
     name: document.getElementById('pName').value.trim(),
     category: document.getElementById('pCategory').value.trim(),
+    specification: document.getElementById('pSpecification').value.trim(),
+    unit: document.getElementById('pUnit').value,
+    packSize: document.getElementById('pPackSize').value.trim(),
+    sku: document.getElementById('pSku').value.trim(),
+    barcode: document.getElementById('pBarcode').value.trim(),
     price: document.getElementById('pPrice').value,
     stock: document.getElementById('pStock').value,
     lowStock: document.getElementById('pLowStock').value
@@ -599,6 +620,12 @@ function removeProduct(id) {
     loadProducts();
   });
 }
+
+function populateCategorySelect(){var sel=document.getElementById('pCategory');if(!sel)return;var current=sel.value;var cats=Array.from(new Set(STATIONERY_CATEGORIES.concat(products.map(function(p){return p.category;}).filter(Boolean))));sel.innerHTML=cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');if(current)sel.value=current;}
+function openScanner(){var b=document.getElementById('scannerBackdrop');b.classList.remove('hidden');document.getElementById('manualScanCode').value='';var s=document.getElementById('scannerStatus');s.textContent='Starting camera… Allow camera access when asked.';if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){s.textContent='Camera unavailable. Enter the SKU/barcode manually.';return;}if(!('BarcodeDetector' in window)){s.textContent='Native barcode scanning is not supported here. Use a modern Chrome/Android browser or enter the code manually.';return;}navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}}).then(function(stream){scannerStream=stream;var v=document.getElementById('scannerVideo');v.srcObject=stream;return v.play();}).then(function(){var d=new BarcodeDetector();scannerLoopScan(d,document.getElementById('scannerVideo'));}).catch(function(e){s.textContent='Camera could not start. Check permission and HTTPS, or enter the code manually.';});}
+function scannerLoopScan(d,v){if(!scannerStream||document.getElementById('scannerBackdrop').classList.contains('hidden'))return;d.detect(v).then(function(c){if(c&&c.length){var value=c[0].rawValue||'';document.getElementById('productSearch').value=value;closeScanner();var m=products.find(function(p){return String(p.barcode||'')===value||String(p.sku||'')===value;});if(m){addToCart(m.id);toast('Scanned: '+m.name);}else{renderProductGrid();toast('Code scanned, but no product matches it. Add this barcode/SKU in Inventory.');}return;}scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},180);}).catch(function(){scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},250);});}
+function useManualScanCode(){var value=document.getElementById('manualScanCode').value.trim();if(!value)return;document.getElementById('productSearch').value=value;closeScanner();var m=products.find(function(p){return String(p.barcode||'')===value||String(p.sku||'')===value;});if(m){addToCart(m.id);toast('Found: '+m.name);}else{renderProductGrid();toast('No product matched that code.');}}
+function closeScanner(){clearTimeout(scannerLoop);scannerLoop=null;if(scannerStream){scannerStream.getTracks().forEach(function(x){x.stop();});scannerStream=null;}var v=document.getElementById('scannerVideo');if(v)v.srcObject=null;document.getElementById('scannerBackdrop').classList.add('hidden');}
 
 /* ================= Sales history ================= */
 function loadSales() {
