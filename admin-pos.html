@@ -67,7 +67,7 @@
 
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,31,92,.62);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}.modal{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:26px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,31,92,.25);}.modal h2{font-size:18px;margin:0 0 16px;color:var(--brand-blue-dark);}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
   .receipt{font-family:'Montserrat',sans-serif;font-size:12px;}.receipt h2{text-align:center;font-size:16px;margin:0 0 2px;}.receipt .rline{text-align:center;color:var(--muted);font-size:10.5px;margin-bottom:2px;}.receipt hr{border:none;border-top:1px dashed var(--rule);margin:12px 0;}.receipt .rrow{display:flex;justify-content:space-between;padding:3px 0;}.receipt .rtotal{font-weight:700;font-size:14px;color:var(--brand-blue);}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--brand-blue-dark);color:#fff;padding:11px 20px;border-radius:8px;font-size:12px;z-index:80;box-shadow:0 8px 25px rgba(0,31,92,.25);border-left:4px solid var(--brand-orange);}
-.scanner-row{display:flex;gap:10px;margin:-4px 0 16px;align-items:center;flex-wrap:wrap}.scanner-row .hint{font-size:10px;color:var(--muted)}.scanner-modal{max-width:520px}#scannerVideo{width:100%;display:block;background:#0b1220;border-radius:12px;aspect-ratio:4/3;object-fit:cover}.scanner-status{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.45}.scanner-frame{position:relative;margin-top:12px}.scanner-frame:after{content:"";position:absolute;left:12%;right:12%;top:50%;height:2px;background:var(--brand-orange);box-shadow:0 0 12px rgba(255,140,66,.65);pointer-events:none}.spec-line{font-size:9px;color:var(--ink-soft);line-height:1.35}.unit-pill{display:inline-block;font-size:9px;padding:3px 6px;border-radius:999px;background:#eef4ff;color:var(--brand-blue);font-weight:700;margin-top:2px}.inventory-code{font-family:monospace;font-size:10px;color:var(--muted)}
+.scan-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;gap:0;border-radius:9px}.scan-btn .scan-label{display:none}.scan-icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}.scanner-row{display:flex;gap:10px;margin:-4px 0 16px;align-items:center;flex-wrap:wrap}.scanner-row .hint{font-size:10px;color:var(--muted)}.scanner-modal{max-width:520px}#scannerVideo{width:100%;display:block;background:#0b1220;border-radius:12px;aspect-ratio:4/3;object-fit:cover}.scanner-status{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.45}.scanner-frame{position:relative;margin-top:12px}.scanner-frame:after{content:"";position:absolute;left:12%;right:12%;top:50%;height:2px;background:var(--brand-orange);box-shadow:0 0 12px rgba(255,140,66,.65);pointer-events:none}.spec-line{font-size:9px;color:var(--ink-soft);line-height:1.35}.unit-pill{display:inline-block;font-size:9px;padding:3px 6px;border-radius:999px;background:#eef4ff;color:var(--brand-blue);font-weight:700;margin-top:2px}.inventory-code{font-family:monospace;font-size:10px;color:var(--muted)}
   @media(max-width:860px){.app.active{grid-template-columns:1fr;}.sidebar{display:flex;flex-direction:row;overflow-x:auto;padding:10px 0;}.sidebar .brand,.sidebar-footer{display:none;}.nav{flex-direction:row;margin-top:0;}.nav button{border-left:none;border-bottom:3px solid transparent;white-space:nowrap;}.nav button.active{border-left-color:transparent;border-bottom-color:var(--brand-orange);}.main{padding:20px;}.checkout-grid{grid-template-columns:1fr;}.cart{position:static;}.stat-row{grid-template-columns:1fr 1fr;}.two-col{grid-template-columns:1fr;}}
   @media(max-width:520px){.main{padding:16px;}.topbar{display:block}.topbar .meta{display:block;margin-top:5px}.stat-row{grid-template-columns:1fr 1fr;gap:10px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.card{padding:28px 22px;}.toolrow{flex-wrap:wrap}.toolrow select{width:100%;}}
   /* Responsive hardening — all POS screens */
@@ -234,7 +234,7 @@
           <div class="toolrow">
             <input type="text" id="productSearch" placeholder="Search name, SKU or barcode…" oninput="renderProductGrid()">
             <select id="categoryFilter" onchange="renderProductGrid()"><option value="">All categories</option></select>
-            <button class="btn btn-primary" type="button" onclick="openScanner()">📷 Scan</button>
+            <button class="btn btn-primary scan-btn" type="button" onclick="openScanner()" aria-label="Scan barcode or QR code" title="Scan barcode or QR code"><svg class="scan-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9V5h4M15 5h4v4M19 15v4h-4M9 19H5v-4M8 8v8M12 7v10M16 8v8"/></svg><span class="scan-label">Scan</span></button>
           </div><div class="scanner-row"><span class="hint">Scan QR codes or barcodes with this phone. Products can be sold as a piece, sheet, pack, box, ream, quire, set, etc.</span></div>
           <div class="product-grid" id="productGrid"></div>
         </div>
@@ -256,7 +256,15 @@
     <section class="view" id="view-inventory">
       <div class="topbar">
         <h1>Inventory</h1>
-        <button class="btn btn-primary" onclick="openProductModal()">Add product</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="btn scan-btn" type="button" onclick="openScanner('inventory')" aria-label="Scan product into inventory" title="Scan product into inventory">
+            <svg class="scan-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h4M15 5h4M5 19h4M15 19h4M5 9v6M19 9v6M9 8v8M12 7v10M15 8v8"/></svg>
+          </button>
+          <button class="btn btn-primary" onclick="openProductModal()">Add product</button>
+        </div>
+      </div>
+      <div class="scanner-row" style="margin-top:-8px;margin-bottom:18px;">
+        <span class="hint">Scan an existing barcode/QR to load the product automatically, or add it manually.</span>
       </div>
       <div class="table-wrap">
         <table>
@@ -329,10 +337,21 @@
     <h2 id="productModalTitle">Add product</h2>
     <form onsubmit="return saveProduct(event)">
       <input type="hidden" id="pId">
-      <div class="field"><label for="pName">Name</label><input type="text" id="pName" required></div>
-      <div class="field"><label for="pCategory">Category</label><input type="text" id="pCategory" placeholder="e.g. Printing, Stationery, Cyber"></div>
-      <div class="field"><label for="pPrice">Price (KES)</label><input type="number" id="pPrice" min="0" step="0.01" required></div>
-      <div class="field"><label for="pStock">Stock on hand</label><input type="number" id="pStock" min="0" step="1" required></div>
+      <div class="field"><label for="pName">Product name</label><input type="text" id="pName" required></div>
+      <div class="field"><label for="pCategory">Category</label><select id="pCategory"></select></div>
+      <div class="field"><label for="pSpecification">Specification</label><input type="text" id="pSpecification" placeholder="e.g. A4 • 200 pages • Square"></div>
+      <div class="two-col" style="gap:10px;">
+        <div class="field"><label for="pUnit">Selling unit</label><select id="pUnit"><option value="piece">Piece</option><option value="single">Single</option><option value="sheet">Sheet</option><option value="pack">Pack</option><option value="box">Box</option><option value="ream">Ream</option><option value="quire">Quire</option><option value="set">Set</option><option value="book">Book</option><option value="roll">Roll</option><option value="metre">Metre</option></select></div>
+        <div class="field"><label for="pPackSize">Pack / quantity detail</label><input type="text" id="pPackSize" placeholder="e.g. 200 pages / 500 sheets"></div>
+      </div>
+      <div class="two-col" style="gap:10px;">
+        <div class="field"><label for="pSku">SKU</label><input type="text" id="pSku" placeholder="e.g. TB-BOOK-A4-200-SQ"></div>
+        <div class="field"><label for="pBarcode">Barcode / QR value</label><input type="text" id="pBarcode" placeholder="Scan or enter code"></div>
+      </div>
+      <div class="two-col" style="gap:10px;">
+        <div class="field"><label for="pPrice">Price (KES)</label><input type="number" id="pPrice" min="0" step="0.01" required></div>
+        <div class="field"><label for="pStock">Stock on hand</label><input type="number" id="pStock" min="0" step="1" required></div>
+      </div>
       <div class="field"><label for="pLowStock">Low-stock alert level</label><input type="number" id="pLowStock" min="0" step="1" value="5"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeProductModal()">Cancel</button>
@@ -364,7 +383,7 @@ var products = [];
 var cart = []; // {id, name, price, qty}
 var currentView = 'checkout';
 var STATIONERY_CATEGORIES = ['Writing instruments','Paper & notebooks','Copy & printer paper','Exercise & school supplies','Office stationery','Filing & organisation','Envelopes & mailing','Art & drawing supplies','Craft & DIY supplies','Desk accessories','Adhesives & tapes','Cutting & measuring','Printing & binding supplies','Packaging supplies','Labels & stickers','Books & registers','Folders & files','Calculators & electronics','Computer & printing accessories','Cleaning & office supplies','Presentation supplies','School bags & accessories','Gift & wrapping supplies','Other stationery'];
-var scannerStream = null, scannerLoop = null;
+var scannerStream = null, scannerLoop = null, scannerTarget = 'checkout';
 
 /* ================= API ================= */
 function api(action, payload) {
@@ -622,9 +641,59 @@ function removeProduct(id) {
 }
 
 function populateCategorySelect(){var sel=document.getElementById('pCategory');if(!sel)return;var current=sel.value;var cats=Array.from(new Set(STATIONERY_CATEGORIES.concat(products.map(function(p){return p.category;}).filter(Boolean))));sel.innerHTML=cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');if(current)sel.value=current;}
-function openScanner(){var b=document.getElementById('scannerBackdrop');b.classList.remove('hidden');document.getElementById('manualScanCode').value='';var s=document.getElementById('scannerStatus');s.textContent='Starting camera… Allow camera access when asked.';if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){s.textContent='Camera unavailable. Enter the SKU/barcode manually.';return;}if(!('BarcodeDetector' in window)){s.textContent='Native barcode scanning is not supported here. Use a modern Chrome/Android browser or enter the code manually.';return;}navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}}).then(function(stream){scannerStream=stream;var v=document.getElementById('scannerVideo');v.srcObject=stream;return v.play();}).then(function(){var d=new BarcodeDetector();scannerLoopScan(d,document.getElementById('scannerVideo'));}).catch(function(e){s.textContent='Camera could not start. Check permission and HTTPS, or enter the code manually.';});}
-function scannerLoopScan(d,v){if(!scannerStream||document.getElementById('scannerBackdrop').classList.contains('hidden'))return;d.detect(v).then(function(c){if(c&&c.length){var value=c[0].rawValue||'';document.getElementById('productSearch').value=value;closeScanner();var m=products.find(function(p){return String(p.barcode||'')===value||String(p.sku||'')===value;});if(m){addToCart(m.id);toast('Scanned: '+m.name);}else{renderProductGrid();toast('Code scanned, but no product matches it. Add this barcode/SKU in Inventory.');}return;}scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},180);}).catch(function(){scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},250);});}
-function useManualScanCode(){var value=document.getElementById('manualScanCode').value.trim();if(!value)return;document.getElementById('productSearch').value=value;closeScanner();var m=products.find(function(p){return String(p.barcode||'')===value||String(p.sku||'')===value;});if(m){addToCart(m.id);toast('Found: '+m.name);}else{renderProductGrid();toast('No product matched that code.');}}
+function openScanner(target){
+  scannerTarget = target || 'checkout';
+  var b=document.getElementById('scannerBackdrop');
+  b.classList.remove('hidden');
+  document.getElementById('manualScanCode').value='';
+  var s=document.getElementById('scannerStatus');
+  s.textContent = scannerTarget === 'inventory' ? 'Scan a product code. A matching product will open automatically for editing.' : 'Point your camera at a QR code or barcode.';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){s.textContent='Camera unavailable. Enter the code manually.';return;}
+  if(!('BarcodeDetector' in window)){s.textContent='Barcode scanning is not supported here. Use modern Chrome/Android or enter the code manually.';return;}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}}).then(function(stream){
+    scannerStream=stream;
+    var v=document.getElementById('scannerVideo');
+    v.srcObject=stream;
+    return v.play();
+  }).then(function(){
+    var formats=['qr_code','ean_13','ean_8','upc_a','upc_e','code_128','code_39','code_93','itf','codabar','data_matrix','pdf417','aztec'];
+    try { var d=new BarcodeDetector({formats:formats}); scannerLoopScan(d,document.getElementById('scannerVideo')); }
+    catch(e){ var d2=new BarcodeDetector(); scannerLoopScan(d2,document.getElementById('scannerVideo')); }
+  }).catch(function(){s.textContent='Camera could not start. Check permission and HTTPS, or enter the code manually.';});
+}
+function processScannedCode(value){
+  value=String(value||'').trim();
+  if(!value)return;
+  var m=products.find(function(p){return String(p.barcode||'').trim()===value||String(p.sku||'').trim()===value;});
+  closeScanner();
+  if(scannerTarget==='inventory'){
+    if(m){
+      openProductModal(m);
+      toast('Product loaded: '+m.name);
+    }else{
+      openProductModal();
+      document.getElementById('pBarcode').value=value;
+      document.getElementById('pName').focus();
+      toast('Code captured. Complete the new product details.');
+    }
+    return;
+  }
+  document.getElementById('productSearch').value=value;
+  if(m){addToCart(m.id);toast('Scanned: '+m.name);}
+  else{renderProductGrid();toast('Code scanned, but no product matches it. Add it in Inventory.');}
+}
+function scannerLoopScan(d,v){
+  if(!scannerStream||document.getElementById('scannerBackdrop').classList.contains('hidden'))return;
+  d.detect(v).then(function(c){
+    if(c&&c.length){processScannedCode(c[0].rawValue||'');return;}
+    scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},180);
+  }).catch(function(){scannerLoop=setTimeout(function(){scannerLoopScan(d,v);},250);});
+}
+function useManualScanCode(){
+  var value=document.getElementById('manualScanCode').value.trim();
+  if(!value)return;
+  processScannedCode(value);
+}
 function closeScanner(){clearTimeout(scannerLoop);scannerLoop=null;if(scannerStream){scannerStream.getTracks().forEach(function(x){x.stop();});scannerStream=null;}var v=document.getElementById('scannerVideo');if(v)v.srcObject=null;document.getElementById('scannerBackdrop').classList.add('hidden');}
 
 /* ================= Sales history ================= */
