@@ -47,7 +47,7 @@
   .center-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#eef4ff 0%,#f8fafc 55%,#fff4eb 100%);}
   .card{background:rgba(255,255,255,.96);border:1px solid var(--rule);border-radius:18px;padding:34px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,31,92,.12);position:relative;overflow:hidden;}
   .card:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--brand-blue),var(--brand-orange));}
-  .stamp-mark{width:58px;height:58px;border:3px solid var(--brand-orange);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--brand-blue);font-family:'Montserrat',sans-serif;font-size:21px;margin:0 auto 18px;transform:none;background:#fff7f1;box-shadow:0 8px 20px rgba(255,140,66,.15);}
+  .stamp-mark{width:76px;height:76px;border:2px solid var(--brand-orange);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:#fff;box-shadow:0 8px 20px rgba(255,140,66,.15);overflow:hidden;padding:7px;}.stamp-mark img{width:100%;height:100%;object-fit:contain;display:block;}
   .card h1{font-size:24px;text-align:center;margin:0 0 4px;color:var(--brand-blue-dark);}.card .sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:24px;}.error-text{color:var(--danger);font-size:12px;margin-top:10px;min-height:16px;}.helper{font-size:11px;color:var(--muted);margin-top:16px;line-height:1.5;}
 
   .app{display:none;min-height:100vh;grid-template-columns:240px 1fr;}.app.active{display:grid;}
@@ -77,7 +77,7 @@
 <!-- ================= CONNECT SCREEN ================= -->
 <div id="connectScreen" class="center-screen">
   <div class="card">
-    <div class="stamp-mark">TB</div>
+    <div class="stamp-mark"><img src="logo/the-brand-cyber-logo.png" alt="The Brand Cyber Logo"></div>
     <h1>Connect the till</h1>
     <p class="sub">One-time setup, per device</p>
     <div class="field">
@@ -93,17 +93,17 @@
 <!-- ================= LOGIN SCREEN ================= -->
 <div id="loginScreen" class="center-screen hidden">
   <div class="card">
-    <div class="stamp-mark">TB</div>
+    <div class="stamp-mark"><img src="logo/the-brand-cyber-logo.png" alt="The Brand Cyber Logo"></div>
     <h1>The Brand Cyber</h1>
     <p class="sub">Admin access · Gate C, Maasai Mara University</p>
     <form onsubmit="return doLogin(event)">
       <div class="field">
         <label for="loginUser">Username</label>
-        <input type="text" id="loginUser" autocomplete="username" required>
+        <input type="text" id="loginUser" autocomplete="username" value="Hemstone" required>
       </div>
       <div class="field">
         <label for="loginPass">Password</label>
-        <input type="password" id="loginPass" autocomplete="current-password" required>
+        <div class="password-wrap"><input type="password" id="loginPass" autocomplete="current-password" required></div>
       </div>
       <button class="btn btn-primary" type="submit" style="width:100%" id="loginBtn">Sign in</button>
       <div class="error-text" id="loginError"></div>
@@ -214,13 +214,15 @@
     <!-- ---------- SETTINGS ---------- -->
     <section class="view" id="view-settings">
       <div class="topbar"><h1>Settings</h1></div>
-      <div class="card" style="max-width:380px; margin:0;">
-        <h2 style="margin-top:0;">Change password</h2>
-        <form onsubmit="return changePassword(event)">
-          <div class="field"><label for="oldPass">Current password</label><input type="password" id="oldPass" required></div>
-          <div class="field"><label for="newPass">New password</label><input type="password" id="newPass" required minlength="6"></div>
-          <button class="btn btn-primary" type="submit">Update password</button>
-          <div class="error-text" id="settingsMsg"></div>
+      <div class="card" style="max-width:430px; margin:0;">
+        <h2 style="margin-top:0;">Security settings</h2>
+        <p class="helper" style="margin-top:0; margin-bottom:20px;">Signed in as <strong id="settingsUsername">Hemstone</strong>. Changing the password requires your current password.</p>
+        <form onsubmit="return changePassword(event)" id="changePasswordForm">
+          <div class="field"><label for="oldPass">Current password</label><div class="password-wrap"><input type="password" id="oldPass" autocomplete="current-password" required></div></div>
+          <div class="field"><label for="newPass">New password</label><div class="password-wrap"><input type="password" id="newPass" autocomplete="new-password" required minlength="8"></div><div class="password-hint">Use at least 8 characters. A mix of letters, numbers and symbols is recommended.</div></div>
+          <div class="field"><label for="confirmPass">Confirm new password</label><div class="password-wrap"><input type="password" id="confirmPass" autocomplete="new-password" required minlength="8"></div></div>
+          <button class="btn btn-primary" type="submit" id="changePasswordBtn">Update password</button>
+          <div class="error-text" id="settingsMsg" role="status" aria-live="polite"></div>
         </form>
       </div>
     </section>
@@ -334,6 +336,8 @@ function doLogout() {
 
 function enterApp() {
   document.getElementById('whoami').textContent = session.username;
+  var settingsUsername = document.getElementById('settingsUsername');
+  if (settingsUsername) settingsUsername.textContent = session.username;
   show('app');
   loadProducts();
   tickClock();
@@ -546,14 +550,48 @@ function loadReport() {
 /* ================= Settings ================= */
 function changePassword(ev) {
   ev.preventDefault();
+  var form = ev.target;
   var msg = document.getElementById('settingsMsg');
-  api('changePassword', {
-    oldPassword: document.getElementById('oldPass').value,
-    newPassword: document.getElementById('newPass').value
-  }).then(function (res) {
-    if (!res.ok) { msg.style.color = 'var(--stamp)'; msg.textContent = res.error; return; }
-    msg.style.color = 'var(--ledger)'; msg.textContent = 'Password updated.';
-    ev.target.reset();
+  var btn = document.getElementById('changePasswordBtn');
+  var oldPassword = document.getElementById('oldPass').value;
+  var newPassword = document.getElementById('newPass').value;
+  var confirmPassword = document.getElementById('confirmPass').value;
+
+  msg.className = 'error-text';
+  msg.textContent = '';
+
+  if (newPassword.length < 8) {
+    msg.classList.add('error');
+    msg.textContent = 'New password must be at least 8 characters.';
+    return false;
+  }
+  if (newPassword !== confirmPassword) {
+    msg.classList.add('error');
+    msg.textContent = 'The new passwords do not match.';
+    return false;
+  }
+  if (newPassword === oldPassword) {
+    msg.classList.add('error');
+    msg.textContent = 'New password must be different from the current password.';
+    return false;
+  }
+  if (!confirm('Confirm password change? Your current password will stop working once this change is accepted.')) return false;
+
+  btn.disabled = true;
+  btn.textContent = 'Verifying…';
+  api('changePassword', { oldPassword: oldPassword, newPassword: newPassword }).then(function (res) {
+    btn.disabled = false;
+    btn.textContent = 'Update password';
+    if (!res.ok) {
+      msg.classList.add('error');
+      msg.textContent = res.error || 'Password change failed.';
+      return;
+    }
+    msg.classList.remove('error');
+    msg.classList.add('success');
+    msg.textContent = '✓ Password changed successfully. Your new password is now active.';
+    form.reset();
+    toast('Password changed successfully.');
   });
   return false;
 }
