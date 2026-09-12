@@ -6,6 +6,8 @@
 <title>Till — The Brand Cyber &amp; Stationery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
   :root{
     --brand-orange:#FF8C42;
@@ -307,8 +309,7 @@
       <div class="filters">
         <div class="field"><label for="repFrom">From</label><input type="date" id="repFrom"></div>
         <div class="field"><label for="repTo">To</label><input type="date" id="repTo"></div>
-        <button class="btn" onclick="loadReport()">Run report</button>
-        <button class="btn secondary" onclick="downloadReportStatement()" title="Download all report records">Download statement</button>
+        <button class="btn" onclick="loadReport()">Run report</button><button class="btn btn-primary" onclick="downloadReportPDF()">Download PDF</button>
       </div>
       <div class="stat-row">
         <div class="stat-card"><div class="label">Revenue</div><div class="value" id="statRevenue">KES 0</div></div>
@@ -797,90 +798,137 @@ function loadReport() {
   });
 }
 
-/* ================= Report statement export ================= */
-function downloadReportStatement() {
+/* ================= Report PDF ================= */
+function downloadReportPDF() {
   var from = document.getElementById('repFrom').value;
   var to = document.getElementById('repTo').value;
-  var btn = event && event.currentTarget ? event.currentTarget : null;
-  if (btn) { btn.disabled = true; btn.textContent = 'Preparing…'; }
+  var btns = document.querySelectorAll('#view-reports .filters .btn');
+  var pdfBtn = btns.length > 1 ? btns[1] : null;
+  if (pdfBtn) { pdfBtn.disabled = true; pdfBtn.textContent = 'Preparing…'; }
 
-  api('listSales', { from: from || null, to: to ? to + 'T23:59:59' : null }).then(function (res) {
-    if (btn) { btn.disabled = false; btn.textContent = 'Download statement'; }
-    if (!res.ok) { toast(res.error || 'Could not prepare the statement.'); return; }
+  Promise.all([
+    api('listSales', { from: from || null, to: to ? to + 'T23:59:59' : null }),
+    api('reportSummary', { from: from || null, to: to ? to + 'T23:59:59' : null })
+  ]).then(function (results) {
+    var salesRes = results[0], summary = results[1];
+    if (!salesRes.ok) throw new Error(salesRes.error || 'Could not load sales records.');
+    if (!summary.ok) throw new Error(summary.error || 'Could not load report summary.');
+    if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('PDF library could not be loaded. Please check your internet connection and try again.');
+
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    var margin = 10;
+    var title = 'THE BRAND CYBER & STATIONERY';
+    var rangeLabel = (from || to) ? ('Period: ' + (from || 'All time') + ' to ' + (to || 'Today')) : 'Period: All records';
+    var generated = new Date().toLocaleString('en-GB');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text(title, margin, 14);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Sales Statement — All Recorded Transactions', margin, 21);
+    doc.setFontSize(8.5);
+    doc.text(rangeLabel, margin, 27);
+    doc.text('Generated: ' + generated, 287, 27, { align: 'right' });
 
     var rows = [];
-    var totalRevenue = 0, totalCost = 0, totalProfit = 0, totalItems = 0;
-    var sales = res.sales || [];
-
-    sales.forEach(function (sale) {
-      (sale.items || []).forEach(function (it) {
+    salesRes.sales.forEach(function (sale) {
+      sale.items.forEach(function (it) {
         var qty = Number(it.qty) || 0;
-        var selling = Number(it.price) || 0;
+        var unitPrice = Number(it.price) || 0;
         var purchase = Number(it.purchasePrice);
         if (isNaN(purchase)) purchase = 0;
-        var revenue = selling * qty;
+        var revenue = unitPrice * qty;
         var cost = purchase * qty;
         var profit = revenue - cost;
-        totalRevenue += revenue;
-        totalCost += cost;
-        totalProfit += profit;
-        totalItems += qty;
         rows.push([
-          sale.id,
+          String(sale.id || ''),
           new Date(sale.timestamp).toLocaleString('en-GB'),
-          sale.cashier || '',
-          sale.paymentMethod || '',
-          it.name || '',
-          it.category || '',
-          it.specification || it.spec || '',
-          it.unit || '',
-          qty,
-          purchase.toFixed(2),
-          selling.toFixed(2),
-          revenue.toFixed(2),
+          String(sale.cashier || ''),
+          String(it.category || 'Other stationery'),
+          String(it.name || ''),
+          String(it.specification || ''),
+          String(qty),
+          unitPrice.toFixed(2),
           cost.toFixed(2),
           profit.toFixed(2),
-          revenue ? ((profit / revenue) * 100).toFixed(1) + '%' : '0.0%'
+          String(sale.paymentMethod || 'Cash'),
+          revenue.toFixed(2)
         ]);
       });
     });
 
-    var csv = [];
-    csv.push(['THE BRAND CYBER & STATIONERY - SALES STATEMENT']);
-    csv.push(['Period', from || 'All records', to || 'All records']);
-    csv.push([]);
-    csv.push(['Receipt','Date / Time','Cashier','Payment','Product','Category','Specification','Unit','Qty','Purchase Price','Selling Price','Revenue','Cost','Gross Profit','Margin']);
-    rows.forEach(function (r) { csv.push(r); });
-    csv.push([]);
-    csv.push(['STATEMENT TOTALS']);
-    csv.push(['Orders', sales.length]);
-    csv.push(['Items Sold', totalItems]);
-    csv.push(['Revenue (KES)', totalRevenue.toFixed(2)]);
-    csv.push(['Cost of Goods (KES)', totalCost.toFixed(2)]);
-    csv.push(['Gross Profit (KES)', totalProfit.toFixed(2)]);
-    csv.push(['Gross Margin', totalRevenue ? ((totalProfit / totalRevenue) * 100).toFixed(1) + '%' : '0.0%']);
+    if (!rows.length) {
+      doc.setFontSize(11);
+      doc.text('No sales records found for the selected period.', margin, 38);
+    } else {
+      doc.autoTable({
+        startY: 32,
+        head: [['Receipt','Date / Time','Cashier','Category','Product','Specification','Qty','Unit Price','Cost','Profit','Payment','Line Total']],
+        body: rows,
+        margin: { left: margin, right: margin },
+        theme: 'grid',
+        styles: { font: 'helvetica', fontSize: 6.5, cellPadding: 1.7, overflow: 'linebreak', valign: 'top' },
+        headStyles: { fontStyle: 'bold', fillColor: [0,51,160], textColor: 255, fontSize: 6.5 },
+        columnStyles: {
+          0: { cellWidth: 21 }, 1: { cellWidth: 25 }, 2: { cellWidth: 20 }, 3: { cellWidth: 28 },
+          4: { cellWidth: 29 }, 5: { cellWidth: 32 }, 6: { cellWidth: 10, halign: 'right' },
+          7: { cellWidth: 20, halign: 'right' }, 8: { cellWidth: 20, halign: 'right' },
+          9: { cellWidth: 20, halign: 'right' }, 10: { cellWidth: 17 }, 11: { cellWidth: 22, halign: 'right' }
+        },
+        didParseCell: function (data) {
+          if (data.section === 'body' && data.column.index >= 7) data.cell.text = ['KES ' + data.cell.text[0]];
+        }
+      });
+    }
 
-    var csvText = csv.map(function (row) {
-      return row.map(function (value) {
-        var text = String(value == null ? '' : value);
-        return /[",\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
-      }).join(',');
-    }).join('\r\n');
+    var y = (doc.lastAutoTable && doc.lastAutoTable.finalY ? doc.lastAutoTable.finalY : 38) + 8;
+    if (y > 185) { doc.addPage(); y = 15; }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Statement Summary', margin, y);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+    var summaryLines = [
+      'Orders: ' + summary.totalOrders,
+      'Items sold: ' + summary.totalItems,
+      'Revenue: KES ' + Number(summary.totalRevenue || 0).toFixed(2),
+      'Cost of goods: KES ' + Number(summary.totalCost || 0).toFixed(2),
+      'Gross profit: KES ' + Number(summary.grossProfit || 0).toFixed(2),
+      'Gross margin: ' + Number(summary.grossMargin || 0).toFixed(1) + '%',
+      'Average order: KES ' + Number(summary.avgOrder || 0).toFixed(2)
+    ];
+    doc.text(summaryLines.slice(0,4), margin, y + 6);
+    doc.text(summaryLines.slice(4), 95, y + 6);
 
-    var blob = new Blob(['\uFEFF' + csvText], { type: 'text/csv;charset=utf-8;' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    var period = (from || 'all') + '_to_' + (to || 'all');
-    a.href = url;
-    a.download = 'TB-sales-statement-' + period + '.csv';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-    toast('Statement downloaded: ' + rows.length + ' item records.');
-  }).catch(function () {
-    if (btn) { btn.disabled = false; btn.textContent = 'Download statement'; }
-    toast('Could not download the statement.');
+    y += 30;
+    if (summary.categoryProfit && summary.categoryProfit.length) {
+      if (y > 175) { doc.addPage(); y = 15; }
+      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Category Profitability', margin, y);
+      doc.autoTable({
+        startY: y + 3,
+        head: [['Category','Qty Sold','Revenue','Cost','Gross Profit','Margin']],
+        body: summary.categoryProfit.map(function (p) { return [p.category, String(p.qty), 'KES ' + Number(p.revenue).toFixed(2), 'KES ' + Number(p.cost).toFixed(2), 'KES ' + Number(p.profit).toFixed(2), Number(p.margin).toFixed(1) + '%']; }),
+        margin: { left: margin, right: margin },
+        theme: 'grid',
+        styles: { fontSize: 7, cellPadding: 1.7 },
+        headStyles: { fontStyle: 'bold', fillColor: [0,51,160], textColor: 255 }
+      });
+    }
+
+    var pageCount = doc.getNumberOfPages();
+    for (var page = 1; page <= pageCount; page++) {
+      doc.setPage(page);
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(100);
+      doc.text('The Brand Cyber & Stationery — Sales Statement', margin, 203);
+      doc.text('Page ' + page + ' of ' + pageCount, 287, 203, { align: 'right' });
+    }
+
+    var filename = 'TB-Sales-Statement-' + (from || 'all') + '-to-' + (to || 'all') + '.pdf';
+    doc.save(filename.replace(/[^a-zA-Z0-9._-]/g, '_'));
+    toast('✓ PDF statement downloaded.');
+  }).catch(function (err) {
+    toast(err.message || 'Could not create the PDF statement.');
+  }).finally(function () {
+    if (pdfBtn) { pdfBtn.disabled = false; pdfBtn.textContent = 'Download PDF'; }
   });
 }
 
