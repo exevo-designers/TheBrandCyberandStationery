@@ -11,7 +11,7 @@
 <style>
 :root{--brand-orange:#FF8C42;--brand-blue:#0033A0;--brand-blue-dark:#001F5C;--brand-blue-light:#4D7FFF;--surface:#F7F9FC;--ink:#13213A;--ink-soft:#53617A;--muted:#6B778C;--rule:#DCE3EF;--success:#15803D;--danger:#D92D20;--stamp:#D92D20;--amber:#B45309;--shadow:0 10px 30px rgba(0,31,92,.08)}
 *{box-sizing:border-box}
-html{font-size:16px;-webkit-text-size-adjust:100%;width:100%;overflow-x:hidden}
+html{font-size:16px;-webkit-text-size-adjust:100%;width:100%}
 html,body{margin:0;padding:0}
 body{background:var(--surface);color:var(--ink);font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;width:100%;overflow-x:hidden}
 h1,h2,h3{font-weight:600;margin:0}
@@ -196,8 +196,14 @@ td .ibtn{padding:0;min-height:38px}
 .rec-checks{display:flex;gap:18px;flex-wrap:wrap}
 .rec-check{display:flex;align-items:center;gap:8px;margin:0;font-weight:600;cursor:pointer}.rec-check input{width:18px;height:18px;accent-color:var(--brand-orange)}
 
+/* Desktop: sidebar pinned to the viewport */
+@media(min-width:861px){
+  .app.active{display:block;padding-left:240px}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;height:100vh;overflow-y:auto}
+}
+
 /* Responsive */
-@media(min-width:861px) and (max-width:1100px){.app{grid-template-columns:210px minmax(0,1fr)}.main{padding:24px 26px 50px}.checkout-grid{grid-template-columns:minmax(0,1fr) 330px;gap:18px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.nav button,.brand{padding-left:18px;padding-right:18px}}
+@media(min-width:861px) and (max-width:1100px){.app.active{padding-left:210px}.sidebar{width:210px}.main{padding:24px 26px 50px}.checkout-grid{grid-template-columns:minmax(0,1fr) 330px;gap:18px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.nav button,.brand{padding-left:18px;padding-right:18px}}
 @media(max-width:1000px){.doc-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:860px){
   input[type=text],input[type=number],input[type=password],input[type=date],select{font-size:16px}
@@ -1064,6 +1070,8 @@ function removeImage() { setImgPreview(''); g('pImgFile').value = ''; g('pImgSta
 function saveProduct(ev) {
   ev.preventDefault();
   if (uploading) { toast('Wait for the photo to finish uploading.'); return false; }
+  var btn = g('pSaveBtn'); if (btn.disabled) return false;
+  btn.disabled = true; btn.textContent = 'Saving…';
   var product = {
     id: g('pId').value || undefined, name: g('pName').value.trim(), category: g('pCategory').value.trim(),
     specification: g('pSpecification').value.trim(), unit: g('pUnit').value, packSize: g('pPackSize').value.trim(),
@@ -1071,8 +1079,11 @@ function saveProduct(ev) {
     price: g('pPrice').value, stock: g('pStock').value, lowStock: g('pLowStock').value, image: g('pImage').value
   };
   api('upsertProduct', { product: product }).then(function (res) {
+    btn.disabled = false; btn.textContent = 'Save product';
     if (!res.ok) { toast(res.error); return; }
-    closeProductModal(); toast('Product saved.'); loadProducts();
+    closeProductModal();
+    toast(res.duplicate ? 'Saved. Note: another product shares this barcode/SKU.' : 'Product saved.');
+    loadProducts();
   });
   return false;
 }
@@ -1327,15 +1338,17 @@ function scannerLoopScan(d, v) {
 }
 function processScannedCode(value) {
   value = String(value || '').trim(); if (!value) return;
-  var m = products.find(function (p) { return String(p.barcode || '').trim() === value || String(p.sku || '').trim() === value; });
+  var matches = products.filter(function (p) { return String(p.barcode || '').trim() === value || String(p.sku || '').trim() === value; });
+  var m = matches[0];
   closeScanner();
   if (scannerTarget === 'inventory') {
-    if (m) { openProductModal(m); toast('Product loaded: ' + m.name); }
+    if (m) { openProductModal(m); toast(matches.length > 1 ? matches.length + ' products share this code. Showing the first.' : 'Product loaded: ' + m.name); }
     else { openProductModal(); g('pBarcode').value = value; g('pName').focus(); toast('Code captured. Complete the new product details.'); }
     return;
   }
   g('productSearch').value = value;
-  if (m) { addToCart(m.id, 1); toast('Scanned: ' + m.name); }
+  if (matches.length > 1) { renderProductGrid(); toast(matches.length + ' products share this code. Tap Add on the right one.'); }
+  else if (m) { addToCart(m.id, 1); toast('Scanned: ' + m.name); }
   else { renderProductGrid(); toast('Code scanned, but no product matches it. Add it in Inventory.'); }
 }
 function useManualScanCode() { var v = g('manualScanCode').value.trim(); if (v) processScannedCode(v); }
@@ -1430,6 +1443,7 @@ function shiftDaily(n) {
 function loadDaily() {
   var day = g('dailyDate').value; if (!day) return;
   api('dailySummary', { day: day }).then(function (res) {
+    if (g('dailyDate').value !== day) return;   // user already moved to another day
     if (!res.ok) { toast(res.error); return; }
     daily = res; var sales = res.sales || [];
     g('dailyLabel').textContent = new Date(day + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
