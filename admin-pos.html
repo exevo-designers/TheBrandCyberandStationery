@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Font loads without blocking first paint -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
 <style>
 :root{--brand-orange:#FF8C42;--brand-blue:#0033A0;--brand-blue-dark:#001F5C;--brand-blue-light:#4D7FFF;--surface:#F7F9FC;--ink:#13213A;--ink-soft:#53617A;--muted:#6B778C;--rule:#DCE3EF;--success:#15803D;--danger:#D92D20;--stamp:#D92D20;--amber:#B45309;--shadow:0 10px 30px rgba(0,31,92,.08)}
@@ -35,8 +34,15 @@ input[type=text],input[type=number],input[type=password],input[type=date],select
 input:focus,select:focus,button:focus-visible{outline:2px solid rgba(255,140,66,.5);outline-offset:2px;border-color:var(--brand-orange)}
 label{font-size:13px;color:var(--ink-soft);display:block;margin-bottom:6px;font-weight:600}
 .field{margin-bottom:14px}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid currentColor;font-weight:600}.badge-low{color:var(--danger)}.badge-ok{color:var(--success)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid currentColor;font-weight:600}.badge-low{color:var(--danger)}.badge-ok{color:var(--success)}.badge-amber{color:var(--amber)}
 .helper,.hint,.password-hint{font-size:12px;color:var(--muted);line-height:1.5}.helper{margin-top:16px}.password-hint{margin-top:4px}
+
+/* Photos */
+.pimg{position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef3fb,#f8ecdf);color:#a9b8d6;overflow:hidden}
+.pimg .ic{width:30px;height:30px}
+.pimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb{width:44px;height:44px;border-radius:8px;flex:none}
+.thumb-lg{width:84px;height:84px;border-radius:12px;flex:none;border:1px solid var(--rule)}
 
 /* Login */
 .center-screen{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#eef4ff 0%,#f8fafc 55%,#fff4eb 100%)}
@@ -72,42 +78,66 @@ label{font-size:13px;color:var(--ink-soft);display:block;margin-bottom:6px;font-
 .sheet-handle{width:38px;height:4px;border-radius:4px;background:var(--rule);margin:0 auto 8px}
 
 /* Checkout */
-.checkout-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:start}
-.toolrow{display:flex;gap:10px;margin-bottom:16px}.toolrow input{flex:1;min-width:0}.toolrow select{width:auto;max-width:200px}
+.checkout-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start}
+.toolrow{display:flex;gap:10px;margin-bottom:14px}.toolrow input{flex:1;min-width:0}
 .scan-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;padding:0;border-radius:9px}.scan-icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.scanner-row{margin:-4px 0 16px}
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
-.product-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:15px;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0;transition:.15s;box-shadow:0 3px 12px rgba(0,31,92,.035)}
-.product-card:hover{border-color:var(--brand-orange);box-shadow:0 10px 25px rgba(0,51,160,.09)}
-.product-card:disabled{opacity:.4}
-.product-card .name{font-size:14px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}.product-card .cat,.product-card .stock,.spec-line{font-size:12px}.product-card .cat{color:var(--muted)}.spec-line{color:var(--ink-soft);line-height:1.35}
-.product-card .price{font-size:17px;font-weight:600;color:var(--brand-blue);margin-top:4px}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}.pills::-webkit-scrollbar{display:none}
+.pill{flex:none;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);border-radius:999px;padding:8px 16px;font-weight:600;font-size:13px;white-space:nowrap;transition:.15s}
+.pill:hover{border-color:var(--brand-orange)}
+.pill.active{background:var(--brand-orange);border-color:var(--brand-orange);color:#fff;box-shadow:0 6px 16px rgba(255,140,66,.28)}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.pcard{background:#fff;border:1px solid var(--rule);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0;box-shadow:0 3px 12px rgba(0,31,92,.035);transition:.15s}
+.pcard:hover{border-color:var(--brand-orange);box-shadow:0 10px 25px rgba(0,51,160,.09)}
+.pcard.out{opacity:.55}
+.pcard .pimg{aspect-ratio:4/3;width:100%}.pcard .pimg .ic{width:38px;height:38px}
+.pbody{padding:12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.pbody .name{font-size:14px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.pbody .cat,.pbody .stock,.spec-line{font-size:12px}.pbody .cat{color:var(--muted)}.spec-line{color:var(--ink-soft);line-height:1.35}
+.pbody .price{font-size:17px;font-weight:700;color:var(--brand-blue)}
+.pfoot{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:2px}
+.padd{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:10px}
+.padd .btn{flex:1;padding:8px 10px;min-height:36px}
 .unit-pill{display:inline-block;align-self:flex-start;font-size:12px;padding:2px 8px;border-radius:999px;background:#eef4ff;color:var(--brand-blue);font-weight:700}
-.cart{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;position:sticky;top:24px;box-shadow:var(--shadow);min-width:0}
-.cart h2{font-size:18px;margin-bottom:14px;color:var(--brand-blue-dark)}.cart-empty{color:var(--muted);font-size:13px;padding:20px 0;text-align:center}
-.cart-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px dashed var(--rule);font-size:13px}.ci-name{flex:1;overflow-wrap:anywhere}
-.qty{display:flex;align-items:center;gap:6px}.qty button{width:28px;height:28px;padding:0;border-radius:6px;border:1px solid var(--rule);background:#f7f9fc}
-.line-total{width:66px;text-align:right}
+.cart{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;position:sticky;top:24px;box-shadow:var(--shadow);min-width:0;max-height:calc(100vh - 48px);overflow-y:auto}
+.cart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cart h2{font-size:18px;color:var(--brand-blue-dark)}.cart-empty{color:var(--muted);font-size:13px;padding:20px 0;text-align:center}
+.cart-item{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:6px 10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--rule);font-size:13px}
+.ci-info{min-width:0}.ci-name{font-weight:600;overflow-wrap:anywhere;line-height:1.3}.ci-sub{font-size:12px;color:var(--muted)}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.line-total{font-weight:700;color:var(--brand-blue-dark)}
+.qty{display:flex;align-items:center;gap:6px;font-weight:700}.qty button{width:28px;height:28px;padding:0;border-radius:6px;border:1px solid var(--rule);background:#f7f9fc}.qty button:hover{border-color:var(--brand-orange)}
 .cart-total-row{display:flex;justify-content:space-between;padding-top:15px;margin-top:7px;border-top:2px solid var(--brand-blue);font-size:18px;font-weight:600;color:var(--brand-blue-dark)}
-.paymethods{display:flex;gap:8px;margin:14px 0}.paymethods label{flex:1;border:1px solid var(--rule);border-radius:8px;padding:9px;text-align:center;cursor:pointer;margin:0;color:var(--ink)}.paymethods input{display:none}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#eef2f9;padding:4px;border-radius:10px;margin:14px 0 12px}
+.seg button{border:0;background:transparent;padding:9px 4px;border-radius:7px;font-weight:600;font-size:12.5px;color:var(--ink-soft)}
+.seg button.active{background:#fff;color:var(--brand-blue);box-shadow:0 2px 8px rgba(0,31,92,.12)}
+.paymethods{display:flex;gap:8px;margin:0 0 12px}.paymethods label{flex:1;border:1px solid var(--rule);border-radius:8px;padding:9px;text-align:center;cursor:pointer;margin:0;color:var(--ink)}.paymethods input{display:none}
 .paymethods label:has(input:checked){border-color:var(--brand-orange);color:var(--brand-blue);background:#fff7f1;font-weight:700}
+.pay-sum{background:#fff7f1;border:1px solid #ffd9bd;border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:13px}
+.pay-sum div{display:flex;justify-content:space-between}.pay-sum .owe{color:var(--danger);font-weight:700}
+.cart .field{margin-bottom:10px}
+.two-in{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cartbar{display:none}
 
 /* Tables / filters / stats */
 .table-wrap{width:100%;border:1px solid var(--rule);border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;box-shadow:0 4px 15px rgba(0,31,92,.04)}
-table{width:100%;border-collapse:collapse;font-size:13px}.table-wrap table.wide{min-width:640px}
+table{width:100%;border-collapse:collapse;font-size:13px}.table-wrap table.wide{min-width:700px}
 th{text-align:left;font-weight:700;color:var(--brand-blue);font-size:12px;padding:10px 12px;border-bottom:2px solid var(--brand-blue);background:#f5f8ff}
 td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}tr:last-child td{border-bottom:none}
 .table-wrap input[type=number]{padding:6px 8px;min-width:70px}
 .row-actions{display:flex;gap:6px;flex-wrap:wrap}.row-actions button,td .btn{padding:6px 10px;min-height:34px;font-size:13px}
+td .ibtn{padding:0;min-height:38px}
+.pcell{display:flex;align-items:center;gap:10px}
 .filters{display:flex;gap:10px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap}.filters .field{margin-bottom:0;min-width:150px}
 .stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.stat-row.s2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .stat-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:17px;box-shadow:0 5px 18px rgba(0,31,92,.045);position:relative;overflow:hidden;min-width:0}
 .stat-card:after{content:"";position:absolute;right:0;top:0;width:4px;height:100%;background:var(--brand-orange)}
+.stat-card.blue:after{background:var(--brand-blue)}
 .stat-card .label{font-size:12px;color:var(--muted);margin-bottom:6px}.stat-card .value{font-size:clamp(18px,2.2vw,24px);font-weight:600;color:var(--brand-blue-dark);overflow-wrap:anywhere}
+.stat-card .note{font-size:11px;color:var(--muted);margin-top:4px}
 .bars{display:flex;align-items:flex-end;gap:8px;height:160px;padding:12px;background:#fff;border:1px solid var(--rule);border-radius:12px;overflow-x:auto;margin-bottom:34px}
 .bar{flex:1;min-width:26px;background:linear-gradient(180deg,var(--brand-orange),#FFB380);border-radius:4px 4px 0 0;min-height:2px;position:relative}
 .bar-label,.bar-value{position:absolute;left:0;right:0;text-align:center;font-size:11px}.bar-label{bottom:-20px;color:var(--muted)}.bar-value{top:-18px;color:var(--brand-blue)}
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-bottom:24px;min-width:0}
+.info-note{background:#eef4ff;border:1px solid #cfdcf8;color:var(--brand-blue-dark);border-radius:10px;padding:10px 14px;font-size:12.5px;margin:-6px 0 18px}
 
 /* Debts */
 .debt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
@@ -117,11 +147,13 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
 .debt-bal{text-align:right;font-weight:700;font-size:16px;color:var(--brand-blue);white-space:nowrap}.debt-bal small{display:block;font-size:11px;font-weight:600;color:var(--muted)}
 .prog{height:6px;background:#eef2f9;border-radius:999px;overflow:hidden}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--brand-orange),#FFB380);border-radius:999px}
 .debt-meta{font-size:12px;color:var(--ink-soft)}
-.debt-actions{display:flex;gap:8px;align-items:center}.debt-actions .btn-primary{flex:1}
+.debt-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.debt-actions .btn-primary{flex:1 1 100px}
+.btn-wa{border-color:#bfe6cc;color:#15803D;flex:1 1 100px}.btn-wa:hover{background:#f0fbf4;border-color:#15803D}
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-height:96px;overflow-y:auto;margin-top:8px}
 .chip{border:1px solid var(--rule);background:#f5f8ff;color:var(--brand-blue);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600}
 .name-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--rule);overflow-wrap:anywhere}
 .names-list{max-height:50vh;overflow-y:auto}
+.remind-prev{background:#eef2f9;border-radius:12px;padding:8px;margin-bottom:14px;max-height:52vh;overflow-y:auto}.remind-prev img{width:100%;display:block;border-radius:8px}
 
 /* Panels / documents */
 .panel{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--shadow);min-width:0}
@@ -133,13 +165,14 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
 /* Modals / receipt / toast / scanner */
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,31,92,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;overflow-y:auto}
 .modal{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:26px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;min-width:0;box-shadow:0 24px 70px rgba(0,31,92,.25)}
-.modal h2{font-size:18px;margin-bottom:16px;color:var(--brand-blue-dark)}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.modal h2{font-size:18px;margin-bottom:16px;color:var(--brand-blue-dark)}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
 .modal .two-col{gap:10px;margin-bottom:0}
 .modal-backdrop.sheet-backdrop{padding:0;align-items:flex-end}.modal.sheet{max-width:100%;margin:0;border-radius:18px 18px 0 0;padding:10px 18px calc(16px + env(safe-area-inset-bottom,0px))}
 .scanner-modal{max-width:520px}#scannerVideo{width:100%;display:block;background:#0b1220;border-radius:12px;aspect-ratio:4/3;object-fit:cover}
 .scanner-status{font-size:12px;color:var(--muted);margin-top:10px}.scanner-frame{position:relative;margin-top:12px}
 .scanner-frame:after{content:"";position:absolute;left:12%;right:12%;top:50%;height:2px;background:var(--brand-orange);box-shadow:0 0 12px rgba(255,140,66,.65);pointer-events:none}
 .inventory-code{font-family:monospace;font-size:12px;color:var(--muted)}
+.img-pick{display:flex;align-items:center;gap:14px}.img-pick .col{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 .receipt{font-family:'Courier New',Courier,monospace;font-size:11px;line-height:1.35;background:#fff;color:#111;max-width:330px;margin:0 auto;padding:4px 2px}
 .receipt-header{text-align:center}.receipt h2{text-align:center;font-size:15px;line-height:1.15;margin:0 0 4px;color:#111;font-weight:800}
 .receipt .rline{text-align:center;color:#333;font-size:10px;margin-bottom:2px}
@@ -150,18 +183,21 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
 .receipt .rdesc{overflow-wrap:anywhere}.receipt .ramt{text-align:right;white-space:nowrap}.receipt .rspec{display:block;font-size:9px;color:#555;margin-top:1px}
 .receipt .rtotal{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:13px;padding:5px 0}
 .receipt .rpayment{display:flex;justify-content:space-between;font-size:10px;padding-top:2px}
+.receipt .rnote{text-align:center;font-weight:800;font-size:10px;border:1px dashed #111;padding:4px;margin-top:6px}
 .receipt .rthank{text-align:center;font-size:10px;margin-top:12px}.receipt .rfoot{text-align:center;font-size:9px;color:#555;margin-top:5px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--brand-blue-dark);color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;z-index:80;box-shadow:0 8px 25px rgba(0,31,92,.25);border-left:4px solid var(--brand-orange);max-width:92vw}
 
 /* Daily: add-record form */
 .rec-panel{margin-bottom:22px}
 .rec-grid{display:grid;grid-template-columns:minmax(0,2fr) 84px 112px 120px auto;gap:10px;align-items:end}
-.rec-grid .field{margin-bottom:0;min-width:0}.rec-grid .rec-custom{grid-column:1/-1}
+.rec-grid .field,.rec-extra .field{margin-bottom:0;min-width:0}.rec-grid .rec-custom{grid-column:1/-1}
+.rec-extra{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:12px}
 .rec-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.rec-checks{display:flex;gap:18px;flex-wrap:wrap}
 .rec-check{display:flex;align-items:center;gap:8px;margin:0;font-weight:600;cursor:pointer}.rec-check input{width:18px;height:18px;accent-color:var(--brand-orange)}
 
 /* Responsive */
-@media(min-width:861px) and (max-width:1100px){.app{grid-template-columns:210px minmax(0,1fr)}.main{padding:24px 26px 50px}.checkout-grid{grid-template-columns:minmax(0,1fr) 300px;gap:18px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}.nav button,.brand{padding-left:18px;padding-right:18px}}
+@media(min-width:861px) and (max-width:1100px){.app{grid-template-columns:210px minmax(0,1fr)}.main{padding:24px 26px 50px}.checkout-grid{grid-template-columns:minmax(0,1fr) 330px;gap:18px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.nav button,.brand{padding-left:18px;padding-right:18px}}
 @media(max-width:1000px){.doc-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:860px){
   input[type=text],input[type=number],input[type=password],input[type=date],select{font-size:16px}
@@ -172,28 +208,28 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
   .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--rule);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(0,31,92,.08)}
   .bnav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;color:var(--muted);font-size:11px;font-weight:600;border-radius:10px;min-height:50px}
   .bnav button.active{color:var(--brand-orange)}
-  .main{padding:20px 18px 100px}
-  .checkout-grid,.two-col{grid-template-columns:minmax(0,1fr)}.cart{position:static}
+  .main{padding:20px 18px 150px}
+  .checkout-grid,.two-col{grid-template-columns:minmax(0,1fr)}.cart{position:static;max-height:none}
   .stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cartbar.on{display:flex;position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:19;background:var(--brand-blue-dark);color:#fff;border:0;border-left:4px solid var(--brand-orange);border-radius:12px;padding:13px 16px;justify-content:space-between;align-items:center;font-weight:700;box-shadow:0 10px 26px rgba(0,31,92,.3)}
 }
 @media(max-width:600px){
   .center-screen{padding:14px}.card{padding:30px 20px 22px;border-radius:15px}.stamp-mark{width:68px;height:68px;margin-bottom:14px}
-  .main{padding:16px 12px 100px}.topbar{margin-bottom:18px}
-  .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-card{padding:12px}
+  .main{padding:16px 12px 150px}.topbar{margin-bottom:18px}
+  .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pbody{padding:10px}
   .stat-row{gap:10px}.stat-card{padding:13px}
   .filters{display:grid;grid-template-columns:1fr}.filters .field{min-width:0;width:100%}.filters .btn{width:100%}
-  .toolrow{display:grid;grid-template-columns:minmax(0,1fr) 42px}.toolrow input{grid-column:1/-1}.toolrow select{max-width:none;width:100%}
-  .cart{padding:15px}.paymethods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cart{padding:15px}
   .modal-backdrop{padding:10px;align-items:flex-start}.modal{margin:3vh auto 0;padding:20px;max-width:100%}
   .modal-actions{flex-direction:column-reverse}.modal-actions .btn{width:100%}
   .modal .two-col,.form-grid{grid-template-columns:1fr}
   .add-row,.add-row.custom{grid-template-columns:1fr 1fr}.add-row>:first-child{grid-column:1/-1}.add-row .btn{grid-column:1/-1}.panel{padding:14px}
-  .toast{left:12px;right:12px;bottom:90px;transform:none;text-align:center;max-width:none}
+  .toast{left:12px;right:12px;bottom:130px;transform:none;text-align:center;max-width:none}
   .hide-sm{display:none}
   .rec-grid{grid-template-columns:1fr 1fr}.rec-grid>:first-child{grid-column:1/-1}.rec-grid .btn{grid-column:1/-1}
   .debt-grid{grid-template-columns:1fr}
 }
-@media(max-width:380px){.product-grid,.paymethods{grid-template-columns:1fr}.stat-row.s2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){.product-grid{grid-template-columns:1fr}.stat-row.s2{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1600px){body{font-size:15px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
@@ -212,7 +248,6 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
 </head>
 <body>
 
-<!-- Icon sprite (minimal line icons) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 7H6"/><circle cx="9" cy="19" r="1.2"/><circle cx="17" cy="19" r="1.2"/></symbol>
   <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></symbol>
@@ -230,6 +265,9 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3.2-5.5 6.5-5.5s6 2 6.5 5.5M16 4.5a3.5 3.5 0 010 7M18 14.8c2 .6 3.3 2.3 3.5 5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4V8z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
 </svg>
 
 <!-- ================= LOGIN ================= -->
@@ -273,21 +311,36 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <div>
           <div class="toolrow">
             <input type="text" id="productSearch" placeholder="Search name, SKU or barcode…" oninput="searchProducts()">
-            <select id="categoryFilter" onchange="renderProductGrid()"><option value="">All categories</option></select>
             <button class="btn btn-primary scan-btn" type="button" onclick="openScanner()" aria-label="Scan barcode or QR code" title="Scan barcode or QR code"><svg class="scan-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9V5h4M15 5h4v4M19 15v4h-4M9 19H5v-4M8 8v8M12 7v10M16 8v8"/></svg></button>
           </div>
-          <div class="scanner-row"><span class="hint">Scan QR codes or barcodes with this phone. Products can be sold as a piece, sheet, pack, box, ream, quire, set, etc.</span></div>
+          <div class="pills" id="catPills"></div>
           <div class="product-grid" id="productGrid"><p class="hint">Loading products…</p></div>
         </div>
-        <div class="cart">
-          <h2>Current sale</h2>
-          <div id="cartItems"><div class="cart-empty">Cart is empty — tap a product to add it.</div></div>
+        <div class="cart" id="cartPanel">
+          <div class="cart-head"><h2>Current sale</h2><button class="btn btn-ghost" type="button" onclick="clearCart()">Clear</button></div>
+          <div id="cartItems"><div class="cart-empty">Cart is empty — tap Add on a product.</div></div>
           <div class="cart-total-row"><span>Total</span><span id="cartTotal">KES 0.00</span></div>
-          <div class="paymethods">
+
+          <div class="seg" id="paySeg">
+            <button type="button" data-m="full" class="active" onclick="setPayMode('full')">Paid in full</button>
+            <button type="button" data-m="part" onclick="setPayMode('part')">Part payment</button>
+            <button type="button" data-m="debt" onclick="setPayMode('debt')">On debt</button>
+          </div>
+
+          <div class="field hidden" id="cPaidWrap"><label for="cPaid">Amount paid now (KES)</label><input type="number" id="cPaid" min="0" step="0.01" inputmode="decimal" oninput="updateSummary()"></div>
+          <div class="paymethods" id="payMethods">
             <label><input type="radio" name="paymethod" value="Cash" checked><span>Cash</span></label>
             <label><input type="radio" name="paymethod" value="M-Pesa"><span>M-Pesa</span></label>
             <label><input type="radio" name="paymethod" value="Card"><span>Card</span></label>
           </div>
+          <div class="pay-sum hidden" id="paySum"></div>
+
+          <div class="two-in">
+            <div class="field"><label for="cName" id="cNameLbl">Customer (optional)</label><input type="text" id="cName" list="dlNames" autocomplete="off" placeholder="Name" oninput="fillPhone('cName','cPhone')"></div>
+            <div class="field hidden" id="cPhoneWrap"><label for="cPhone">WhatsApp number</label><input type="text" id="cPhone" inputmode="tel" autocomplete="off" placeholder="07…"></div>
+          </div>
+          <label class="rec-check" style="margin-bottom:14px"><input type="checkbox" id="cHold">Customer has not collected the items yet</label>
+
           <button class="btn btn-primary" style="width:100%" id="checkoutBtn" onclick="completeSale()" disabled>Complete sale</button>
         </div>
       </div>
@@ -302,7 +355,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
           <button class="btn btn-primary bi" onclick="openProductModal()"><svg class="ic"><use href="#i-plus"/></svg>Add product</button>
         </div>
       </div>
-      <p class="hint" style="margin:-8px 0 18px">Scan an existing barcode/QR to load the product automatically, or add it manually.</p>
+      <p class="hint" style="margin:-8px 0 18px">Scan an existing barcode/QR to load the product automatically, or add it manually. Add a photo so it shows on the checkout.</p>
       <div class="table-wrap"><table class="wide">
         <thead><tr><th>Product</th><th>Category</th><th>Purchase</th><th>Selling</th><th>Stock</th><th>SKU / Barcode</th><th></th><th></th></tr></thead>
         <tbody id="inventoryBody"></tbody>
@@ -335,7 +388,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <button class="btn" onclick="loadSales()">Filter</button>
       </div>
       <div class="table-wrap"><table class="wide">
-        <thead><tr><th>Receipt</th><th>Date</th><th>Cashier</th><th>Items</th><th>Payment</th><th>Total</th></tr></thead>
+        <thead><tr><th>Receipt</th><th>Date</th><th>Customer</th><th>Items</th><th>Payment</th><th>Total</th><th>Status</th><th>Pickup</th></tr></thead>
         <tbody id="salesBody"></tbody>
       </table></div>
     </section>
@@ -357,26 +410,43 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
           <div class="field rec-custom hidden" id="recCustomWrap"><label for="recName">Item name</label><input type="text" id="recName" autocomplete="off" placeholder="e.g. Printing, Lamination"></div>
           <div class="field"><label for="recQty">Qty</label><input type="number" id="recQty" min="0.01" step="any" value="1" oninput="recTotal()"></div>
           <div class="field"><label for="recPrice">Unit price</label><input type="number" id="recPrice" min="0" step="0.01" placeholder="0.00" oninput="recTotal()"></div>
-          <div class="field"><label for="recPay">Payment</label><select id="recPay"><option>Cash</option><option>M-Pesa</option><option>Card</option></select></div>
+          <div class="field"><label for="recPay">Method</label><select id="recPay"><option>Cash</option><option>M-Pesa</option><option>Card</option></select></div>
           <button class="btn btn-primary bi" type="button" id="recAddBtn" onclick="addDailyRecord()"><svg class="ic"><use href="#i-plus"/></svg>Add</button>
         </div>
+        <div class="rec-extra">
+          <div class="field"><label for="recStatus">Payment status</label><select id="recStatus" onchange="recStatusChanged()"><option value="full">Paid in full</option><option value="part">Part payment</option><option value="debt">On debt</option></select></div>
+          <div class="field hidden" id="recPaidWrap"><label for="recPaid">Amount paid now</label><input type="number" id="recPaid" min="0" step="0.01" inputmode="decimal"></div>
+          <div class="field" id="recCustWrap"><label for="recCust" id="recCustLbl">Customer (optional)</label><input type="text" id="recCust" list="dlNames" autocomplete="off" placeholder="Name" oninput="fillPhone('recCust','recPhone')"></div>
+          <div class="field hidden" id="recPhoneWrap"><label for="recPhone">WhatsApp number</label><input type="text" id="recPhone" inputmode="tel" autocomplete="off" placeholder="07…"></div>
+        </div>
         <div class="rec-foot">
-          <label class="rec-check hidden" id="recStockWrap"><input type="checkbox" id="recStock" checked>Deduct from stock</label>
+          <div class="rec-checks">
+            <label class="rec-check hidden" id="recStockWrap"><input type="checkbox" id="recStock" checked>Deduct from stock</label>
+            <label class="rec-check"><input type="checkbox" id="recHold">Not collected yet</label>
+          </div>
           <span class="hint">Line total: <strong id="recLineTotal">KES 0.00</strong></span>
         </div>
       </div>
+      <div class="info-note">Sales made counts everything sold today. Income only counts money actually received (paid at the sale plus debt payments). A sale on debt becomes income on the day it is paid.</div>
       <div class="stat-row">
-        <div class="stat-card"><div class="label">Revenue</div><div class="value" id="dRevenue">KES 0</div></div>
+        <div class="stat-card blue"><div class="label">Sales made</div><div class="value" id="dSales">KES 0</div></div>
+        <div class="stat-card"><div class="label">Income received</div><div class="value" id="dIncome">KES 0</div><div class="note" id="dIncomeNote"></div></div>
+        <div class="stat-card blue"><div class="label">Still on debt (from today's sales)</div><div class="value" id="dDebt">KES 0</div></div>
         <div class="stat-card"><div class="label">Gross profit</div><div class="value" id="dProfit">KES 0</div></div>
+      </div>
+      <div class="stat-row">
         <div class="stat-card"><div class="label">Orders</div><div class="value" id="dOrders">0</div></div>
         <div class="stat-card"><div class="label">Items sold</div><div class="value" id="dItems">0</div></div>
+        <div class="stat-card"><div class="label">Paid, not collected</div><div class="value" id="dPending">0</div></div>
+        <div class="stat-card"><div class="label">Debt payments received</div><div class="value" id="dFromDebts">KES 0</div></div>
       </div>
       <div class="two-col">
-        <div><h3>Payment methods</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Orders</th><th>Total</th></tr></thead><tbody id="dPayBody"></tbody></table></div></div>
-        <div><h3>Items sold</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Qty</th><th>Revenue</th></tr></thead><tbody id="dItemsBody"></tbody></table></div></div>
+        <div><h3>Money received by method</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Payments</th><th>Total</th></tr></thead><tbody id="dPayBody"></tbody></table></div></div>
+        <div><h3>Items sold</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Qty</th><th>Value</th></tr></thead><tbody id="dItemsBody"></tbody></table></div></div>
       </div>
+      <div id="dDebtWrap" class="hidden" style="margin-bottom:24px"><h3>Debt payments received today</h3><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Receipt</th><th>Method</th><th>Time</th><th>Amount</th></tr></thead><tbody id="dDebtBody"></tbody></table></div></div>
       <h3>Transactions</h3>
-      <div class="table-wrap"><table class="wide"><thead><tr><th>Receipt</th><th>Time</th><th>Cashier</th><th>Items</th><th>Payment</th><th>Total</th><th></th></tr></thead><tbody id="dSalesBody"></tbody></table></div>
+      <div class="table-wrap"><table class="wide"><thead><tr><th>Receipt</th><th>Time</th><th>Customer</th><th>Items</th><th>Payment</th><th>Total</th><th>Status</th><th>Pickup</th><th></th></tr></thead><tbody id="dSalesBody"></tbody></table></div>
     </section>
 
     <!-- REPORTS -->
@@ -388,17 +458,18 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <button class="btn" onclick="loadReport()">Run report</button>
         <button class="btn btn-primary" id="repPdfBtn" onclick="downloadReportPDF()">Download PDF</button>
       </div>
+      <div class="info-note">Income and profit count money actually received. Sales still on debt are shown separately until they are paid.</div>
       <div class="stat-row">
-        <div class="stat-card"><div class="label">Revenue</div><div class="value" id="statRevenue">KES 0</div></div>
+        <div class="stat-card"><div class="label">Income received</div><div class="value" id="statRevenue">KES 0</div></div>
         <div class="stat-card"><div class="label">Cost of goods</div><div class="value" id="statCost">KES 0</div></div>
         <div class="stat-card"><div class="label">Gross profit</div><div class="value" id="statProfit">KES 0</div></div>
         <div class="stat-card"><div class="label">Gross margin</div><div class="value" id="statMargin">0%</div></div>
       </div>
       <div class="stat-row">
-        <div class="stat-card"><div class="label">Orders</div><div class="value" id="statOrders">0</div></div>
-        <div class="stat-card"><div class="label">Items sold</div><div class="value" id="statItems">0</div></div>
-        <div class="stat-card"><div class="label">Avg. order</div><div class="value" id="statAvg">KES 0</div></div>
-        <div class="stat-card"><div class="label">Profit / item</div><div class="value" id="statProfitItem">KES 0</div></div>
+        <div class="stat-card blue"><div class="label">Sales made</div><div class="value" id="statSales">KES 0</div></div>
+        <div class="stat-card blue"><div class="label">On debt (this period)</div><div class="value" id="statOnDebt">KES 0</div></div>
+        <div class="stat-card blue"><div class="label">All debts outstanding</div><div class="value" id="statOutstanding">KES 0</div></div>
+        <div class="stat-card"><div class="label">Orders / items</div><div class="value" id="statOrders">0</div></div>
       </div>
       <div class="bars" id="dailyBars"></div>
       <div class="two-col">
@@ -450,9 +521,11 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
     </section>
   </main>
 
-  <!-- Bottom navigation (phones) -->
+  <button class="cartbar" id="cartBar" type="button" onclick="g('cartPanel').scrollIntoView({behavior:'smooth'})"><span id="cartBarLeft">0 items</span><span id="cartBarRight">View sale</span></button>
   <nav class="bnav" id="bnav" aria-label="Main navigation"></nav>
 </div>
+
+<datalist id="dlNames"></datalist>
 
 <!-- MORE SHEET (phones) -->
 <div class="modal-backdrop sheet-backdrop hidden" id="moreBackdrop" onclick="if(event.target===this)closeMore()">
@@ -469,7 +542,19 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
   <div class="modal">
     <h2 id="productModalTitle">Add product</h2>
     <form onsubmit="return saveProduct(event)">
-      <input type="hidden" id="pId">
+      <input type="hidden" id="pId"><input type="hidden" id="pImage">
+      <div class="field">
+        <label>Product photo</label>
+        <div class="img-pick">
+          <div class="pimg thumb-lg" id="pImgPrev"></div>
+          <div class="col">
+            <label class="btn bi" for="pImgFile" style="margin:0"><svg class="ic"><use href="#i-camera"/></svg>Take or choose photo</label>
+            <input type="file" id="pImgFile" accept="image/*" class="hidden" onchange="pickImage(this)">
+            <button type="button" class="btn btn-ghost" id="pImgRemove" onclick="removeImage()">Remove photo</button>
+          </div>
+        </div>
+        <div class="hint" id="pImgStatus" style="margin-top:6px"></div>
+      </div>
       <div class="field"><label for="pName">Product name</label><input type="text" id="pName" required></div>
       <div class="field"><label for="pCategory">Category</label><select id="pCategory"></select></div>
       <div class="field"><label for="pSpecification">Specification</label><input type="text" id="pSpecification" placeholder="e.g. A4 • 200 pages • Square"></div>
@@ -491,7 +576,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeProductModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save product</button>
+        <button type="submit" class="btn btn-primary" id="pSaveBtn">Save product</button>
       </div>
     </form>
   </div>
@@ -508,6 +593,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <input type="text" id="dName" required autocomplete="off" oninput="renderChips()" placeholder="Type a name or pick a saved one">
         <div class="chips" id="nameChips"></div>
       </div>
+      <div class="field"><label for="dPhone">WhatsApp number (for reminders)</label><input type="text" id="dPhone" inputmode="tel" autocomplete="off" placeholder="e.g. 0712 345 678"></div>
       <div class="two-col">
         <div class="field"><label for="dAmount">Amount owed (KES)</label><input type="number" id="dAmount" min="1" step="0.01" required></div>
         <div class="field"><label for="dPaid">Already paid (KES)</label><input type="number" id="dPaid" min="0" step="0.01" value="0"></div>
@@ -528,7 +614,10 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
     <form onsubmit="return savePayment(event)">
       <input type="hidden" id="payId">
       <p style="margin:0 0 14px"><strong id="payWho"></strong><br><span class="hint">Balance: <span id="payBal"></span></span></p>
-      <div class="field"><label for="payAmt">Amount paid (KES)</label><input type="number" id="payAmt" min="0.01" step="0.01" required></div>
+      <div class="two-col">
+        <div class="field"><label for="payAmt">Amount paid (KES)</label><input type="number" id="payAmt" min="0.01" step="0.01" required></div>
+        <div class="field"><label for="payMethod">Method</label><select id="payMethod"><option>Cash</option><option>M-Pesa</option><option>Card</option></select></div>
+      </div>
       <button type="button" class="btn bi" onclick="payFull()"><svg class="ic"><use href="#i-check"/></svg>Pay full balance</button>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="g('payBackdrop').classList.add('hidden')">Cancel</button>
@@ -538,11 +627,27 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
   </div>
 </div>
 
+<!-- REMINDER MODAL -->
+<div class="modal-backdrop hidden" id="remindBackdrop">
+  <div class="modal" style="max-width:520px">
+    <h2>Payment reminder</h2>
+    <div class="remind-prev"><img id="remindImg" alt="Reminder preview"></div>
+    <div class="field"><label for="rPhone">WhatsApp number</label><input type="text" id="rPhone" inputmode="tel" autocomplete="off" placeholder="e.g. 0712 345 678"></div>
+    <p class="hint">“Send image” opens your phone's share sheet: pick WhatsApp, then the customer. “Open chat” opens this number directly with the message text, and you can attach the downloaded image.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" onclick="g('remindBackdrop').classList.add('hidden')">Close</button>
+      <button class="btn bi" type="button" onclick="downloadRemind()"><svg class="ic"><use href="#i-download"/></svg>Download</button>
+      <button class="btn bi" type="button" onclick="openChat()"><svg class="ic"><use href="#i-chat"/></svg>Open chat</button>
+      <button class="btn btn-primary bi" type="button" onclick="sendRemind()"><svg class="ic"><use href="#i-chat"/></svg>Send image</button>
+    </div>
+  </div>
+</div>
+
 <!-- SAVED NAMES MODAL -->
 <div class="modal-backdrop hidden" id="namesBackdrop">
   <div class="modal">
     <h2>Saved names</h2>
-    <p class="hint" style="margin:-8px 0 12px">Names are saved automatically when you add a debt, so you can pick them next time. Remove them here whenever you like.</p>
+    <p class="hint" style="margin:-8px 0 12px">Names and WhatsApp numbers are saved automatically when you record a debt, so you can pick them next time. Remove them here whenever you like.</p>
     <div class="names-list" id="namesList"></div>
     <div class="modal-actions">
       <button class="btn btn-danger bi" id="clearNamesBtn" onclick="clearNames()"><svg class="ic"><use href="#i-trash"/></svg>Clear all</button>
@@ -573,10 +678,12 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocB
 var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [], cart = [], currentView = 'checkout', lastLoad = 0;
 var debts = [], debtors = [];
+var activeCat = '', cardQty = {}, payMode = 'full';
 var STATIONERY_CATEGORIES = ['Writing instruments','Paper & notebooks','Copy & printer paper','Exercise & school supplies','Office stationery','Filing & organisation','Envelopes & mailing','Art & drawing supplies','Craft & DIY supplies','Desk accessories','Adhesives & tapes','Cutting & measuring','Printing & binding supplies','Packaging supplies','Labels & stickers','Books & registers','Folders & files','Calculators & electronics','Computer & printing accessories','Cleaning & office supplies','Presentation supplies','School bags & accessories','Gift & wrapping supplies','Other stationery'];
 var NAV = [['checkout','Checkout','cart'],['inventory','Inventory','box'],['debts','Debts','wallet'],['sales','Sales history','receipt','Sales'],['daily','Daily records','calendar'],['reports','Reports','chart'],['documents','Documents','file'],['settings','Settings','sliders']];
 var BOTTOM = ['checkout','inventory','debts','sales'];
 var scannerStream = null, scannerLoop = null, scannerTarget = 'checkout', clockTimer = null;
+var uploading = false, remind = null;
 
 /* ================= Helpers ================= */
 function g(id) { return document.getElementById(id); }
@@ -589,6 +696,45 @@ function cacheGet(k) { try { return JSON.parse(sessionStorage.getItem(k) || 'nul
 function toast(msg) {
   var t = g('toast'); t.textContent = msg; t.classList.remove('hidden');
   clearTimeout(toast._h); toast._h = setTimeout(function () { t.classList.add('hidden'); }, 2800);
+}
+function imgInner(url) { return ic('box') + (url ? '<img src="' + esc(url) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : ''); }
+function normPhone(p) {
+  var d = String(p || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.indexOf('254') === 0) return d;
+  if (d.charAt(0) === '0') return '254' + d.slice(1);
+  if (d.length === 9) return '254' + d;
+  return d;
+}
+function normDebtors(list) {
+  return (list || []).map(function (n) { return typeof n === 'string' ? { name: n, phone: '' } : { name: n.name || '', phone: n.phone || '' }; }).filter(function (n) { return n.name; });
+}
+function setDebtors(list) {
+  debtors = normDebtors(list);
+  g('dlNames').innerHTML = debtors.map(function (n) { return '<option value="' + esc(n.name) + '"></option>'; }).join('');
+}
+function debtorPhone(name) {
+  var low = String(name || '').trim().toLowerCase(); if (!low) return '';
+  var m = debtors.find(function (n) { return n.name.toLowerCase() === low; });
+  return m ? m.phone : '';
+}
+function fillPhone(nameId, phoneId) {
+  var ph = debtorPhone(g(nameId).value);
+  if (ph && !g(phoneId).value) g(phoneId).value = ph;
+}
+function statusBadge(s) {
+  var cls = s.status === 'Paid' ? 'badge-ok' : (s.status === 'Partial' ? 'badge-amber' : 'badge-low');
+  return '<span class="badge ' + cls + '">' + esc(s.status) + '</span>' + (s.balance > 0.005 ? '<div class="spec-line">Owes ' + kes(s.balance) + '</div>' : '');
+}
+function pickupCell(s) {
+  return s.collected === 'No' ? '<button class="btn bi" type="button" data-id="' + esc(s.id) + '" onclick="markCollected(this.dataset.id)">' + ic('check') + 'Collected</button>' : '<span class="hint">Collected</span>';
+}
+function markCollected(id) {
+  api('setCollected', { id: id, collected: true }).then(function (res) {
+    if (!res.ok) { toast(res.error); return; }
+    toast('Marked as collected.');
+    if (currentView === 'daily') loadDaily(); else loadSales();
+  });
 }
 
 /* PDF libraries load only when a PDF is actually requested */
@@ -656,8 +802,8 @@ function enterApp() {
   g('whoami').textContent = session.username; g('whoami2').textContent = session.username;
   g('settingsUsername').textContent = session.username;
   buildNav(); show('app');
-  var c = cacheGet('pos_products'); if (c) { products = c; afterProducts(); }   // instant paint from cache
-  loadProducts().then(function () { setTimeout(function () { if (session) loadDebts(); }, 400); });  // warm the Debts tab in the background
+  var c = cacheGet('pos_products'); if (c) { products = c; afterProducts(); }
+  loadProducts().then(function () { setTimeout(function () { if (session) loadDebts(); }, 400); });
   tickClock();
   clearInterval(clockTimer); clockTimer = setInterval(tickClock, 30000);
 }
@@ -686,7 +832,7 @@ function showView(name) {
   currentView = name;
   document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
   g('view-' + name).classList.add('active');
-  markNav(name);
+  markNav(name); updateCartBar();
   if (name === 'checkout' || name === 'inventory') { if (Date.now() - lastLoad > 60000) loadProducts(); }
   if (name === 'inventory') renderInventoryTable();
   if (name === 'debts') loadDebts();
@@ -700,10 +846,7 @@ function showView(name) {
 /* ================= Products / Checkout ================= */
 function allCategories() { return Array.from(new Set(STATIONERY_CATEGORIES.concat(products.map(function (p) { return p.category; }).filter(Boolean)))); }
 function afterProducts() {
-  var cf = g('categoryFilter'), cur = cf.value;
-  cf.innerHTML = '<option value="">All categories</option>' + allCategories().map(function (c) { return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
-  cf.value = cur;
-  populateCategorySelect(); renderProductGrid();
+  buildPills(); populateCategorySelect(); renderProductGrid();
   if (currentView === 'inventory') renderInventoryTable();
   if (currentView === 'documents') initDocuments();
   if (currentView === 'daily') recFillProducts();
@@ -714,61 +857,128 @@ function loadProducts() {
     products = res.products; lastLoad = Date.now(); cacheSet('pos_products', products); afterProducts();
   });
 }
+function buildPills() {
+  var present = {}; products.forEach(function (p) { if (p.category) present[p.category] = 1; });
+  var cats = allCategories().filter(function (c) { return present[c]; });
+  if (activeCat && !present[activeCat]) activeCat = '';
+  g('catPills').innerHTML = ['<button type="button" class="pill' + (!activeCat ? ' active' : '') + '" data-c="" onclick="setCat(this.dataset.c)">All items</button>'].concat(cats.map(function (c) {
+    return '<button type="button" class="pill' + (activeCat === c ? ' active' : '') + '" data-c="' + esc(c) + '" onclick="setCat(this.dataset.c)">' + esc(c) + '</button>';
+  })).join('');
+}
+function setCat(c) { activeCat = c || ''; buildPills(); renderProductGrid(); }
 var _sd; function searchProducts() { clearTimeout(_sd); _sd = setTimeout(renderProductGrid, 120); }
 function renderProductGrid() {
-  var q = g('productSearch').value.toLowerCase(), cat = g('categoryFilter').value, grid = g('productGrid');
+  var q = g('productSearch').value.toLowerCase(), grid = g('productGrid');
   var list = products.filter(function (p) {
     var hay = [p.name, p.category, p.specification, p.sku, p.barcode, p.unit, p.packSize].map(function (v) { return String(v || '').toLowerCase(); }).join(' ');
-    return (!cat || p.category === cat) && (!q || hay.indexOf(q) > -1);
+    return (!activeCat || p.category === activeCat) && (!q || hay.indexOf(q) > -1);
   });
   if (!list.length) { grid.innerHTML = '<p class="hint">No products match. Add some from Inventory.</p>'; return; }
   grid.innerHTML = list.map(function (p) {
-    var out = Number(p.stock) <= 0, low = Number(p.stock) <= Number(p.lowStock);
-    return '<button class="product-card" ' + (out ? 'disabled' : '') + ' onclick="addToCart(\'' + esc(p.id) + '\')">' +
-      '<span class="name">' + esc(p.name) + '</span><span class="cat">' + esc(p.category || '—') + '</span>' +
-      (p.specification ? '<span class="spec-line">' + esc(p.specification) + '</span>' : '') +
-      '<span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span>' +
-      '<span class="price">KES ' + Number(p.price).toFixed(2) + '</span>' +
-      '<span class="stock" style="color:' + (out ? 'var(--stamp)' : low ? 'var(--amber)' : 'var(--muted)') + '">' + (out ? 'Out of stock' : esc(p.stock) + ' in stock') + '</span></button>';
+    var out = Number(p.stock) <= 0, low = Number(p.stock) <= Number(p.lowStock), id = esc(p.id);
+    return '<div class="pcard' + (out ? ' out' : '') + '"><div class="pimg">' + imgInner(p.image) + '</div><div class="pbody">' +
+      '<span class="name">' + esc(p.name) + '</span>' +
+      (p.specification ? '<span class="spec-line">' + esc(p.specification) + '</span>' : '<span class="cat">' + esc(p.category || '—') + '</span>') +
+      '<div class="pfoot"><span class="price">KES ' + Number(p.price).toFixed(2) + '</span><span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span></div>' +
+      '<span class="stock" style="color:' + (out ? 'var(--stamp)' : low ? 'var(--amber)' : 'var(--muted)') + '">' + (out ? 'Out of stock' : esc(p.stock) + ' in stock') + '</span>' +
+      '<div class="padd"><span class="qty"><button type="button" aria-label="Less" ' + (out ? 'disabled' : '') + ' onclick="stepCard(\'' + id + '\',-1)">–</button><span id="cq_' + id + '">' + (cardQty[p.id] || 1) + '</span><button type="button" aria-label="More" ' + (out ? 'disabled' : '') + ' onclick="stepCard(\'' + id + '\',1)">+</button></span>' +
+      '<button type="button" class="btn btn-primary" ' + (out ? 'disabled' : '') + ' onclick="addFromCard(\'' + id + '\')">Add</button></div></div></div>';
   }).join('');
 }
-function addToCart(id) {
+function stepCard(id, d) {
+  var p = products.find(function (x) { return String(x.id) === String(id); }); if (!p) return;
+  var n = Math.min(Math.max(1, (cardQty[id] || 1) + d), Math.max(1, Number(p.stock)));
+  cardQty[id] = n; var el = g('cq_' + id); if (el) el.textContent = n;
+}
+function addFromCard(id) { addToCart(id, cardQty[id] || 1); cardQty[id] = 1; var el = g('cq_' + id); if (el) el.textContent = 1; }
+function addToCart(id, n) {
   var p = products.find(function (x) { return String(x.id) === String(id); });
   if (!p) return;
+  n = n || 1;
   var line = cart.find(function (c) { return String(c.id) === String(id); });
-  if (line) line.qty += 1; else cart.push({ id: p.id, name: p.name, price: Number(p.price), qty: 1 });
+  var have = line ? line.qty : 0;
+  if (have + n > Number(p.stock)) { toast('Only ' + p.stock + ' of ' + p.name + ' in stock.'); return; }
+  if (line) line.qty += n; else cart.push({ id: p.id, name: p.name, price: Number(p.price), qty: n, image: p.image || '', spec: p.specification || '', unit: p.unit || 'piece' });
   renderCart();
 }
 function changeQty(id, delta) {
   var line = cart.find(function (c) { return String(c.id) === String(id); });
   if (!line) return;
+  var p = products.find(function (x) { return String(x.id) === String(id); });
+  if (delta > 0 && p && line.qty + delta > Number(p.stock)) { toast('Only ' + p.stock + ' in stock.'); return; }
   line.qty += delta;
   if (line.qty <= 0) cart = cart.filter(function (c) { return String(c.id) !== String(id); });
   renderCart();
 }
+function clearCart() { cart = []; renderCart(); }
+function cartTotal() { return cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0); }
 function renderCart() {
   var box = g('cartItems');
   box.innerHTML = cart.length ? cart.map(function (c) {
-    return '<div class="cart-item"><span class="ci-name">' + esc(c.name) + '</span>' +
-      '<span class="qty"><button onclick="changeQty(\'' + esc(c.id) + '\',-1)">–</button>' + c.qty + '<button onclick="changeQty(\'' + esc(c.id) + '\',1)">+</button></span>' +
-      '<span class="line-total">' + (c.price * c.qty).toFixed(2) + '</span></div>';
-  }).join('') : '<div class="cart-empty">Cart is empty — tap a product to add it.</div>';
-  var total = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
-  g('cartTotal').textContent = 'KES ' + total.toFixed(2);
-  g('checkoutBtn').disabled = !cart.length;
+    var id = esc(c.id);
+    return '<div class="cart-item"><div class="pimg thumb">' + imgInner(c.image) + '</div>' +
+      '<div class="ci-info"><div class="ci-name">' + esc(c.name) + '</div><div class="ci-sub">' + esc(c.spec ? c.spec + ' · ' : '') + 'KES ' + c.price.toFixed(2) + '</div></div>' +
+      '<div class="ci-right"><span class="line-total">' + (c.price * c.qty).toFixed(2) + '</span>' +
+      '<span class="qty"><button type="button" onclick="changeQty(\'' + id + '\',-1)">–</button>' + c.qty + '<button type="button" onclick="changeQty(\'' + id + '\',1)">+</button></span></div></div>';
+  }).join('') : '<div class="cart-empty">Cart is empty — tap Add on a product.</div>';
+  updateSummary(); updateCartBar();
+}
+function updateCartBar() {
+  var n = cart.reduce(function (s, c) { return s + c.qty; }, 0);
+  g('cartBar').classList.toggle('on', n > 0 && currentView === 'checkout');
+  g('cartBarLeft').textContent = n + (n === 1 ? ' item' : ' items');
+  g('cartBarRight').textContent = 'KES ' + cartTotal().toFixed(2) + ' · View sale';
+}
+function setPayMode(m) {
+  payMode = m;
+  document.querySelectorAll('#paySeg button').forEach(function (b) { b.classList.toggle('active', b.dataset.m === m); });
+  g('cPaidWrap').classList.toggle('hidden', m !== 'part');
+  g('payMethods').classList.toggle('hidden', m === 'debt');
+  g('cPhoneWrap').classList.toggle('hidden', m === 'full');
+  g('cNameLbl').textContent = m === 'full' ? 'Customer (optional)' : 'Customer name (required)';
+  if (m === 'part') setTimeout(function () { g('cPaid').focus(); }, 30);
+  updateSummary();
+}
+function paidNow() {
+  var t = cartTotal();
+  if (payMode === 'full') return t;
+  if (payMode === 'debt') return 0;
+  return Number(g('cPaid').value) || 0;
+}
+function updateSummary() {
+  var t = cartTotal(), paid = paidNow(), box = g('paySum');
+  g('cartTotal').textContent = 'KES ' + t.toFixed(2);
+  var lbl = payMode === 'debt' ? 'Record sale on debt' : (payMode === 'part' ? 'Complete part-paid sale' : 'Complete sale');
+  var btn = g('checkoutBtn'); if (!btn.dataset.busy) btn.textContent = lbl;
+  btn.disabled = !cart.length || !!btn.dataset.busy;
+  if (payMode === 'full' || !cart.length) { box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  box.innerHTML = '<div><span>Paid now</span><span>' + kes(Math.min(paid, t)) + '</span></div><div class="owe"><span>Goes on debt</span><span>' + kes(Math.max(0, t - paid)) + '</span></div>';
 }
 function completeSale() {
-  var btn = g('checkoutBtn'); btn.disabled = true; btn.textContent = 'Recording sale…';
+  var total = cartTotal(), paid = paidNow(), name = g('cName').value.trim(), phone = g('cPhone').value.trim();
+  if (!cart.length) return;
+  if (payMode !== 'full' && !name) { toast('Enter the customer name for a sale on debt.'); g('cName').focus(); return; }
+  if (payMode === 'part' && !(paid > 0 && paid < total)) { toast('Part payment must be more than 0 and less than the total.'); g('cPaid').focus(); return; }
+  var btn = g('checkoutBtn'); btn.dataset.busy = '1'; btn.disabled = true; btn.textContent = 'Recording sale…';
   var pm = document.querySelector('input[name=paymethod]:checked').value;
-  api('createSale', { items: cart, paymentMethod: pm }).then(function (res) {
-    btn.textContent = 'Complete sale';
-    if (!res.ok) { toast(res.error); btn.disabled = false; return; }
-    res.sale.items.forEach(function (it) {          // update stock locally, no full reload needed
+  api('createSale', {
+    items: cart.map(function (c) { return { id: c.id, name: c.name, qty: c.qty }; }),
+    paymentMethod: pm, customer: name, phone: phone,
+    amountPaid: payMode === 'full' ? '' : paid, collected: !g('cHold').checked
+  }).then(function (res) {
+    delete btn.dataset.busy;
+    if (!res.ok) { toast(res.error); updateSummary(); return; }
+    res.sale.items.forEach(function (it) {
       var p = products.find(function (x) { return String(x.id) === String(it.id); });
       if (p) p.stock = Math.max(0, Number(p.stock) - Number(it.qty));
     });
     cacheSet('pos_products', products);
-    showReceipt(res.sale); cart = []; renderCart(); renderProductGrid();
+    if (res.debtors) setDebtors(res.debtors);
+    if (res.debtCreated) loadDebts();
+    showReceipt(res.sale); cart = [];
+    g('cName').value = ''; g('cPhone').value = ''; g('cPaid').value = ''; g('cHold').checked = false; setPayMode('full');
+    renderCart(); renderProductGrid();
   });
 }
 function showReceipt(sale) {
@@ -779,12 +989,15 @@ function showReceipt(sale) {
     var spec = p && p.specification ? '<span class="rspec">' + esc(p.specification) + '</span>' : '';
     return '<div class="ritem"><span>' + esc(it.qty) + '</span><span class="rdesc">' + esc(it.name) + spec + '</span><span class="ramt">' + (Number(it.price) * Number(it.qty)).toFixed(2) + '</span></div>';
   }).join('');
+  var owes = Number(sale.balance) > 0.005;
   g('receiptContent').innerHTML =
     '<div class="receipt-header"><h2>The Brand Cyber &amp; Stationery</h2><div class="rline">Gate C, Maasai Mara University</div><div class="rline">Thank you for shopping with us</div></div>' +
-    '<div class="rmeta"><div>Receipt</div><div>' + esc(sale.id) + '</div><div>Date</div><div>' + d.toLocaleDateString('en-GB') + '</div><div>Time</div><div>' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '</div><div>Cashier</div><div>' + esc(sale.cashier) + '</div></div>' +
+    '<div class="rmeta"><div>Receipt</div><div>' + esc(sale.id) + '</div><div>Date</div><div>' + d.toLocaleDateString('en-GB') + '</div><div>Time</div><div>' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '</div><div>Cashier</div><div>' + esc(sale.cashier) + '</div>' + (sale.customer ? '<div>Customer</div><div>' + esc(sale.customer) + '</div>' : '') + '</div>' +
     '<hr><div class="ritems-head"><span>Qty</span><span>Item</span><span class="ramt">Amount</span></div>' + lines + '<hr>' +
     '<div class="rpayment"><span>Items</span><span>' + itemCount + '</span></div><div class="rpayment"><span>Payment</span><span>' + esc(sale.paymentMethod) + '</span></div>' +
-    '<div class="rtotal"><span>TOTAL</span><span>KES ' + Number(sale.total).toFixed(2) + '</span></div><hr>' +
+    '<div class="rtotal"><span>TOTAL</span><span>KES ' + Number(sale.total).toFixed(2) + '</span></div>' +
+    (owes ? '<div class="rpayment"><span>Paid</span><span>KES ' + Number(sale.amountPaid).toFixed(2) + '</span></div><div class="rpayment"><b>BALANCE DUE</b><b>KES ' + Number(sale.balance).toFixed(2) + '</b></div>' : '') +
+    (sale.collected === 'No' ? '<div class="rnote">HELD FOR PICKUP — NOT YET COLLECTED</div>' : '') + '<hr>' +
     '<div class="rthank">Thank you. Please come again.</div><div class="rfoot">Receipt ' + esc(sale.id) + '</div>';
   g('receiptBackdrop').classList.remove('hidden');
 }
@@ -796,7 +1009,7 @@ function renderInventoryTable() {
   if (!products.length) { body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">No products yet. Add your first one.</td></tr>'; return; }
   body.innerHTML = products.map(function (p, i) {
     var low = Number(p.stock) <= Number(p.lowStock);
-    return '<tr><td><strong>' + esc(p.name) + '</strong>' + (p.specification ? '<div class="spec-line">' + esc(p.specification) + '</div>' : '') + '<span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span></td>' +
+    return '<tr><td><div class="pcell"><div class="pimg thumb">' + imgInner(p.image) + '</div><div><strong>' + esc(p.name) + '</strong>' + (p.specification ? '<div class="spec-line">' + esc(p.specification) + '</div>' : '') + '<span class="unit-pill">per ' + esc(p.unit || 'piece') + '</span></div></div></td>' +
       '<td>' + esc(p.category || '—') + '</td><td class="nowrap">KES ' + Number(p.purchasePrice || 0).toFixed(2) + '</td><td class="nowrap">KES ' + Number(p.price).toFixed(2) + '</td>' +
       '<td class="nowrap">' + esc(p.stock) + ' <span class="badge ' + (low ? 'badge-low' : 'badge-ok') + '">' + (low ? 'Low' : 'OK') + '</span></td>' +
       '<td><div class="inventory-code">' + esc(p.sku || '—') + '</div><div class="inventory-code">' + esc(p.barcode || '—') + '</div></td>' +
@@ -809,6 +1022,7 @@ function populateCategorySelect() {
   sel.innerHTML = allCategories().map(function (c) { return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
   if (cur) sel.value = cur;
 }
+function setImgPreview(url) { g('pImage').value = url || ''; g('pImgPrev').innerHTML = imgInner(url); g('pImgRemove').classList.toggle('hidden', !url); }
 function openProductModal(p) {
   g('productModalTitle').textContent = p ? 'Edit product' : 'Add product';
   g('pId').value = p ? p.id : ''; g('pName').value = p ? p.name : '';
@@ -818,16 +1032,43 @@ function openProductModal(p) {
   g('pStock').value = p ? p.stock : 0; g('pLowStock').value = p ? p.lowStock : 5;
   g('pUnit').value = p ? (p.unit || 'piece') : 'piece'; g('pPackSize').value = p ? (p.packSize || '') : '';
   g('pSku').value = p ? (p.sku || '') : ''; g('pBarcode').value = p ? (p.barcode || '') : '';
+  setImgPreview(p ? p.image : ''); g('pImgStatus').textContent = ''; g('pImgFile').value = '';
   g('productModalBackdrop').classList.remove('hidden');
 }
 function closeProductModal() { g('productModalBackdrop').classList.add('hidden'); }
+/* Photo: shrink on the phone, then save to Google Drive through the backend */
+function pickImage(input) {
+  var f = input.files && input.files[0]; if (!f) return;
+  var st = g('pImgStatus'); st.textContent = 'Preparing photo…'; uploading = true; g('pSaveBtn').disabled = true;
+  var rd = new FileReader();
+  rd.onerror = function () { uploading = false; g('pSaveBtn').disabled = false; st.textContent = 'Could not read that photo.'; };
+  rd.onload = function () {
+    var im = new Image();
+    im.onerror = function () { uploading = false; g('pSaveBtn').disabled = false; st.textContent = 'That file is not a usable image.'; };
+    im.onload = function () {
+      var max = 640, r = Math.min(1, max / Math.max(im.width, im.height));
+      var cv = document.createElement('canvas'); cv.width = Math.round(im.width * r); cv.height = Math.round(im.height * r);
+      var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0, cv.width, cv.height);
+      var data = cv.toDataURL('image/jpeg', 0.8); g('pImgPrev').innerHTML = imgInner(data); st.textContent = 'Uploading photo…';
+      api('uploadImage', { data: data.split(',')[1], mime: 'image/jpeg' }).then(function (res) {
+        uploading = false; g('pSaveBtn').disabled = false;
+        if (!res.ok) { st.textContent = res.error || 'Upload failed.'; setImgPreview(g('pImage').value); return; }
+        setImgPreview(res.url); st.textContent = 'Photo ready. Save the product to keep it.';
+      });
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+}
+function removeImage() { setImgPreview(''); g('pImgFile').value = ''; g('pImgStatus').textContent = 'Photo removed. Save the product to apply.'; }
 function saveProduct(ev) {
   ev.preventDefault();
+  if (uploading) { toast('Wait for the photo to finish uploading.'); return false; }
   var product = {
     id: g('pId').value || undefined, name: g('pName').value.trim(), category: g('pCategory').value.trim(),
     specification: g('pSpecification').value.trim(), unit: g('pUnit').value, packSize: g('pPackSize').value.trim(),
     sku: g('pSku').value.trim(), barcode: g('pBarcode').value.trim(), purchasePrice: g('pPurchasePrice').value,
-    price: g('pPrice').value, stock: g('pStock').value, lowStock: g('pLowStock').value
+    price: g('pPrice').value, stock: g('pStock').value, lowStock: g('pLowStock').value, image: g('pImage').value
   };
   api('upsertProduct', { product: product }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
@@ -847,10 +1088,10 @@ function removeProduct(id) {
 function bal(d) { return Math.max(0, Number(d.amount) - Number(d.paid || 0)); }
 function loadDebts() {
   var c = cacheGet('pos_debts');
-  if (c && !debts.length) { debts = c.debts || []; debtors = c.debtors || []; renderDebts(); }
+  if (c && !debts.length) { debts = c.debts || []; setDebtors(c.debtors); renderDebts(); }
   return api('listDebts', {}).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
-    debts = res.debts || []; debtors = res.debtors || []; saveDebtCache(); renderDebts();
+    debts = res.debts || []; setDebtors(res.debtors); saveDebtCache(); renderDebts();
   });
 }
 function saveDebtCache() { cacheSet('pos_debts', { debts: debts, debtors: debtors }); }
@@ -861,12 +1102,15 @@ function renderDebts() {
   g('dbCount').textContent = debts.length;
   g('debtGrid').innerHTML = list.length ? list.map(function (d) {
     var pct = Math.min(100, Math.round(Number(d.paid || 0) / Number(d.amount) * 100)) || 0, id = esc(d.id);
+    var ph = debtorPhone(d.name);
     return '<div class="debt-card"><div class="debt-top"><div><div class="debt-name">' + esc(d.name) + '</div>' +
-      '<div class="debt-note">' + (d.note ? esc(d.note) + ' · ' : '') + new Date(d.createdAt).toLocaleDateString('en-GB') + '</div></div>' +
+      '<div class="debt-note">' + (d.note ? esc(d.note) + ' · ' : '') + new Date(d.createdAt).toLocaleDateString('en-GB') + '</div>' +
+      (ph ? '<div class="debt-note">WhatsApp: ' + esc(ph) + '</div>' : '') + '</div>' +
       '<div class="debt-bal">' + kes(bal(d)) + '<small>balance</small></div></div>' +
       '<div class="prog"><i style="width:' + pct + '%"></i></div>' +
       '<div class="debt-meta">Paid ' + kes(d.paid) + ' of ' + kes(d.amount) + ' (' + pct + '%)</div>' +
       '<div class="debt-actions"><button class="btn btn-primary bi" onclick="openPay(\'' + id + '\')">' + ic('check') + 'Payment</button>' +
+      '<button class="btn btn-wa bi" onclick="openRemind(\'' + id + '\')">' + ic('chat') + 'Remind</button>' +
       '<button class="btn ibtn" aria-label="Edit" onclick="openDebtModal(\'' + id + '\')">' + ic('edit') + '</button>' +
       '<button class="btn ibtn" aria-label="Copy" onclick="copyDebt(\'' + id + '\')">' + ic('copy') + '</button>' +
       '<button class="btn btn-danger ibtn" aria-label="Delete" onclick="removeDebt(\'' + id + '\')">' + ic('trash') + '</button></div></div>';
@@ -877,13 +1121,13 @@ function applyDebt(debt, cleared, names) {
   var i = debts.findIndex(function (d) { return String(d.id) === String(debt.id); });
   if (cleared) { if (i > -1) debts.splice(i, 1); }
   else if (i > -1) debts[i] = debt; else debts.unshift(debt);
-  if (names) debtors = names;
+  if (names) setDebtors(names);
   saveDebtCache(); renderDebts();
 }
 function openDebtModal(id) {
   var d = id ? findDebt(id) : null;
   g('debtModalTitle').textContent = d ? 'Edit debt' : 'Add debt';
-  g('dId').value = d ? d.id : ''; g('dName').value = d ? d.name : '';
+  g('dId').value = d ? d.id : ''; g('dName').value = d ? d.name : ''; g('dPhone').value = d ? debtorPhone(d.name) : '';
   g('dAmount').value = d ? d.amount : ''; g('dPaid').value = d ? (d.paid || 0) : 0; g('dNote').value = d ? (d.note || '') : '';
   renderChips(); g('debtModalBackdrop').classList.remove('hidden');
   if (!d) setTimeout(function () { g('dName').focus(); }, 50);
@@ -891,13 +1135,13 @@ function openDebtModal(id) {
 function closeDebtModal() { g('debtModalBackdrop').classList.add('hidden'); }
 function renderChips() {
   var q = g('dName').value.toLowerCase().trim();
-  var list = debtors.filter(function (n) { return n.toLowerCase() !== q && (!q || n.toLowerCase().indexOf(q) > -1); });
-  g('nameChips').innerHTML = list.map(function (n) { return '<button type="button" class="chip" onclick="pickName(this.textContent)">' + esc(n) + '</button>'; }).join('');
+  var list = debtors.filter(function (n) { return n.name.toLowerCase() !== q && (!q || n.name.toLowerCase().indexOf(q) > -1); });
+  g('nameChips').innerHTML = list.map(function (n) { return '<button type="button" class="chip" data-n="' + esc(n.name) + '" data-p="' + esc(n.phone) + '" onclick="pickName(this)">' + esc(n.name) + '</button>'; }).join('');
 }
-function pickName(n) { g('dName').value = n; renderChips(); g('dAmount').focus(); }
+function pickName(el) { g('dName').value = el.dataset.n; g('dPhone').value = el.dataset.p || ''; renderChips(); g('dAmount').focus(); }
 function saveDebt(ev) {
   ev.preventDefault();
-  var d = { id: g('dId').value || undefined, name: g('dName').value.trim(), amount: g('dAmount').value, paid: g('dPaid').value || 0, note: g('dNote').value.trim() };
+  var d = { id: g('dId').value || undefined, name: g('dName').value.trim(), phone: g('dPhone').value.trim(), amount: g('dAmount').value, paid: g('dPaid').value || 0, note: g('dNote').value.trim() };
   if (!d.name) { toast('Enter a name.'); return false; }
   api('upsertDebt', { debt: d }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
@@ -915,7 +1159,7 @@ function openPay(id) {
 function payFull() { var d = findDebt(g('payId').value); if (d) g('payAmt').value = bal(d).toFixed(2); }
 function savePayment(ev) {
   ev.preventDefault();
-  api('payDebt', { id: g('payId').value, amount: g('payAmt').value }).then(function (res) {
+  api('payDebt', { id: g('payId').value, amount: g('payAmt').value, method: g('payMethod').value }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
     g('payBackdrop').classList.add('hidden'); applyDebt(res.debt, res.cleared);
     toast(res.cleared ? 'Fully paid — debt cleared.' : 'Payment recorded.');
@@ -938,24 +1182,123 @@ function copyDebt(id) {
   var d = findDebt(id); if (!d) return;
   copyText(d.name + '\nOwed: ' + kes(d.amount) + '\nPaid: ' + kes(d.paid) + '\nBalance: ' + kes(bal(d)) + (d.note ? '\nNote: ' + d.note : '') + '\n— The Brand Cyber & Stationery');
 }
+
+/* ---- WhatsApp reminder (branded image) ---- */
+function rrect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+function fitText(x, t, maxW) { t = String(t); if (x.measureText(t).width <= maxW) return t; while (t.length > 1 && x.measureText(t + '…').width > maxW) t = t.slice(0, -1); return t + '…'; }
+function money(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE', { maximumFractionDigits: 2 }); }
+function drawReminder(d) {
+  return new Promise(function (resolve) {
+    var items = (d.items && d.items.length) ? d.items.slice() : [{ name: d.note || 'Items on credit', qty: '', price: null }];
+    var more = 0; if (items.length > 12) { more = items.length - 12; items = items.slice(0, 12); }
+    var W = 760, S = 2, pad = 36, rowH = 40;
+    var H = 156 + 118 + 38 + items.length * rowH + (more ? 32 : 0) + 30 + 150 + 86;
+    var cv = document.createElement('canvas'); cv.width = W * S; cv.height = H * S;
+    var x = cv.getContext('2d'); x.scale(S, S);
+    var F = "'Montserrat',Arial,sans-serif", logo = new Image();
+    function draw(hasLogo) {
+      x.fillStyle = '#F7F9FC'; x.fillRect(0, 0, W, H);
+      var gr = x.createLinearGradient(0, 0, W, 156); gr.addColorStop(0, '#001F5C'); gr.addColorStop(1, '#0033A0');
+      x.fillStyle = gr; x.fillRect(0, 0, W, 150); x.fillStyle = '#FF8C42'; x.fillRect(0, 150, W, 6);
+      var tx = pad;
+      if (hasLogo) { x.fillStyle = '#fff'; rrect(x, pad, 34, 82, 82, 16); x.fill(); x.drawImage(logo, pad + 8, 42, 66, 66); tx = pad + 102; }
+      x.textBaseline = 'alphabetic'; x.textAlign = 'left';
+      x.fillStyle = '#fff'; x.font = '700 24px ' + F; x.fillText('The Brand Cyber & Stationery', tx, 76);
+      x.fillStyle = '#BFD0F2'; x.font = '400 14px ' + F; x.fillText('Gate C, Maasai Mara University', tx, 102);
+      x.fillStyle = '#FF8C42'; x.font = '700 15px ' + F; x.fillText('Payment reminder · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), tx, 130);
+      var y = 156 + 46;
+      x.fillStyle = '#13213A'; x.font = '700 21px ' + F; x.fillText('Hello ' + fitText(x, d.name, W - pad * 2 - 80) + ',', pad, y);
+      x.fillStyle = '#53617A'; x.font = '400 14px ' + F; x.fillText('This is a friendly reminder of your outstanding balance.', pad, y + 28);
+      y += 56;
+      x.fillStyle = '#E8EFFC'; rrect(x, pad, y, W - pad * 2, 36, 8); x.fill();
+      x.fillStyle = '#0033A0'; x.font = '700 12px ' + F;
+      x.fillText('Item', pad + 14, y + 23); x.textAlign = 'right'; x.fillText('Qty', W - pad - 150, y + 23); x.fillText('Amount', W - pad - 14, y + 23); x.textAlign = 'left';
+      y += 38;
+      items.forEach(function (it) {
+        x.fillStyle = '#13213A'; x.font = '600 14px ' + F; x.fillText(fitText(x, it.name, W - pad * 2 - 230), pad + 14, y + 25);
+        x.textAlign = 'right'; x.fillStyle = '#53617A'; x.font = '400 14px ' + F; x.fillText(String(it.qty === '' ? '' : it.qty), W - pad - 150, y + 25);
+        x.fillStyle = '#13213A'; x.font = '600 14px ' + F; x.fillText(it.price == null ? '' : money(Number(it.price) * Number(it.qty || 1)), W - pad - 14, y + 25); x.textAlign = 'left';
+        x.fillStyle = '#DCE3EF'; x.fillRect(pad, y + rowH - 1, W - pad * 2, 1); y += rowH;
+      });
+      if (more) { x.fillStyle = '#6B778C'; x.font = 'italic 400 13px ' + F; x.fillText('+ ' + more + ' more item' + (more > 1 ? 's' : ''), pad + 14, y + 22); y += 32; }
+      y += 30;
+      x.fillStyle = '#53617A'; x.font = '400 15px ' + F; x.fillText('Total of the sale', pad + 14, y); x.fillText('Paid so far', pad + 14, y + 32);
+      x.textAlign = 'right'; x.fillStyle = '#13213A'; x.font = '600 15px ' + F; x.fillText(money(d.amount), W - pad - 14, y); x.fillText(money(d.paid), W - pad - 14, y + 32); x.textAlign = 'left';
+      y += 56;
+      var og = x.createLinearGradient(pad, y, W - pad, y + 74); og.addColorStop(0, '#FF8C42'); og.addColorStop(1, '#FF6B00');
+      x.fillStyle = og; rrect(x, pad, y, W - pad * 2, 74, 16); x.fill();
+      x.fillStyle = '#fff'; x.font = '700 16px ' + F; x.fillText('Balance due', pad + 22, y + 44);
+      x.textAlign = 'right'; x.font = '700 30px ' + F; x.fillText(money(bal(d)), W - pad - 22, y + 48); x.textAlign = 'center';
+      y += 74 + 40;
+      x.fillStyle = '#53617A'; x.font = '400 13px ' + F; x.fillText('Kindly settle at your earliest convenience. Thank you for your business!', W / 2, y);
+      x.fillStyle = '#FF8C42'; x.fillRect(0, H - 12, W, 12); x.fillStyle = '#0033A0'; x.fillRect(0, H - 12, W * 0.6, 12);
+      resolve(cv);
+    }
+    logo.onload = function () { draw(true); }; logo.onerror = function () { draw(false); };
+    logo.src = 'logo/the-brand-cyber-logo.png';
+  });
+}
+function remindText(d) {
+  var items = (d.items && d.items.length) ? d.items.map(function (i) { return i.name + ' x' + i.qty; }).join(', ') : (d.note || '');
+  return 'Hello ' + d.name + ', a friendly reminder from The Brand Cyber & Stationery. Your outstanding balance is ' + money(bal(d)) + ' (total ' + money(d.amount) + ', paid ' + money(d.paid) + ').' + (items ? '\nItems: ' + items : '') + '\nThank you!';
+}
+function openRemind(id) {
+  var d = findDebt(id); if (!d) return;
+  toast('Preparing reminder…');
+  drawReminder(d).then(function (cv) {
+    cv.toBlob(function (blob) {
+      remind = { d: d, blob: blob };
+      g('remindImg').src = cv.toDataURL('image/png');
+      g('rPhone').value = debtorPhone(d.name);
+      g('remindBackdrop').classList.remove('hidden');
+    }, 'image/png');
+  });
+}
+function remindFile() { return 'Reminder-' + remind.d.name.replace(/[^a-z0-9]+/gi, '-') + '.png'; }
+function rememberPhone() {
+  var raw = g('rPhone').value.trim();
+  if (raw && raw !== debtorPhone(remind.d.name)) api('saveDebtor', { name: remind.d.name, phone: raw }).then(function (r) { if (r.ok) { setDebtors(r.debtors); saveDebtCache(); renderDebts(); } });
+}
+function downloadRemind() {
+  if (!remind) return;
+  var a = document.createElement('a'); a.href = URL.createObjectURL(remind.blob); a.download = remindFile(); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000); toast('Image downloaded.');
+}
+function sendRemind() {
+  if (!remind) return; rememberPhone();
+  var file = new File([remind.blob], remindFile(), { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], text: remindText(remind.d) }).catch(function () {});
+  } else { downloadRemind(); openChat(true); }
+}
+function openChat(quiet) {
+  if (!remind) return;
+  var ph = normPhone(g('rPhone').value);
+  if (!ph) { toast('Enter the customer’s WhatsApp number.'); g('rPhone').focus(); return; }
+  if (!quiet) rememberPhone();
+  window.open('https://wa.me/' + ph + '?text=' + encodeURIComponent(remindText(remind.d)), '_blank');
+  if (quiet) toast('Image saved. Attach it in the WhatsApp chat.');
+}
+
+/* ---- Saved names ---- */
 function openNames() { renderNames(); g('namesBackdrop').classList.remove('hidden'); }
 function renderNames() {
   g('namesList').innerHTML = debtors.length ? debtors.map(function (n) {
-    return '<div class="name-row"><span>' + esc(n) + '</span><button class="btn btn-danger ibtn" aria-label="Remove name" data-n="' + esc(n) + '" onclick="delName(this.dataset.n)">' + ic('trash') + '</button></div>';
+    return '<div class="name-row"><span>' + esc(n.name) + (n.phone ? '<br><span class="hint">' + esc(n.phone) + '</span>' : '') + '</span><button class="btn btn-danger ibtn" aria-label="Remove name" data-n="' + esc(n.name) + '" onclick="delName(this.dataset.n)">' + ic('trash') + '</button></div>';
   }).join('') : '<p class="hint">No saved names yet.</p>';
   g('clearNamesBtn').disabled = !debtors.length;
 }
 function delName(n) {
   api('deleteDebtor', { name: n }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
-    debtors = res.debtors || []; saveDebtCache(); renderNames();
+    setDebtors(res.debtors); saveDebtCache(); renderNames(); renderDebts();
   });
 }
 function clearNames() {
   if (!confirm('Clear all saved names? Existing debts are not affected.')) return;
   api('clearDebtors', {}).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
-    debtors = []; saveDebtCache(); renderNames(); toast('Saved names cleared.');
+    setDebtors([]); saveDebtCache(); renderNames(); renderDebts(); toast('Saved names cleared.');
   });
 }
 
@@ -992,7 +1335,7 @@ function processScannedCode(value) {
     return;
   }
   g('productSearch').value = value;
-  if (m) { addToCart(m.id); toast('Scanned: ' + m.name); }
+  if (m) { addToCart(m.id, 1); toast('Scanned: ' + m.name); }
   else { renderProductGrid(); toast('Code scanned, but no product matches it. Add it in Inventory.'); }
 }
 function useManualScanCode() { var v = g('manualScanCode').value.trim(); if (v) processScannedCode(v); }
@@ -1003,15 +1346,16 @@ function closeScanner() {
 }
 
 /* ================= Sales history ================= */
+function itemsText(s) { return (s.items || []).map(function (it) { return it.name + ' x' + it.qty; }).join(', '); }
 function loadSales() {
   var from = g('salesFrom').value, to = g('salesTo').value;
   api('listSales', { from: from || null, to: to ? to + 'T23:59:59' : null }).then(function (res) {
     var body = g('salesBody');
     if (!res.ok) { toast(res.error); return; }
-    if (!res.sales.length) { body.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">No sales in this range.</td></tr>'; return; }
+    if (!res.sales.length) { body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">No sales in this range.</td></tr>'; return; }
     body.innerHTML = res.sales.map(function (s) {
-      return '<tr><td>' + esc(s.id) + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleString('en-GB') + '</td><td>' + esc(s.cashier) + '</td>' +
-        '<td>' + esc(s.items.map(function (it) { return it.name + ' x' + it.qty; }).join(', ')) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">KES ' + Number(s.total).toFixed(2) + '</td></tr>';
+      return '<tr><td>' + esc(s.id) + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleString('en-GB') + '</td><td>' + esc(s.customer || '—') + '</td>' +
+        '<td>' + esc(itemsText(s)) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">KES ' + Number(s.total).toFixed(2) + '</td><td>' + statusBadge(s) + '</td><td>' + pickupCell(s) + '</td></tr>';
     }).join('');
   });
 }
@@ -1020,7 +1364,6 @@ function loadSales() {
 var daily = null;
 function initDaily() { if (!g('dailyDate').value) g('dailyDate').value = ymd(new Date()); recFillProducts(); loadDaily(); }
 
-/* ---- Manual daily records ---- */
 function recFillProducts() {
   var sel = g('recProduct'), cur = sel.value;
   sel.innerHTML = products.map(function (p) { return '<option value="' + esc(p.id) + '">' + esc(p.name + (p.specification ? ' (' + p.specification + ')' : '')) + '</option>'; }).join('') + '<option value="__custom">Custom item (type a name)</option>';
@@ -1036,6 +1379,12 @@ function recProductChanged(keepPrice) {
   recTotal();
 }
 function recTotal() { g('recLineTotal').textContent = kes((Number(g('recQty').value) || 0) * (Number(g('recPrice').value) || 0)); }
+function recStatusChanged() {
+  var m = g('recStatus').value;
+  g('recPaidWrap').classList.toggle('hidden', m !== 'part');
+  g('recPhoneWrap').classList.toggle('hidden', m === 'full');
+  g('recCustLbl').textContent = m === 'full' ? 'Customer (optional)' : 'Customer name (required)';
+}
 function addDailyRecord() {
   var day = g('dailyDate').value; if (!day) { toast('Pick a date first.'); return; }
   var id = g('recProduct').value, p = products.find(function (x) { return String(x.id) === String(id); });
@@ -1043,22 +1392,34 @@ function addDailyRecord() {
   if (!p && !name) { toast('Enter the item name.'); g('recName').focus(); return; }
   if (!(qty > 0)) { toast('Enter a quantity.'); return; }
   if (priceRaw === '' || !(price >= 0)) { toast('Enter the unit price.'); g('recPrice').focus(); return; }
+  var mode = g('recStatus').value, total = qty * price, cust = g('recCust').value.trim(), paid = '';
+  if (mode !== 'full' && !cust) { toast('Enter the customer name for a sale on debt.'); g('recCust').focus(); return; }
+  if (mode === 'debt') paid = 0;
+  if (mode === 'part') {
+    paid = Number(g('recPaid').value) || 0;
+    if (!(paid > 0 && paid < total)) { toast('Part payment must be more than 0 and less than ' + kes(total) + '.'); g('recPaid').focus(); return; }
+  }
   var deduct = !!p && g('recStock').checked;
   var btn = g('recAddBtn'); btn.disabled = true;
-  api('addRecord', { day: day, paymentMethod: g('recPay').value, deductStock: deduct, item: p ? { id: p.id, qty: qty, price: price } : { name: name, qty: qty, price: price } }).then(function (res) {
+  api('addRecord', {
+    day: day, paymentMethod: g('recPay').value, deductStock: deduct, customer: cust, phone: g('recPhone').value.trim(), amountPaid: paid, collected: !g('recHold').checked,
+    item: p ? { id: p.id, qty: qty, price: price } : { name: name, qty: qty, price: price }
+  }).then(function (res) {
     btn.disabled = false;
     if (!res.ok) { toast(res.error); return; }
-    g('recQty').value = 1; g('recName').value = ''; recTotal();
-    toast('Record added.');
+    g('recQty').value = 1; g('recName').value = ''; g('recCust').value = ''; g('recPhone').value = ''; g('recPaid').value = ''; g('recHold').checked = false; g('recStatus').value = 'full'; recStatusChanged(); recTotal();
+    toast(res.debtCreated ? 'Record added. Debt created automatically.' : 'Record added.');
+    if (res.debtors) setDebtors(res.debtors);
+    if (res.debtCreated) loadDebts();
     if (deduct) loadProducts();
     loadDaily();
   });
 }
 function deleteRecord(id) {
-  if (!confirm('Delete this record? Stock that was deducted for it will be put back.')) return;
+  if (!confirm('Delete this record? Stock that was deducted is put back, and any debt or debt payments linked to it are removed.')) return;
   api('deleteSale', { id: id }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
-    toast('Record deleted.'); loadProducts(); loadDaily();
+    toast('Record deleted.'); loadProducts(); loadDebts(); loadDaily();
   });
 }
 function dailyToday() { g('dailyDate').value = ymd(new Date()); loadDaily(); }
@@ -1068,31 +1429,25 @@ function shiftDaily(n) {
 }
 function loadDaily() {
   var day = g('dailyDate').value; if (!day) return;
-  api('listSales', { from: day, to: day + 'T23:59:59' }).then(function (res) {
+  api('dailySummary', { day: day }).then(function (res) {
     if (!res.ok) { toast(res.error); return; }
-    var sales = res.sales || [], rev = 0, cost = 0, qty = 0, pay = {}, items = {};
-    sales.forEach(function (s) {
-      rev += Number(s.total) || 0;
-      var k = s.paymentMethod || 'Cash'; pay[k] = pay[k] || { n: 0, t: 0 }; pay[k].n++; pay[k].t += Number(s.total) || 0;
-      (s.items || []).forEach(function (it) {
-        var q = Number(it.qty) || 0, pc = Number(it.purchasePrice) || 0;
-        qty += q; cost += pc * q;
-        var i = items[it.name] = items[it.name] || { q: 0, r: 0 }; i.q += q; i.r += (Number(it.price) || 0) * q;
-      });
-    });
-    daily = { day: day, sales: sales, rev: rev, cost: cost, profit: rev - cost, qty: qty, pay: pay };
+    daily = res; var sales = res.sales || [];
     g('dailyLabel').textContent = new Date(day + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    g('dRevenue').textContent = kes(rev); g('dProfit').textContent = kes(rev - cost);
-    g('dOrders').textContent = sales.length; g('dItems').textContent = qty;
-    var pk = Object.keys(pay), ik = Object.keys(items).sort(function (a, b) { return items[b].q - items[a].q; });
-    g('dPayBody').innerHTML = pk.length ? pk.map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + pay[k].n + '</td><td class="nowrap">' + kes(pay[k].t) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No sales recorded.</td></tr>';
-    g('dItemsBody').innerHTML = ik.length ? ik.map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + items[k].q + '</td><td class="nowrap">' + kes(items[k].r) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No sales recorded.</td></tr>';
+    g('dSales').textContent = kes(res.salesValue); g('dIncome').textContent = kes(res.income);
+    g('dIncomeNote').textContent = 'Paid at sale ' + kes(res.cashAtSale) + ' + debt payments ' + kes(res.fromDebts);
+    g('dDebt').textContent = kes(res.onDebt); g('dProfit').textContent = kes(res.profit);
+    g('dOrders').textContent = sales.length; g('dItems').textContent = res.qty; g('dPending').textContent = res.pending; g('dFromDebts').textContent = kes(res.fromDebts);
+    var bm = res.byMethod || [], its = res.items || [], dp = res.debtPayments || [];
+    g('dPayBody').innerHTML = bm.length ? bm.map(function (m) { return '<tr><td>' + esc(m.method) + '</td><td>' + m.n + '</td><td class="nowrap">' + kes(m.t) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No money received.</td></tr>';
+    g('dItemsBody').innerHTML = its.length ? its.map(function (i) { return '<tr><td>' + esc(i.name) + '</td><td>' + i.qty + '</td><td class="nowrap">' + kes(i.revenue) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No sales recorded.</td></tr>';
+    g('dDebtWrap').classList.toggle('hidden', !dp.length);
+    g('dDebtBody').innerHTML = dp.map(function (p) { return '<tr><td>' + esc(p.name) + '</td><td>' + esc(p.saleId) + '</td><td>' + esc(p.method) + '</td><td class="nowrap">' + new Date(p.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td class="nowrap">' + kes(p.amount) + '</td></tr>'; }).join('');
     g('dSalesBody').innerHTML = sales.length ? sales.map(function (s) {
       var manual = (s.items || []).some(function (it) { return it.manual; });
-      return '<tr><td>' + esc(s.id) + (manual ? ' <span class="unit-pill">manual</span>' : '') + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td>' + esc(s.cashier) + '</td><td>' +
-        esc((s.items || []).map(function (it) { return it.name + ' x' + it.qty; }).join(', ')) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">' + kes(s.total) + '</td>' +
+      return '<tr><td>' + esc(s.id) + (manual ? ' <span class="unit-pill">manual</span>' : '') + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td>' + esc(s.customer || '—') + '</td><td>' +
+        esc(itemsText(s)) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">' + kes(s.total) + '</td><td>' + statusBadge(s) + '</td><td>' + pickupCell(s) + '</td>' +
         '<td><button class="btn btn-danger ibtn" type="button" aria-label="Delete record" data-id="' + esc(s.id) + '" onclick="deleteRecord(this.dataset.id)">' + ic('trash') + '</button></td></tr>';
-    }).join('') : '<tr><td colspan="7" style="color:var(--muted)">No sales on this day.</td></tr>';
+    }).join('') : '<tr><td colspan="9" style="color:var(--muted)">No sales on this day.</td></tr>';
   });
 }
 
@@ -1118,18 +1473,20 @@ function dailyPDF() {
   ensurePDF().then(buildDailyPDF).catch(function (e) { toast(e.message); });
 }
 function buildDailyPDF() {
-  var d = daily, doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+  var d = daily, sales = d.sales || [], doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
   pdfHeader(doc, 'DAILY RECORD', new Date(d.day + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
-  doc.autoTable({ startY: 30, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9 }, head: [['Orders', 'Items sold', 'Revenue', 'Cost of goods', 'Gross profit']], body: [[d.sales.length, d.qty, kes(d.rev), kes(d.cost), kes(d.profit)]] });
-  var pk = Object.keys(d.pay);
-  doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9 }, head: [['Payment method', 'Orders', 'Total']], body: pk.length ? pk.map(function (k) { return [k, d.pay[k].n, kes(d.pay[k].t)]; }) : [['No sales', '', '']] });
+  doc.autoTable({ startY: 30, theme: 'grid', headStyles: HEAD, styles: { fontSize: 8.5 }, head: [['Sales made', 'Income received', 'On debt', 'Cost of goods', 'Gross profit', 'Orders', 'Items']], body: [[kes(d.salesValue), kes(d.income), kes(d.onDebt), kes(d.cost), kes(d.profit), sales.length, d.qty]] });
+  var bm = d.byMethod || [];
+  doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9 }, head: [['Money received by method', 'Payments', 'Total']], body: bm.length ? bm.map(function (m) { return [m.method, m.n, kes(m.t)]; }) : [['No money received', '', '']] });
+  var dp = d.debtPayments || [];
+  if (dp.length) doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9 }, head: [['Debt payments received', 'Receipt', 'Method', 'Amount']], body: dp.map(function (p) { return [p.name, p.saleId, p.method, kes(p.amount)]; }) });
   var rows = [];
-  d.sales.forEach(function (s) {
+  sales.forEach(function (s) {
     (s.items || []).forEach(function (it, i) {
-      rows.push([i === 0 ? s.id : '', i === 0 ? new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '', i === 0 ? s.cashier : '', it.name, it.qty, kes(Number(it.price) * Number(it.qty)), i === 0 ? s.paymentMethod : '']);
+      rows.push([i === 0 ? s.id : '', i === 0 ? new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '', i === 0 ? (s.customer || s.cashier) : '', it.name, it.qty, kes(Number(it.price) * Number(it.qty)), i === 0 ? s.paymentMethod : '', i === 0 ? (s.status + (s.balance > 0.005 ? ' (owes ' + Number(s.balance).toFixed(0) + ')' : '') + (s.collected === 'No' ? ', not collected' : '')) : '']);
     });
   });
-  doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 8 }, head: [['Receipt', 'Time', 'Cashier', 'Item', 'Qty', 'Amount', 'Payment']], body: rows.length ? rows : [['No transactions', '', '', '', '', '', '']], columnStyles: { 4: { halign: 'right' }, 5: { halign: 'right' } } });
+  doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 7.5 }, head: [['Receipt', 'Time', 'Customer', 'Item', 'Qty', 'Amount', 'Payment', 'Status']], body: rows.length ? rows : [['No transactions', '', '', '', '', '', '', '']], columnStyles: { 4: { halign: 'right' }, 5: { halign: 'right' } } });
   pdfFooter(doc); doc.save('TB-Daily-Record-' + d.day + '.pdf'); toast('Daily record downloaded.');
 }
 
@@ -1229,14 +1586,14 @@ function loadReport() {
     g('statCost').textContent = 'KES ' + Number(res.totalCost).toFixed(0);
     g('statProfit').textContent = 'KES ' + Number(res.grossProfit).toFixed(0);
     g('statMargin').textContent = Number(res.grossMargin).toFixed(1) + '%';
-    g('statOrders').textContent = res.totalOrders;
-    g('statAvg').textContent = 'KES ' + Number(res.avgOrder).toFixed(0);
-    g('statItems').textContent = res.totalItems;
-    g('statProfitItem').textContent = 'KES ' + Number(res.totalItems ? res.grossProfit / res.totalItems : 0).toFixed(2);
+    g('statSales').textContent = 'KES ' + Number(res.salesValue).toFixed(0);
+    g('statOnDebt').textContent = 'KES ' + Number(res.onDebt).toFixed(0);
+    g('statOutstanding').textContent = 'KES ' + Number(res.outstanding).toFixed(0);
+    g('statOrders').textContent = res.totalOrders + ' / ' + res.totalItems;
     var max = Math.max.apply(null, res.daily.map(function (d) { return d.total; }).concat([1]));
     g('dailyBars').innerHTML = res.daily.length ? res.daily.map(function (d) {
       return '<div class="bar" style="height:' + Math.max(4, Math.round((d.total / max) * 120)) + 'px"><span class="bar-value">' + d.total.toFixed(0) + '</span><span class="bar-label">' + d.day.slice(5) + '</span></div>';
-    }).join('') : '<p class="hint" style="padding:16px">No sales in this range yet.</p>';
+    }).join('') : '<p class="hint" style="padding:16px">No income in this range yet.</p>';
     g('productProfitBody').innerHTML = res.productProfit.length ? res.productProfit.map(function (p) {
       return '<tr><td><strong>' + esc(p.name) + '</strong>' + (p.category ? '<div class="spec-line">' + esc(p.category) + '</div>' : '') + '</td><td>' + p.qty + '</td><td class="nowrap">KES ' + p.revenue.toFixed(2) + '</td><td class="nowrap">KES ' + p.profit.toFixed(2) + '</td><td>' + p.margin.toFixed(1) + '%</td></tr>';
     }).join('') : '<tr><td colspan="5" style="color:var(--muted)">No sales in this range yet.</td></tr>';
@@ -1267,21 +1624,21 @@ function downloadReportPDF() {
       sale.items.forEach(function (it) {
         var qty = Number(it.qty) || 0, up = Number(it.price) || 0, pu = Number(it.purchasePrice); if (isNaN(pu)) pu = 0;
         var rev = up * qty, cost = pu * qty;
-        rows.push([String(sale.id || ''), new Date(sale.timestamp).toLocaleString('en-GB'), String(sale.cashier || ''), String(it.category || 'Other stationery'), String(it.name || ''), String(it.specification || ''), String(qty), 'KES ' + up.toFixed(2), 'KES ' + cost.toFixed(2), 'KES ' + (rev - cost).toFixed(2), String(sale.paymentMethod || 'Cash'), 'KES ' + rev.toFixed(2)]);
+        rows.push([String(sale.id || ''), new Date(sale.timestamp).toLocaleString('en-GB'), String(sale.customer || sale.cashier || ''), String(it.category || 'Other stationery'), String(it.name || ''), String(it.specification || ''), String(qty), 'KES ' + up.toFixed(2), 'KES ' + cost.toFixed(2), 'KES ' + (rev - cost).toFixed(2), String(sale.paymentMethod || 'Cash'), String(sale.status || ''), 'KES ' + rev.toFixed(2)]);
       });
     });
     if (!rows.length) { doc.setFontSize(11); doc.text('No sales records found for the selected period.', margin, 38); }
     else doc.autoTable({
       startY: 32, theme: 'grid', margin: { left: margin, right: margin },
-      head: [['Receipt', 'Date / Time', 'Cashier', 'Category', 'Product', 'Specification', 'Qty', 'Unit Price', 'Cost', 'Profit', 'Payment', 'Line Total']], body: rows,
+      head: [['Receipt', 'Date / Time', 'Customer', 'Category', 'Product', 'Specification', 'Qty', 'Unit Price', 'Cost', 'Profit', 'Payment', 'Status', 'Line Total']], body: rows,
       styles: { font: 'helvetica', fontSize: 6.5, cellPadding: 1.7, overflow: 'linebreak', valign: 'top' }, headStyles: { fontStyle: 'bold', fillColor: [0, 51, 160], textColor: 255, fontSize: 6.5 },
-      columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 25 }, 2: { cellWidth: 20 }, 3: { cellWidth: 28 }, 4: { cellWidth: 29 }, 5: { cellWidth: 32 }, 6: { cellWidth: 10, halign: 'right' }, 7: { cellWidth: 20, halign: 'right' }, 8: { cellWidth: 20, halign: 'right' }, 9: { cellWidth: 20, halign: 'right' }, 10: { cellWidth: 17 }, 11: { cellWidth: 22, halign: 'right' } }
+      columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 25 }, 2: { cellWidth: 20 }, 3: { cellWidth: 26 }, 4: { cellWidth: 27 }, 5: { cellWidth: 28 }, 6: { cellWidth: 9, halign: 'right' }, 7: { cellWidth: 19, halign: 'right' }, 8: { cellWidth: 19, halign: 'right' }, 9: { cellWidth: 19, halign: 'right' }, 10: { cellWidth: 14 }, 11: { cellWidth: 12 }, 12: { cellWidth: 18, halign: 'right' } }
     });
     var y = (doc.lastAutoTable && doc.lastAutoTable.finalY ? doc.lastAutoTable.finalY : 38) + 8;
     if (y > 185) { doc.addPage(); y = 15; }
     doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Statement Summary', margin, y);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-    var sl = ['Orders: ' + summary.totalOrders, 'Items sold: ' + summary.totalItems, 'Revenue: KES ' + Number(summary.totalRevenue || 0).toFixed(2), 'Cost of goods: KES ' + Number(summary.totalCost || 0).toFixed(2), 'Gross profit: KES ' + Number(summary.grossProfit || 0).toFixed(2), 'Gross margin: ' + Number(summary.grossMargin || 0).toFixed(1) + '%', 'Average order: KES ' + Number(summary.avgOrder || 0).toFixed(2)];
+    var sl = ['Orders: ' + summary.totalOrders, 'Items sold: ' + summary.totalItems, 'Sales made: KES ' + Number(summary.salesValue || 0).toFixed(2), 'Still on debt (period): KES ' + Number(summary.onDebt || 0).toFixed(2), 'Income received: KES ' + Number(summary.totalRevenue || 0).toFixed(2), 'Cost of goods: KES ' + Number(summary.totalCost || 0).toFixed(2), 'Gross profit: KES ' + Number(summary.grossProfit || 0).toFixed(2), 'Gross margin: ' + Number(summary.grossMargin || 0).toFixed(1) + '%'];
     doc.text(sl.slice(0, 4), margin, y + 6); doc.text(sl.slice(4), 95, y + 6);
     y += 30;
     if (summary.categoryProfit && summary.categoryProfit.length) {
