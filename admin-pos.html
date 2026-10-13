@@ -153,6 +153,13 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
 .receipt .rthank{text-align:center;font-size:10px;margin-top:12px}.receipt .rfoot{text-align:center;font-size:9px;color:#555;margin-top:5px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--brand-blue-dark);color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;z-index:80;box-shadow:0 8px 25px rgba(0,31,92,.25);border-left:4px solid var(--brand-orange);max-width:92vw}
 
+/* Daily: add-record form */
+.rec-panel{margin-bottom:22px}
+.rec-grid{display:grid;grid-template-columns:minmax(0,2fr) 84px 112px 120px auto;gap:10px;align-items:end}
+.rec-grid .field{margin-bottom:0;min-width:0}.rec-grid .rec-custom{grid-column:1/-1}
+.rec-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.rec-check{display:flex;align-items:center;gap:8px;margin:0;font-weight:600;cursor:pointer}.rec-check input{width:18px;height:18px;accent-color:var(--brand-orange)}
+
 /* Responsive */
 @media(min-width:861px) and (max-width:1100px){.app{grid-template-columns:210px minmax(0,1fr)}.main{padding:24px 26px 50px}.checkout-grid{grid-template-columns:minmax(0,1fr) 300px;gap:18px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}.nav button,.brand{padding-left:18px;padding-right:18px}}
 @media(max-width:1000px){.doc-grid{grid-template-columns:minmax(0,1fr)}}
@@ -183,6 +190,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
   .add-row,.add-row.custom{grid-template-columns:1fr 1fr}.add-row>:first-child{grid-column:1/-1}.add-row .btn{grid-column:1/-1}.panel{padding:14px}
   .toast{left:12px;right:12px;bottom:90px;transform:none;text-align:center;max-width:none}
   .hide-sm{display:none}
+  .rec-grid{grid-template-columns:1fr 1fr}.rec-grid>:first-child{grid-column:1/-1}.rec-grid .btn{grid-column:1/-1}
   .debt-grid{grid-template-columns:1fr}
 }
 @media(max-width:380px){.product-grid,.paymethods{grid-template-columns:1fr}.stat-row.s2{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -342,6 +350,21 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <button class="btn" onclick="dailyToday()">Today</button>
         <button class="btn btn-primary" onclick="dailyPDF()">Download PDF</button>
       </div>
+      <div class="panel rec-panel">
+        <h3>Add a record for this day</h3>
+        <div class="rec-grid">
+          <div class="field"><label for="recProduct">Product</label><select id="recProduct" onchange="recProductChanged()"></select></div>
+          <div class="field rec-custom hidden" id="recCustomWrap"><label for="recName">Item name</label><input type="text" id="recName" autocomplete="off" placeholder="e.g. Printing, Lamination"></div>
+          <div class="field"><label for="recQty">Qty</label><input type="number" id="recQty" min="0.01" step="any" value="1" oninput="recTotal()"></div>
+          <div class="field"><label for="recPrice">Unit price</label><input type="number" id="recPrice" min="0" step="0.01" placeholder="0.00" oninput="recTotal()"></div>
+          <div class="field"><label for="recPay">Payment</label><select id="recPay"><option>Cash</option><option>M-Pesa</option><option>Card</option></select></div>
+          <button class="btn btn-primary bi" type="button" id="recAddBtn" onclick="addDailyRecord()"><svg class="ic"><use href="#i-plus"/></svg>Add</button>
+        </div>
+        <div class="rec-foot">
+          <label class="rec-check hidden" id="recStockWrap"><input type="checkbox" id="recStock" checked>Deduct from stock</label>
+          <span class="hint">Line total: <strong id="recLineTotal">KES 0.00</strong></span>
+        </div>
+      </div>
       <div class="stat-row">
         <div class="stat-card"><div class="label">Revenue</div><div class="value" id="dRevenue">KES 0</div></div>
         <div class="stat-card"><div class="label">Gross profit</div><div class="value" id="dProfit">KES 0</div></div>
@@ -353,7 +376,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:middle}t
         <div><h3>Items sold</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Qty</th><th>Revenue</th></tr></thead><tbody id="dItemsBody"></tbody></table></div></div>
       </div>
       <h3>Transactions</h3>
-      <div class="table-wrap"><table class="wide"><thead><tr><th>Receipt</th><th>Time</th><th>Cashier</th><th>Items</th><th>Payment</th><th>Total</th></tr></thead><tbody id="dSalesBody"></tbody></table></div>
+      <div class="table-wrap"><table class="wide"><thead><tr><th>Receipt</th><th>Time</th><th>Cashier</th><th>Items</th><th>Payment</th><th>Total</th><th></th></tr></thead><tbody id="dSalesBody"></tbody></table></div>
     </section>
 
     <!-- REPORTS -->
@@ -634,7 +657,8 @@ function enterApp() {
   g('settingsUsername').textContent = session.username;
   buildNav(); show('app');
   var c = cacheGet('pos_products'); if (c) { products = c; afterProducts(); }   // instant paint from cache
-  loadProducts(); tickClock();
+  loadProducts().then(function () { setTimeout(function () { if (session) loadDebts(); }, 400); });  // warm the Debts tab in the background
+  tickClock();
   clearInterval(clockTimer); clockTimer = setInterval(tickClock, 30000);
 }
 function tickClock() { var el = g('checkoutClock'); if (el) el.textContent = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }); }
@@ -682,6 +706,7 @@ function afterProducts() {
   populateCategorySelect(); renderProductGrid();
   if (currentView === 'inventory') renderInventoryTable();
   if (currentView === 'documents') initDocuments();
+  if (currentView === 'daily') recFillProducts();
 }
 function loadProducts() {
   return api('listProducts', {}).then(function (res) {
@@ -993,7 +1018,49 @@ function loadSales() {
 
 /* ================= Daily records ================= */
 var daily = null;
-function initDaily() { if (!g('dailyDate').value) g('dailyDate').value = ymd(new Date()); loadDaily(); }
+function initDaily() { if (!g('dailyDate').value) g('dailyDate').value = ymd(new Date()); recFillProducts(); loadDaily(); }
+
+/* ---- Manual daily records ---- */
+function recFillProducts() {
+  var sel = g('recProduct'), cur = sel.value;
+  sel.innerHTML = products.map(function (p) { return '<option value="' + esc(p.id) + '">' + esc(p.name + (p.specification ? ' (' + p.specification + ')' : '')) + '</option>'; }).join('') + '<option value="__custom">Custom item (type a name)</option>';
+  if (cur && Array.prototype.some.call(sel.options, function (o) { return o.value === cur; })) sel.value = cur;
+  recProductChanged(!!g('recPrice').value);
+}
+function recProductChanged(keepPrice) {
+  var id = g('recProduct').value, p = products.find(function (x) { return String(x.id) === String(id); });
+  g('recCustomWrap').classList.toggle('hidden', !!p);
+  g('recStockWrap').classList.toggle('hidden', !p);
+  if (p && keepPrice !== true) g('recPrice').value = Number(p.price).toFixed(2);
+  if (!p && keepPrice !== true) g('recPrice').value = '';
+  recTotal();
+}
+function recTotal() { g('recLineTotal').textContent = kes((Number(g('recQty').value) || 0) * (Number(g('recPrice').value) || 0)); }
+function addDailyRecord() {
+  var day = g('dailyDate').value; if (!day) { toast('Pick a date first.'); return; }
+  var id = g('recProduct').value, p = products.find(function (x) { return String(x.id) === String(id); });
+  var name = g('recName').value.trim(), qty = Number(g('recQty').value), priceRaw = g('recPrice').value, price = Number(priceRaw);
+  if (!p && !name) { toast('Enter the item name.'); g('recName').focus(); return; }
+  if (!(qty > 0)) { toast('Enter a quantity.'); return; }
+  if (priceRaw === '' || !(price >= 0)) { toast('Enter the unit price.'); g('recPrice').focus(); return; }
+  var deduct = !!p && g('recStock').checked;
+  var btn = g('recAddBtn'); btn.disabled = true;
+  api('addRecord', { day: day, paymentMethod: g('recPay').value, deductStock: deduct, item: p ? { id: p.id, qty: qty, price: price } : { name: name, qty: qty, price: price } }).then(function (res) {
+    btn.disabled = false;
+    if (!res.ok) { toast(res.error); return; }
+    g('recQty').value = 1; g('recName').value = ''; recTotal();
+    toast('Record added.');
+    if (deduct) loadProducts();
+    loadDaily();
+  });
+}
+function deleteRecord(id) {
+  if (!confirm('Delete this record? Stock that was deducted for it will be put back.')) return;
+  api('deleteSale', { id: id }).then(function (res) {
+    if (!res.ok) { toast(res.error); return; }
+    toast('Record deleted.'); loadProducts(); loadDaily();
+  });
+}
 function dailyToday() { g('dailyDate').value = ymd(new Date()); loadDaily(); }
 function shiftDaily(n) {
   var d = new Date((g('dailyDate').value || ymd(new Date())) + 'T00:00:00');
@@ -1021,9 +1088,11 @@ function loadDaily() {
     g('dPayBody').innerHTML = pk.length ? pk.map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + pay[k].n + '</td><td class="nowrap">' + kes(pay[k].t) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No sales recorded.</td></tr>';
     g('dItemsBody').innerHTML = ik.length ? ik.map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + items[k].q + '</td><td class="nowrap">' + kes(items[k].r) + '</td></tr>'; }).join('') : '<tr><td colspan="3" style="color:var(--muted)">No sales recorded.</td></tr>';
     g('dSalesBody').innerHTML = sales.length ? sales.map(function (s) {
-      return '<tr><td>' + esc(s.id) + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td>' + esc(s.cashier) + '</td><td>' +
-        esc((s.items || []).map(function (it) { return it.name + ' x' + it.qty; }).join(', ')) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">' + kes(s.total) + '</td></tr>';
-    }).join('') : '<tr><td colspan="6" style="color:var(--muted)">No sales on this day.</td></tr>';
+      var manual = (s.items || []).some(function (it) { return it.manual; });
+      return '<tr><td>' + esc(s.id) + (manual ? ' <span class="unit-pill">manual</span>' : '') + '</td><td class="nowrap">' + new Date(s.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '</td><td>' + esc(s.cashier) + '</td><td>' +
+        esc((s.items || []).map(function (it) { return it.name + ' x' + it.qty; }).join(', ')) + '</td><td>' + esc(s.paymentMethod) + '</td><td class="nowrap">' + kes(s.total) + '</td>' +
+        '<td><button class="btn btn-danger ibtn" type="button" aria-label="Delete record" data-id="' + esc(s.id) + '" onclick="deleteRecord(this.dataset.id)">' + ic('trash') + '</button></td></tr>';
+    }).join('') : '<tr><td colspan="7" style="color:var(--muted)">No sales on this day.</td></tr>';
   });
 }
 
