@@ -655,8 +655,8 @@ tbody tr{animation:fadeIn .3s ease both}
 
       <div class="field">
         <label id="dItemsLbl">Items owed — quantity × price adds up automatically</label>
-        <div id="dItems"></div>
-        <button type="button" class="btn bi" id="dAddItemBtn" onclick="addDebtItem()"><svg class="ic"><use href="#i-plus"/></svg>Add item</button>
+        <div id="dDebtItems"></div>
+        <button type="button" class="btn bi" id="dAddItemBtn"><svg class="ic"><use href="#i-plus"/></svg>Add item</button>
       </div>
 
       <div class="two-col">
@@ -1307,6 +1307,12 @@ function applyDebt(debt, cleared, names) {
 }
 
 /* ---- Debt modal with item calculator ---- */
+function resetDebtButtons() {
+  /* clear busy state AND the manual "disabled" on whichever button was not pressed */
+  var sb = g('dSaveBtn'), hb = g('dShareBtn');
+  idle(sb); idle(hb);
+  sb.disabled = false; hb.disabled = false;
+}
 function openDebtModal(id) {
   var d = id ? findDebt(id) : null;
   debtLocked = !!(d && d.saleId);
@@ -1315,14 +1321,15 @@ function openDebtModal(id) {
   g('dId').value = d ? d.id : ''; g('dName').value = d ? d.name : ''; g('dPhone').value = d ? debtorPhone(d.name) : '';
   g('dAmount').value = d ? d.amount : ''; g('dPaid').value = d ? (d.paid || 0) : 0; g('dNote').value = d ? (d.note || '') : '';
   g('dItemsLbl').textContent = debtLocked ? 'Items on this sale (managed by the sale)' : 'Items owed — quantity × price adds up automatically';
-  idle(g('dSaveBtn')); idle(g('dShareBtn'));
+  debtShare = false;
+  resetDebtButtons();
   renderChips(); renderDebtItems(); g('debtModalBackdrop').classList.remove('hidden');
   if (!d) setTimeout(function () { g('dName').focus(); }, 60);
 }
 function closeDebtModal() { g('debtModalBackdrop').classList.add('hidden'); }
 function lineAmt(it) { return (Number(it.qty) || 0) * (Number(it.price) || 0); }
 function renderDebtItems() {
-  var box = g('dItems');
+  var box = g('dDebtItems');
   g('dAddItemBtn').classList.toggle('hidden', debtLocked);
   if (debtLocked) {
     box.innerHTML = debtItems.length ? debtItems.map(function (it) { return '<div class="di-ro"><span>' + esc(it.name) + ' × ' + esc(it.qty) + '</span><strong>' + kes(lineAmt(it)) + '</strong></div>'; }).join('') : '<p class="hint">No item list for this debt.</p>';
@@ -1338,8 +1345,15 @@ function renderDebtItems() {
   updateCalc();
 }
 function addDebtItem() {
-  debtItems.push({ name: '', qty: 1, price: '' }); renderDebtItems();
-  var f = document.querySelectorAll('#dItems .di-name'); if (f.length) f[f.length - 1].focus();
+  if (debtLocked) return;   // items on a sale-linked debt are managed by the sale
+  debtItems.push({ name: '', qty: 1, price: '' });
+  renderDebtItems();
+  var f = document.querySelectorAll('#dDebtItems .di-name');
+  if (f.length) {
+    var last = f[f.length - 1];
+    last.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    last.focus();
+  }
 }
 function rmDebtItem(i) { debtItems.splice(i, 1); renderDebtItems(); }
 function setDI(i, k, v) {
@@ -1365,7 +1379,7 @@ function renderChips() {
   var list = debtors.filter(function (n) { return n.name.toLowerCase() !== q && (!q || n.name.toLowerCase().indexOf(q) > -1); });
   g('nameChips').innerHTML = list.map(function (n) { return '<button type="button" class="chip" data-n="' + esc(n.name) + '" data-p="' + esc(n.phone) + '" onclick="pickName(this)">' + esc(n.name) + '</button>'; }).join('');
 }
-function pickName(el) { g('dName').value = el.dataset.n; g('dPhone').value = el.dataset.p || ''; renderChips(); var f = document.querySelector('#dItems .di-name'); (f || g('dAmount')).focus(); }
+function pickName(el) { g('dName').value = el.dataset.n; g('dPhone').value = el.dataset.p || ''; renderChips(); var f = document.querySelector('#dDebtItems .di-name'); (f || g('dAmount')).focus(); }
 function saveDebt(ev) {
   ev.preventDefault();
   var sb = g('dSaveBtn'), hb = g('dShareBtn');
@@ -1382,7 +1396,7 @@ function saveDebt(ev) {
   if (!(Number(d.amount) > 0)) { toast('Enter the amount owed or add items with prices.', 'err'); return false; }
   busy(share ? hb : sb, 'Saving…'); (share ? sb : hb).disabled = true;
   api('upsertDebt', { debt: d }).then(function (res) {
-    idle(sb); idle(hb);
+    resetDebtButtons();
     if (!res.ok) { er(res); return; }
     closeDebtModal(); applyDebt(res.debt, res.cleared, res.debtors);
     toast(res.cleared ? 'Fully paid — debt cleared ✓' : 'Debt saved ✓');
@@ -1957,7 +1971,24 @@ function changePassword(ev) {
   return false;
 }
 
+function bindDebtItemUI() {
+  var addBtn = g('dAddItemBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      addDebtItem();
+    });
+  }
+  // Enter inside an item row should not submit the whole debt form
+  g('dDebtItems').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT') {
+      e.preventDefault();
+    }
+  });
+}
+
 initLoginPrivacy();
+bindDebtItemUI();
 boot();
 </script>
 </body>
