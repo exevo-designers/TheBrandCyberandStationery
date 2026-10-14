@@ -742,6 +742,7 @@ tbody tr{animation:fadeIn .3s ease both}
 <script>
 /* ================= State ================= */
 var API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec';
+var PAYMENT_TILL = '4879772';   // shown on invoices and debt images
 var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [], cart = [], currentView = 'checkout', lastLoad = 0;
 var debts = [], debtors = [], productsLoaded = false, debtsLoaded = false;
@@ -1453,7 +1454,7 @@ function drawReminder(d) {
     var items = (d.items && d.items.length) ? d.items.slice() : [{ name: d.note || 'Items on credit', qty: '', price: null }];
     var more = 0; if (items.length > 14) { more = items.length - 14; items = items.slice(0, 14); }
     var W = 760, S = 2, pad = 36, rowH = 40;
-    var H = 156 + 118 + 38 + items.length * rowH + (more ? 32 : 0) + 30 + 150 + 86;
+    var H = 156 + 118 + 38 + items.length * rowH + (more ? 32 : 0) + 30 + 150 + 136;
     var cv = document.createElement('canvas'); cv.width = W * S; cv.height = H * S;
     var x = cv.getContext('2d'); x.scale(S, S);
     var F = "'Montserrat',Arial,sans-serif", logo = new Image();
@@ -1493,7 +1494,11 @@ function drawReminder(d) {
       x.fillStyle = og; rrect(x, pad, y, W - pad * 2, 74, 16); x.fill();
       x.fillStyle = '#fff'; x.font = '700 16px ' + F; x.fillText('Balance due', pad + 22, y + 44);
       x.textAlign = 'right'; x.font = '700 30px ' + F; x.fillText(money(bal(d)), W - pad - 22, y + 48); x.textAlign = 'center';
-      y += 74 + 40;
+      y += 74 + 22;
+      x.fillStyle = '#E8EFFC'; rrect(x, pad, y, W - pad * 2, 44, 12); x.fill();
+      x.fillStyle = '#0033A0'; x.font = '700 18px ' + F; x.textAlign = 'center';
+      x.fillText('Payment Till: ' + PAYMENT_TILL, W / 2, y + 28);
+      y += 44 + 38;
       x.fillStyle = '#53617A'; x.font = '400 13px ' + F; x.fillText('Kindly settle at your earliest convenience. Thank you for your business!', W / 2, y);
       x.fillStyle = '#FF8C42'; x.fillRect(0, H - 12, W, 12); x.fillStyle = '#0033A0'; x.fillRect(0, H - 12, W * 0.6, 12);
       resolve(cv);
@@ -1861,7 +1866,14 @@ function buildDoc() {
     columnStyles: showP ? { 0: { cellWidth: 10 }, 2: { halign: 'right', cellWidth: 16 }, 3: { halign: 'right', cellWidth: 34 }, 4: { halign: 'right', cellWidth: 36 } } : { 0: { cellWidth: 10 }, 2: { halign: 'right', cellWidth: 20 } }
   });
   var y = doc.lastAutoTable.finalY + 8;
-  if (showP) { doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.text('TOTAL: ' + kes(total), 196, y, { align: 'right' }); y += 10; }
+  if (showP) {
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.text('TOTAL: ' + kes(total), 196, y, { align: 'right' }); y += 10;
+    if (type === 'invoice') {
+      doc.setFontSize(11); doc.setTextColor(0, 51, 160);
+      doc.text('Payment Till: ' + PAYMENT_TILL, 196, y - 1, { align: 'right' });
+      doc.setTextColor(20); y += 6;
+    }
+  }
   var note = g('docNotes').value.trim();
   if (note) { doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.text(doc.splitTextToSize(note, 182), 14, y); y += 12; }
   if (type === 'delivery') {
