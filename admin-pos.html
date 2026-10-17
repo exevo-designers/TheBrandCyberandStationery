@@ -743,6 +743,12 @@ tbody tr{animation:fadeIn .3s ease both}
 /* ================= State ================= */
 var API_URL = 'https://script.google.com/macros/s/AKfycbyeTk3ze8QGM_iHpOlGo9bocBI7kx1X-nK7FbiSR-IHxfQeRcBDtUFeBKK_w9NM_q1H/exec';
 var PAYMENT_TILL = '4879772';   // shown on invoices and debt images
+var BIZ = {
+  po: 'P.O. Box 20500, Narok',
+  loc: 'Location: Gate C, Maasai Mara University',
+  phone: 'Phone No: 0702502147',
+  email: 'Email: thebrandcyber0@gmail.com'
+};
 var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [], cart = [], currentView = 'checkout', lastLoad = 0;
 var debts = [], debtors = [], productsLoaded = false, debtsLoaded = false;
@@ -1146,7 +1152,7 @@ function showReceipt(sale) {
   }).join('');
   var owes = Number(sale.balance) > 0.005;
   g('receiptContent').innerHTML =
-    '<div class="receipt-header"><h2>The Brand Cyber &amp; Stationery</h2><div class="rline">Gate C, Maasai Mara University</div><div class="rline">Thank you for shopping with us</div></div>' +
+    '<div class="receipt-header"><h2>The Brand Cyber &amp; Stationery</h2><div class="rline">' + esc(BIZ.po) + '</div><div class="rline">' + esc(BIZ.loc) + '</div><div class="rline">' + esc(BIZ.phone) + '</div><div class="rline">' + esc(BIZ.email) + '</div><div class="rline">Thank you for shopping with us</div></div>' +
     '<div class="rmeta"><div>Receipt</div><div>' + esc(sale.id) + '</div><div>Date</div><div>' + d.toLocaleDateString('en-GB') + '</div><div>Time</div><div>' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '</div><div>Cashier</div><div>' + esc(sale.cashier) + '</div>' + (sale.customer ? '<div>Customer</div><div>' + esc(sale.customer) + '</div>' : '') + '</div>' +
     '<hr><div class="ritems-head"><span>Qty</span><span>Item</span><span class="ramt">Amount</span></div>' + lines + '<hr>' +
     '<div class="rpayment"><span>Items</span><span>' + itemCount + '</span></div><div class="rpayment"><span>Payment</span><span>' + esc(sale.paymentMethod) + '</span></div>' +
@@ -1466,8 +1472,10 @@ function drawReminder(d) {
       var tx = pad;
       if (hasLogo) { x.fillStyle = '#fff'; rrect(x, pad, 34, 82, 82, 16); x.fill(); x.drawImage(logo, pad + 8, 42, 66, 66); tx = pad + 102; }
       x.textBaseline = 'alphabetic'; x.textAlign = 'left';
-      x.fillStyle = '#fff'; x.font = '700 24px ' + F; x.fillText('The Brand Cyber & Stationery', tx, 76);
-      x.fillStyle = '#BFD0F2'; x.font = '400 14px ' + F; x.fillText('Gate C, Maasai Mara University', tx, 102);
+      x.fillStyle = '#fff'; x.font = '700 24px ' + F; x.fillText('The Brand Cyber & Stationery', tx, 58);
+      x.fillStyle = '#BFD0F2'; x.font = '400 12px ' + F;
+      x.fillText(fitText(x, BIZ.po + ' · ' + BIZ.loc.replace('Location: ', ''), W - tx - pad), tx, 80);
+      x.fillText(fitText(x, BIZ.phone.replace('Phone No: ', 'Tel: ') + ' · ' + BIZ.email.replace('Email: ', ''), W - tx - pad), tx, 98);
       x.fillStyle = '#FF8C42'; x.font = '700 15px ' + F; x.fillText('Debt statement · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), tx, 130);
       var y = 156 + 46;
       x.fillStyle = '#13213A'; x.font = '700 21px ' + F; x.fillText('Hello ' + fitText(x, d.name, W - pad * 2 - 80) + ',', pad, y);
@@ -1751,10 +1759,11 @@ function loadDaily() {
 var HEAD = { fillColor: [0, 51, 160], textColor: 255, fontStyle: 'bold' };
 function pdfHeader(doc, title, sub) {
   doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(0, 31, 92); doc.text('THE BRAND CYBER & STATIONERY', 14, 16);
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80); doc.text('Gate C, Maasai Mara University', 14, 21);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(80);
+  doc.text([BIZ.po, BIZ.loc, BIZ.phone, BIZ.email], 14, 21, { lineHeightFactor: 1.2 });
   doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(255, 107, 0); doc.text(title, 196, 16, { align: 'right' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80); if (sub) doc.text(sub, 196, 21, { align: 'right' });
-  doc.setDrawColor(0, 51, 160); doc.setLineWidth(0.6); doc.line(14, 25, 196, 25); doc.setTextColor(20);
+  doc.setDrawColor(0, 51, 160); doc.setLineWidth(0.6); doc.line(14, 38, 196, 38); doc.setTextColor(20);
 }
 function pdfFooter(doc) {
   var n = doc.getNumberOfPages();
@@ -1773,7 +1782,7 @@ function dailyPDF() {
 function buildDailyPDF() {
   var d = daily, sales = d.sales || [], doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
   pdfHeader(doc, 'DAILY RECORD', new Date(d.day + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
-  doc.autoTable({ startY: 30, theme: 'grid', headStyles: HEAD, styles: { fontSize: 8.5 }, head: [['Sales made', 'Income received', 'On debt', 'Cost of goods', 'Gross profit', 'Orders', 'Items']], body: [[kes(d.salesValue), kes(d.income), kes(d.onDebt), kes(d.cost), kes(d.profit), sales.length, d.qty]] });
+  doc.autoTable({ startY: 43, theme: 'grid', headStyles: HEAD, styles: { fontSize: 8.5 }, head: [['Sales made', 'Income received', 'On debt', 'Cost of goods', 'Gross profit', 'Orders', 'Items']], body: [[kes(d.salesValue), kes(d.income), kes(d.onDebt), kes(d.cost), kes(d.profit), sales.length, d.qty]] });
   var bm = d.byMethod || [];
   doc.autoTable({ startY: doc.lastAutoTable.finalY + 6, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9 }, head: [['Money received by method', 'Payments', 'Total']], body: bm.length ? bm.map(function (m) { return [m.method, m.n, kes(m.t)]; }) : [['No money received', '', '']] });
   var dp = d.debtPayments || [];
@@ -1855,13 +1864,13 @@ function buildDoc() {
   var type = g('docType').value, T = DOC[type], date = g('docDate').value || ymd(new Date()), showP = type !== 'delivery';
   var no = nextDocNo(type, date), doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
   pdfHeader(doc, T.title, 'No: ' + no + '   |   Date: ' + new Date(date + 'T00:00:00').toLocaleDateString('en-GB'));
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text(type === 'delivery' ? 'DELIVER TO' : 'BILL TO', 14, 33);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text(type === 'delivery' ? 'DELIVER TO' : 'BILL TO', 14, 46);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-  doc.text([g('docCustomer').value.trim() || 'Walk-in customer', g('docContact').value.trim()].filter(Boolean), 14, 38);
+  doc.text([g('docCustomer').value.trim() || 'Walk-in customer', g('docContact').value.trim()].filter(Boolean), 14, 51);
   var total = 0;
   var body = docLines.map(function (l, i) { var a = l.qty * l.price; total += a; return showP ? [i + 1, l.desc, l.qty, kes(l.price), kes(a)] : [i + 1, l.desc, l.qty]; });
   doc.autoTable({
-    startY: 52, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9, cellPadding: 2.5 },
+    startY: 65, theme: 'grid', headStyles: HEAD, styles: { fontSize: 9, cellPadding: 2.5 },
     head: [showP ? ['#', 'Description', 'Qty', 'Unit price', 'Amount'] : ['#', 'Description', 'Qty']], body: body,
     columnStyles: showP ? { 0: { cellWidth: 10 }, 2: { halign: 'right', cellWidth: 16 }, 3: { halign: 'right', cellWidth: 34 }, 4: { halign: 'right', cellWidth: 36 } } : { 0: { cellWidth: 10 }, 2: { halign: 'right', cellWidth: 20 } }
   });
@@ -1921,10 +1930,13 @@ function downloadReportPDF() {
     if (!summary.ok) throw new Error(summary.error || 'Could not load report summary.');
     var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }), margin = 10;
     doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.text('THE BRAND CYBER & STATIONERY', margin, 14);
-    doc.setFontSize(11); doc.setFont('helvetica', 'normal'); doc.text('Sales Statement — All Recorded Transactions', margin, 21);
+    doc.setFontSize(8.5); doc.setFont('helvetica', 'normal');
+    doc.text(BIZ.po + '  |  ' + BIZ.loc, margin, 19);
+    doc.text(BIZ.phone + '  |  ' + BIZ.email, margin, 23.5);
+    doc.setFontSize(11); doc.text('Sales Statement — All Recorded Transactions', margin, 30);
     doc.setFontSize(8.5);
-    doc.text((from || to) ? ('Period: ' + (from || 'All time') + ' to ' + (to || 'Today')) : 'Period: All records', margin, 27);
-    doc.text('Generated: ' + new Date().toLocaleString('en-GB'), 287, 27, { align: 'right' });
+    doc.text((from || to) ? ('Period: ' + (from || 'All time') + ' to ' + (to || 'Today')) : 'Period: All records', margin, 35);
+    doc.text('Generated: ' + new Date().toLocaleString('en-GB'), 287, 35, { align: 'right' });
     var rows = [];
     salesRes.sales.forEach(function (sale) {
       sale.items.forEach(function (it) {
@@ -1933,9 +1945,9 @@ function downloadReportPDF() {
         rows.push([String(sale.id || ''), new Date(sale.timestamp).toLocaleString('en-GB'), String(sale.customer || sale.cashier || ''), String(it.category || 'Other stationery'), String(it.name || ''), String(it.specification || ''), String(qty), 'KES ' + up.toFixed(2), 'KES ' + cost.toFixed(2), 'KES ' + (rev - cost).toFixed(2), String(sale.paymentMethod || 'Cash'), String(sale.status || ''), 'KES ' + rev.toFixed(2)]);
       });
     });
-    if (!rows.length) { doc.setFontSize(11); doc.text('No sales records found for the selected period.', margin, 38); }
+    if (!rows.length) { doc.setFontSize(11); doc.text('No sales records found for the selected period.', margin, 46); }
     else doc.autoTable({
-      startY: 32, theme: 'grid', margin: { left: margin, right: margin },
+      startY: 40, theme: 'grid', margin: { left: margin, right: margin },
       head: [['Receipt', 'Date / Time', 'Customer', 'Category', 'Product', 'Specification', 'Qty', 'Unit Price', 'Cost', 'Profit', 'Payment', 'Status', 'Line Total']], body: rows,
       styles: { font: 'helvetica', fontSize: 6.5, cellPadding: 1.7, overflow: 'linebreak', valign: 'top' }, headStyles: { fontStyle: 'bold', fillColor: [0, 51, 160], textColor: 255, fontSize: 6.5 },
       columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 25 }, 2: { cellWidth: 20 }, 3: { cellWidth: 26 }, 4: { cellWidth: 27 }, 5: { cellWidth: 28 }, 6: { cellWidth: 9, halign: 'right' }, 7: { cellWidth: 19, halign: 'right' }, 8: { cellWidth: 19, halign: 'right' }, 9: { cellWidth: 19, halign: 'right' }, 10: { cellWidth: 14 }, 11: { cellWidth: 12 }, 12: { cellWidth: 18, halign: 'right' } }
