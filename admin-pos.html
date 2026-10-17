@@ -191,6 +191,8 @@ td .ibtn{padding:0;min-height:38px}
 .receipt{font-family:'Courier New',Courier,monospace;font-size:11px;line-height:1.35;background:#fff;color:#111;max-width:330px;margin:0 auto;padding:4px 2px}
 .receipt-header{text-align:center}.receipt h2{text-align:center;font-size:15px;line-height:1.15;margin:0 0 4px;color:#111;font-weight:800}
 .receipt .rline{text-align:center;color:#333;font-size:10px;margin-bottom:2px}
+.receipt .rc{display:flex;justify-content:center;align-items:center;gap:4px;overflow-wrap:anywhere}
+.rico{width:10px;height:10px;fill:none;stroke:#333;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .receipt .rmeta{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin-top:9px;font-size:10px}.receipt .rmeta div:nth-child(even){text-align:right}
 .receipt hr{border:none;border-top:1px dashed #333;margin:10px 0}
 .receipt .ritems-head,.receipt .ritem{display:grid;grid-template-columns:28px minmax(0,1fr) 74px;gap:5px;align-items:start}
@@ -749,6 +751,40 @@ var BIZ = {
   phone: 'Phone No: 0702502147',
   email: 'Email: thebrandcyber0@gmail.com'
 };
+var ICONS = {
+  po: 'M3 13l2.5-7h13L21 13v6H3v-6z M3 13h5l1 2h6l1-2h5',
+  pin: 'M12 21s-6-5.2-6-10a6 6 0 0112 0c0 4.8-6 10-6 10z M14.2 11a2.2 2.2 0 11-4.4 0 2.2 2.2 0 014.4 0z',
+  phone: 'M9 2.5h6a2 2 0 012 2v15a2 2 0 01-2 2H9a2 2 0 01-2-2v-15a2 2 0 012-2z M11 18.5h2',
+  mail: 'M5 5.5h14a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2z M3.5 7.5l8.5 6 8.5-6'
+};
+function bizItems() {
+  return [{ i: 'po', t: BIZ.po }, { i: 'pin', t: BIZ.loc.replace('Location: ', '') }, { i: 'phone', t: BIZ.phone.replace('Phone No: ', '') }, { i: 'mail', t: BIZ.email.replace('Email: ', '') }];
+}
+function rIco(n) { return '<svg class="rico" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[n] + '"/></svg>'; }
+function cvIcon(ctx, n, px, py, size, color) {
+  ctx.save(); ctx.translate(px, py); ctx.scale(size / 24, size / 24);
+  ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(ICONS[n])); ctx.restore();
+}
+var _icoCache = {};
+function iconPNG(n, color) {
+  var k = n + color; if (_icoCache[k]) return _icoCache[k];
+  var cv = document.createElement('canvas'); cv.width = cv.height = 96;
+  cvIcon(cv.getContext('2d'), n, 0, 0, 96, color);
+  return (_icoCache[k] = cv.toDataURL('image/png'));
+}
+function pdfIconRow(doc, items, x, y, sz) {
+  items.forEach(function (it) {
+    doc.addImage(iconPNG(it.i, '#505050'), 'PNG', x, y - sz * 0.8, sz, sz);
+    x += sz + 1.4; doc.text(it.t, x, y); x += doc.getTextWidth(it.t) + 6;
+  });
+}
+function icoRow(ctx, items, sx, y, maxW) {
+  var cx = sx, t1 = fitText(ctx, items[0].t, maxW * 0.52 - 19);
+  cvIcon(ctx, items[0].i, cx, y - 11, 14, '#BFD0F2'); ctx.fillText(t1, cx + 19, y);
+  cx += 19 + ctx.measureText(t1).width + 18;
+  var room = sx + maxW - cx - 19;
+  if (room > 30) { cvIcon(ctx, items[1].i, cx, y - 11, 14, '#BFD0F2'); ctx.fillText(fitText(ctx, items[1].t, room), cx + 19, y); }
+}
 var session = JSON.parse(sessionStorage.getItem('pos_session') || 'null');
 var products = [], cart = [], currentView = 'checkout', lastLoad = 0;
 var debts = [], debtors = [], productsLoaded = false, debtsLoaded = false;
@@ -1152,7 +1188,7 @@ function showReceipt(sale) {
   }).join('');
   var owes = Number(sale.balance) > 0.005;
   g('receiptContent').innerHTML =
-    '<div class="receipt-header"><h2>The Brand Cyber &amp; Stationery</h2><div class="rline">' + esc(BIZ.po) + '</div><div class="rline">' + esc(BIZ.loc) + '</div><div class="rline">' + esc(BIZ.phone) + '</div><div class="rline">' + esc(BIZ.email) + '</div><div class="rline">Thank you for shopping with us</div></div>' +
+    '<div class="receipt-header"><h2>The Brand Cyber &amp; Stationery</h2>' + bizItems().map(function (b) { return '<div class="rline rc">' + rIco(b.i) + '<span>' + esc(b.t) + '</span></div>'; }).join('') + '<div class="rline">Thank you for shopping with us</div></div>' +
     '<div class="rmeta"><div>Receipt</div><div>' + esc(sale.id) + '</div><div>Date</div><div>' + d.toLocaleDateString('en-GB') + '</div><div>Time</div><div>' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '</div><div>Cashier</div><div>' + esc(sale.cashier) + '</div>' + (sale.customer ? '<div>Customer</div><div>' + esc(sale.customer) + '</div>' : '') + '</div>' +
     '<hr><div class="ritems-head"><span>Qty</span><span>Item</span><span class="ramt">Amount</span></div>' + lines + '<hr>' +
     '<div class="rpayment"><span>Items</span><span>' + itemCount + '</span></div><div class="rpayment"><span>Payment</span><span>' + esc(sale.paymentMethod) + '</span></div>' +
@@ -1474,8 +1510,9 @@ function drawReminder(d) {
       x.textBaseline = 'alphabetic'; x.textAlign = 'left';
       x.fillStyle = '#fff'; x.font = '700 24px ' + F; x.fillText('The Brand Cyber & Stationery', tx, 58);
       x.fillStyle = '#BFD0F2'; x.font = '400 12px ' + F;
-      x.fillText(fitText(x, BIZ.po + ' · ' + BIZ.loc.replace('Location: ', ''), W - tx - pad), tx, 80);
-      x.fillText(fitText(x, BIZ.phone.replace('Phone No: ', 'Tel: ') + ' · ' + BIZ.email.replace('Email: ', ''), W - tx - pad), tx, 98);
+      var bz = bizItems();
+      icoRow(x, [bz[0], bz[1]], tx, 80, W - tx - pad);
+      icoRow(x, [bz[2], bz[3]], tx, 98, W - tx - pad);
       x.fillStyle = '#FF8C42'; x.font = '700 15px ' + F; x.fillText('Debt statement · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), tx, 130);
       var y = 156 + 46;
       x.fillStyle = '#13213A'; x.font = '700 21px ' + F; x.fillText('Hello ' + fitText(x, d.name, W - pad * 2 - 80) + ',', pad, y);
@@ -1760,7 +1797,7 @@ var HEAD = { fillColor: [0, 51, 160], textColor: 255, fontStyle: 'bold' };
 function pdfHeader(doc, title, sub) {
   doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(0, 31, 92); doc.text('THE BRAND CYBER & STATIONERY', 14, 16);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(80);
-  doc.text([BIZ.po, BIZ.loc, BIZ.phone, BIZ.email], 14, 21, { lineHeightFactor: 1.2 });
+  bizItems().forEach(function (b, i) { pdfIconRow(doc, [b], 14, 21 + i * 4.2, 3); });
   doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(255, 107, 0); doc.text(title, 196, 16, { align: 'right' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80); if (sub) doc.text(sub, 196, 21, { align: 'right' });
   doc.setDrawColor(0, 51, 160); doc.setLineWidth(0.6); doc.line(14, 38, 196, 38); doc.setTextColor(20);
@@ -1931,8 +1968,10 @@ function downloadReportPDF() {
     var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }), margin = 10;
     doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.text('THE BRAND CYBER & STATIONERY', margin, 14);
     doc.setFontSize(8.5); doc.setFont('helvetica', 'normal');
-    doc.text(BIZ.po + '  |  ' + BIZ.loc, margin, 19);
-    doc.text(BIZ.phone + '  |  ' + BIZ.email, margin, 23.5);
+    var bz = bizItems(); doc.setTextColor(80);
+    pdfIconRow(doc, [bz[0], bz[1]], margin, 19, 3);
+    pdfIconRow(doc, [bz[2], bz[3]], margin, 23.5, 3);
+    doc.setTextColor(0);
     doc.setFontSize(11); doc.text('Sales Statement — All Recorded Transactions', margin, 30);
     doc.setFontSize(8.5);
     doc.text((from || to) ? ('Period: ' + (from || 'All time') + ' to ' + (to || 'Today')) : 'Period: All records', margin, 35);
